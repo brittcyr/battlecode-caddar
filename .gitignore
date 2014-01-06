@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+
+# Eclipse cruft #
+.metadata
+Battlecode 2014
+
+# Editor cruft #
+*.swp
