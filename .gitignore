@@ -11,3 +11,6 @@ Battlecode 2014
 
 # Editor cruft #
 *.swp
+
+# Battlecode cruft #
+.installationinformation
