@@ -11,15 +11,6 @@ public class PastrRobot extends BaseRobot {
     }
 
     public void run() {
-        if (rc.getHealth() < 20) {
-            try {
-                rc.selfDestruct();
-            }
-            catch (GameActionException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
 
     }
 

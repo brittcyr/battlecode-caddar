@@ -50,7 +50,7 @@ public class CowboyRobot extends BaseRobot {
                     && rc.senseRobotCount() > 5) {
                 rc.construct(RobotType.PASTR);
             }
-            else if (action < 20) {
+            else if (action < 40) {
                 // Random movement
                 Direction moveDirection = directions[rand.nextInt(8)];
                 if (rc.canMove(moveDirection)) {
