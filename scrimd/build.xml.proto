@@ -1,4 +1,4 @@
-<project name="Battlecode 2014 Scrim Sserver" basedir="../." default="run">
+<project name="Battlecode 2014 Scrim Sserver" basedir="../../../../." default="run">
 
   <description>
     Build file for Battlecode 2014 players.

@@ -4,8 +4,8 @@ bc.server.throttle-count=50
 
 # Game engine settings
 bc.engine.debug-methods=false
-bc.engine.silence-a=false
-bc.engine.silence-b=false
+bc.engine.silence-a=true
+bc.engine.silence-b=true
 bc.engine.gc=false
 bc.engine.gc-rounds=50
 bc.engine.upkeep=true
@@ -22,9 +22,6 @@ bc.client.check-updates=false
 bc.client.viewer-delay=50
 
 # Headless settings - for "ant file"
-bc.game.maps=
-bc.game.team-a=
-bc.game.team-b=
 bc.server.save-file=match.rms
 
 # Transcriber settings
