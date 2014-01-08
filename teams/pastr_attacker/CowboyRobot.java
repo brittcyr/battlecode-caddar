@@ -19,7 +19,7 @@ public class CowboyRobot extends BaseRobot {
 
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
-        rand = new Random();
+        rand = new Random(myRC.getRobot().getID());
         pastrAttacker = false;
     }
 

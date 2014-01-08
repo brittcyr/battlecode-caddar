@@ -3,6 +3,7 @@ package pastr_attacker;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
+import battlecode.common.MapLocation;
 import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
@@ -12,6 +13,14 @@ public class HQRobot extends BaseRobot {
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
+        double growth[][] = rc.senseCowGrowth();
+        for (int x = 0; x < growth.length; x++) {
+            for (int y = 0; y < growth.length; y++) {
+                System.out.print(growth[x][y] + " ");
+            }
+            System.out.println("");
+        }
+        System.out.println(rc.senseCowGrowth().length);
         // TODO Auto-generated constructor stub
     }
 

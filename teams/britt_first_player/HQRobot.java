@@ -16,7 +16,7 @@ public class HQRobot extends BaseRobot {
 
     public void run() {
         try {
-            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 10, rc.getTeam()
+            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, rc.getTeam()
                     .opponent());
             if (nearbyEnemies.length > 0) {
                 RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[0]);
