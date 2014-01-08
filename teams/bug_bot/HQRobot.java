@@ -1,7 +1,9 @@
 package bug_bot;
 
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
@@ -16,6 +18,14 @@ public class HQRobot extends BaseRobot {
 
     public void run() {
         try {
+            if (Clock.getRoundNum() > 500) {
+                MapLocation enemy = rc.senseEnemyHQLocation();
+                int target = 100 * enemy.x + enemy.y;
+                rc.broadcast(0, target);
+            }
+            else {
+                rc.broadcast(0, 99999);
+            }
             Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, rc.getTeam()
                     .opponent());
             if (nearbyEnemies.length > 0) {

@@ -50,7 +50,16 @@ public class CowboyRobot extends BaseRobot {
                 }
             }
 
-            MapLocation target = rc.senseEnemyHQLocation();
+            int t = rc.readBroadcast(0);
+            if (t == 99999) {
+                Direction moveDirection = directions[rand.nextInt(8)];
+                if (rc.canMove(moveDirection)) {
+                    rc.move(moveDirection);
+                }
+                return;
+            }
+
+            MapLocation target = new MapLocation(t / 100, t % 100);
 
             // If we are free from a wall
             if (!bugging) {
