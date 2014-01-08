@@ -1,0 +1,7 @@
+babbybot
+britt_first_player
+examplefuncsplayer
+milker
+pastr_attacker
+shepherd
+swarm_and_defend
