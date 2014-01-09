@@ -1,4 +1,4 @@
-package bug_bot;
+package pastr_attacker;
 
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;

@@ -62,34 +62,8 @@ public class CowboyRobot extends BaseRobot {
                     }
                 } // Run to attack the pastr
                 MapLocation pastr = enemyPastrs[closestInd];
-                Direction toPastr = rc.getLocation().directionTo(pastr);
-                if (rc.canMove(toPastr)) {
-                    rc.move(toPastr);
-                    return;
-                }
-                else {
-
-                    for (int j = 0; j < 8; j++) {
-                        if (this.directions[(j + 1) % 8].equals(toPastr)
-                                && rc.canMove(this.directions[j])) {
-                            rc.move(this.directions[j]);
-                            return;
-                        }
-                    }
-
-                    for (int j = 0; j < 8; j++) {
-                        // Move perpendicularly and getting closer
-                        if (directions[(j + 2) % 8].equals(toPastr)
-                                && rc.canMove(directions[j])
-                                && rc.getLocation().add(directions[j]).distanceSquaredTo(pastr) < rc
-                                        .getLocation().add(directions[(j + 4) % 8])
-                                        .distanceSquaredTo(pastr)) {
-                            rc.move(directions[j]);
-                            return;
-                        }
-                    }
-                    this.pastrAttacker = false;
-                }
+                BugNavigator.navigateTo(rc, pastr);
+                return;
             }
 
             int action = (rc.getRobot().getID() * rand.nextInt(101) + 50) % 101;
@@ -114,10 +88,8 @@ public class CowboyRobot extends BaseRobot {
             }
             else {
                 // Sneak towards the enemy
-                Direction toEnemy = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
-                if (rc.canMove(toEnemy)) {
-                    rc.sneak(toEnemy);
-                }
+                BugNavigator.navigateTo(rc, rc.senseEnemyHQLocation());
+                return;
             }
 
         }
