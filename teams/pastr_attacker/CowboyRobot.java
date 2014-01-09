@@ -11,11 +11,8 @@ import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 
 public class CowboyRobot extends BaseRobot {
-    static Random       rand;
-    private boolean     pastrAttacker;
-    private Direction[] directions = { Direction.NORTH, Direction.NORTH_EAST, Direction.EAST,
-            Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST,
-            Direction.NORTH_WEST  };
+    static Random   rand;
+    private boolean pastrAttacker;
 
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -78,23 +75,18 @@ public class CowboyRobot extends BaseRobot {
 
             int action = (rc.getRobot().getID() * rand.nextInt(101) + 50) % 101;
             if (rc.senseCowsAtLocation(rc.getLocation()) > 2000
-                    && rc.senseNearbyGameObjects(Robot.class, 30, rc.getTeam().opponent()).length == 0) {
+                    && rc.senseNearbyGameObjects(Robot.class, 35, rc.getTeam().opponent()).length == 0) {
                 rc.construct(RobotType.PASTR);
                 return;
             }
 
             // Construct a PASTR
-            if (action < 1 && rc.getLocation().distanceSquaredTo(rc.senseHQLocation()) > 20
+            if (action < 1
+                    && rc.getLocation().distanceSquaredTo(rc.senseHQLocation()) > 20
                     && rc.senseCowGrowth()[rc.getLocation().x][rc.getLocation().y] > 0
+                    && rc.senseNearbyGameObjects(Robot.class, 35, rc.getTeam().opponent()).length == 0
                     && rc.senseRobotCount() > 5) {
                 rc.construct(RobotType.PASTR);
-            }
-            else if (action < 40) {
-                // Random movement
-                Direction moveDirection = directions[rand.nextInt(8)];
-                if (rc.canMove(moveDirection)) {
-                    rc.sneak(moveDirection);
-                }
             }
             else {
                 // Sneak towards the enemy
