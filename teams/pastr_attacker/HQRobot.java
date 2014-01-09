@@ -28,6 +28,10 @@ public class HQRobot extends BaseRobot {
                 rc.broadcast(1001, 0);
             }
 
+            if (!rc.isActive()) {
+                rc.yield();
+            }
+
             // Check if a robot is spawnable and spawn one if it is
             if (rc.isActive() && rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
                 Direction toEnemy = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
@@ -38,7 +42,7 @@ public class HQRobot extends BaseRobot {
             }
 
             // Attack enemies
-            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 10, rc.getTeam()
+            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, rc.getTeam()
                     .opponent());
             for (int x = 0; x < nearbyEnemies.length; x++) {
                 RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[x]);

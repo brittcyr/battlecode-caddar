@@ -10,9 +10,7 @@ public abstract class BaseRobot {
     }
 
     public void loop() {
-        if (rc.isActive()) {
-            run();
-        }
+        run();
         rc.yield();
     }
 

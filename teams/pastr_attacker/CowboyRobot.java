@@ -32,16 +32,26 @@ public class CowboyRobot extends BaseRobot {
             if (pastrAttacker) {
                 rc.broadcast(1000, rc.readBroadcast(1000) + 1);
             }
+            if (!rc.isActive()) {
+                rc.yield();
+            }
 
             // Attack if possible prioritize attacking the enemy robots first
             Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 10, rc.getTeam()
                     .opponent());
+            MapLocation bestAttack = null;
+            double leastHealth = 999.9;
             for (int x = 0; x < nearbyEnemies.length; x++) {
                 RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[x]);
                 if (robotInfo.type == RobotType.SOLDIER) {
-                    rc.attackSquare(robotInfo.location);
-                    return;
+                    // Prioritize attacking weakest bot first
+                    bestAttack = leastHealth > robotInfo.health ? robotInfo.location : bestAttack;
+                    leastHealth = leastHealth > robotInfo.health ? robotInfo.health : leastHealth;
                 }
+            }
+            if (bestAttack != null) {
+                rc.attackSquare(bestAttack);
+                return;
             }
             for (int x = 0; x < nearbyEnemies.length; x++) {
                 RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[x]);
