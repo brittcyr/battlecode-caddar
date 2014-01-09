@@ -54,10 +54,12 @@ public class BugNavigator {
             if (bugging) {
                 // if we are closer than when we started
                 if (rc.getLocation().distanceSquaredTo(target) < dist_to_target_at_bug_start) {
-                    bugging = false;
-                    // Call it again with navigating not in bugging mode
-                    navigateTo(rc, target);
-                    return;
+                    if (rc.canMove(toTarget)) {
+                        bugging = false;
+                        // Call it again with navigating not in bugging mode
+                        navigateTo(rc, target);
+                        return;
+                    }
                 }
 
                 // Take the direction to wall and add one until valid terrain, then move that way
@@ -65,7 +67,7 @@ public class BugNavigator {
                 for (int x = 1; x < 8; x++) {
                     Direction to_check = rc.getLocation().directionTo(last_wall);
                     next_square = rc.getLocation().add(
-                            directions[(to_check.ordinal() + x * direction_to_turn + 8) % 8]);
+                            directions[(to_check.ordinal() + 1 * direction_to_turn + 8) % 8]);
                     if (rc.senseTerrainTile(next_square) == TerrainTile.VOID
                             || rc.senseTerrainTile(next_square) == TerrainTile.OFF_MAP) {
                         last_wall = next_square;
