@@ -18,7 +18,7 @@ public class HQRobot extends BaseRobot {
 
     public void run() {
         try {
-            if (Clock.getRoundNum() > 200) {
+            if (Clock.getRoundNum() > 100) {
                 MapLocation enemy = rc.senseEnemyHQLocation();
                 int target = 100 * enemy.x + enemy.y;
                 rc.broadcast(0, target);
