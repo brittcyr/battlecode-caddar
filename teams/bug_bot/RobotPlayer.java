@@ -2,16 +2,12 @@ package bug_bot;
 
 import java.util.Random;
 
-import battlecode.common.Direction;
-import battlecode.common.Robot;
 import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.*;
 
 public class RobotPlayer {
-	static Random rand;
+    static Random rand;
 
-	public static void run(RobotController rc) {
+    public static void run(RobotController rc) {
         BaseRobot br = null;
         try {
             switch (rc.getType()) {
@@ -45,5 +41,5 @@ public class RobotPlayer {
                 br.rc.addMatchObservation(e.toString());
             }
         }
-	}
+    }
 }

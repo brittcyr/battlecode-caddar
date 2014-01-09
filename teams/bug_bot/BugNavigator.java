@@ -1,6 +1,8 @@
 package bug_bot;
 
 import battlecode.common.Direction;
+import battlecode.common.GameConstants;
+import battlecode.common.GameObject;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
@@ -13,9 +15,11 @@ public class BugNavigator {
     static double      dist_to_target_at_bug_start = 0.0;
     static MapLocation last_wall                   = null;
     static int         direction_to_turn           = 1;
+    static boolean     turned                      = false;
 
     public static void navigateTo(RobotController rc, MapLocation target) {
         try {
+            turned &= bugging;
             Direction toTarget = rc.getLocation().directionTo(target);
             // If we are free from a wall
             if (!bugging) {
@@ -73,14 +77,34 @@ public class BugNavigator {
                         last_wall = next_square;
                     }
                     else {
-                        break;
+                        if (rc.senseObjectAtLocation(next_square) != null) {
+                            last_wall = next_square;
+                        }
+                        else {
+                            break;
+                        }
                     }
                 }
                 Direction toNextSquare = rc.getLocation().directionTo(next_square);
-                if (toNextSquare.opposite().equals(toTarget)) {
-                    direction_to_turn *= -1;
-                    navigateTo(rc, target);
-                    return;
+                if (toNextSquare.opposite().equals(toTarget) && !turned) {
+                    // TODO: Check if we have teammates nearby and tell to turn also
+                    MapLocation possibleNextWall = last_wall;
+                    boolean willGetOut = false;
+
+                    // Check worst case range of sight
+                    for (int x = 0; (x + 1) * (x + 1) + 1 < 35; x++) {
+                        possibleNextWall = possibleNextWall.add(toNextSquare);
+                        if (rc.senseTerrainTile(next_square) == TerrainTile.ROAD
+                                || rc.senseTerrainTile(next_square) == TerrainTile.NORMAL) {
+                            willGetOut = true;
+                        }
+                    }
+                    if (!willGetOut) {
+                        direction_to_turn *= -1;
+                        turned = true;
+                        navigateTo(rc, target);
+                        return;
+                    }
                 }
                 if (rc.canMove(toNextSquare)) {
                     rc.sneak(toNextSquare);
@@ -91,8 +115,20 @@ public class BugNavigator {
                     Direction moveDirection = directions[(toNextSquare.ordinal()
                             + direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {
-                        bugging = false;
                         rc.sneak(moveDirection);
+                        return;
+                    }
+                    // Check if we can go perpendicular around
+                    moveDirection = directions[(toNextSquare.ordinal() + 2 * direction_to_turn + 8) % 8];
+                    if (rc.canMove(moveDirection)) {
+                        rc.sneak(moveDirection);
+                        return;
+                    }
+                    else {
+                        // Otherwise we will go other way
+                        direction_to_turn *= -1;
+                        turned = true;
+                        navigateTo(rc, target);
                         return;
                     }
                 }
