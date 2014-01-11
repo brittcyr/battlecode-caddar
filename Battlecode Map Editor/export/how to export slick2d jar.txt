@@ -1,0 +1,10 @@
+create jar file from eclipse (not runnable, don't worry about main class or anything)
+open jarSplice
+add jars
+-the jar you just made
+-plus lwjgl, lwgjl_util, jinput,slick
+add all the windows natives
+set the main class to packageName.MainClassName
+then create fat jar
+Put the fat jar in a folder with the game resources
+Worked for me.

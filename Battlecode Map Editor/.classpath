@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/mit/java/java_v1.7.0_17"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="jar/jinput.jar"/>
+	<classpathentry exported="true" kind="lib" path="jar/lwjgl_util.jar"/>
+	<classpathentry exported="true" kind="lib" path="jar/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Battlecode Map Editor/native/linux"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="jar/slick.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

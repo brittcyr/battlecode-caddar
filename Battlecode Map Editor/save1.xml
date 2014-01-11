@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map height="30" width="30">
+    <game seed="1337" rounds="2000"/>
+    <symbols>
+        <symbol terrain="NORMAL" type="TERRAIN" character="n"/>
+        <symbol terrain="VOID" type="TERRAIN" character="v"/>
+        <symbol terrain="ROAD" type="TERRAIN" character="r"/>
+        <symbol team="A" type="HQ" character="a"/>
+        <symbol team="B" type="HQ" character="b"/>
+    </symbols>
+    <data>
+<![CDATA[
+n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 r1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n3 n3 n3 n3 n8 r8 r8 r8 r3 r3 r3 r1 r1 n1 n1 n1 n3 n3 r3 r3 r3 n3 n1 n1 n1 n1 n1
+n1 n1 n1 n3 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 n1 n1 n1 n1 n1 n3 n3 n3 n3 r3 r3 r1 n1 n1 n1 n1
+n1 n1 n1 r3 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 n1 n1 n1 n1 r1 r3 n3 n3 n3 n3 n3 r1 r1 r1 n1 n1
+n1 n1 n1 r3 v3 v3 v3 v8 v8 v8 v8 v3 v3 v3 v1 v1 v1 n1 r1 n3 n3 n3 n3 n3 n3 n1 n1 n1 n1 n1
+n1 n1 n1 r3 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 n1 n1 n1 n1 r1 n3 v3 v3 v3 v3 n3 n1 n1 n1 n1 n1
+n1 n1 n1 r3 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 n1 n1 n1 n1 r1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1
+n1 n1 n1 r3 n3 n3 n3 v8 n8 n8 n8 n3 n3 n3 n1 n1 n1 n1 r1 n1 n1 n1 n1 n1 n1 a1 n1 n1 n1 n1
+n1 n1 n1 r8 r8 n8 n8 v3 n3 n3 n3 n3 n3 n3 n1 n1 n1 n1 r4 n4 n4 n4 n4 n4 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n8 r8 n8 n8 v3 n3 n3 n3 n3 n3 n3 n1 n1 n1 n1 r4 r4 n4 n4 n4 n4 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n8 r8 n8 n8 v3 v3 n3 n3 n3 n3 n3 n1 v1 n1 n1 n4 r4 r4 n4 n4 n4 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n8 r8 n8 n8 n3 v3 n3 n3 n3 n3 n3 n1 v4 v4 n4 n4 n4 r4 r4 n4 n4 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n3 r3 r3 n3 n3 v3 v4 n4 n4 n4 n4 n4 n4 v4 v4 v4 n4 n4 r4 r4 n4 n1 n1 n1 n1 v1 n1
+n1 v1 v1 n1 n1 r1 r1 n1 n1 n4 n4 n4 n4 n4 n4 n4 n4 n4 n4 n4 n4 n1 r1 r1 n1 n1 n1 n1 v1 n1
+n1 v1 n1 n1 n1 n1 r1 r1 n1 n4 n4 n4 n4 n4 n4 n4 n4 n4 n4 n4 n4 n1 n1 r1 r1 n1 n1 v1 v1 n1
+n1 v1 n1 n1 n1 n1 n4 r4 r4 n4 n4 v4 v4 v4 n4 n4 n4 n4 n4 n4 v4 v3 n3 n3 r3 r3 n3 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n4 n4 r4 r4 n4 n4 n4 v4 v4 n1 n3 n3 n3 n3 n3 v3 n3 n8 n8 r8 n8 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n4 n4 n4 r4 r4 n4 n1 n1 v1 n1 n3 n3 n3 n3 n3 v3 v3 n8 n8 r8 n8 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n4 n4 n4 n4 r4 r4 n1 n1 n1 n1 n3 n3 n3 n3 n3 n3 v3 n8 n8 r8 n8 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n4 n4 n4 n4 n4 r4 n1 n1 n1 n1 n3 n3 n3 n3 n3 n3 v3 n8 n8 r8 r8 n1 n1 n1
+n1 n1 n1 n1 b1 n1 n1 n1 n1 n1 n1 r1 n1 n1 n1 n1 n3 n3 n3 n8 n8 n8 v8 n3 n3 n3 r3 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 r1 n1 n1 n1 n1 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 r3 n1 n1 n1
+n1 n1 n1 n1 n1 n3 v3 v3 v3 v3 n3 r1 n1 n1 n1 n1 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 r3 n1 n1 n1
+n1 n1 n1 n1 n1 n3 n3 n3 n3 n3 n3 r1 n1 v1 v1 v1 v3 v3 v3 v8 v8 v8 v8 v3 v3 v3 r3 n1 n1 n1
+n1 n1 r1 r1 r1 n3 n3 n3 n3 n3 r3 r1 n1 n1 n1 n1 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 r3 n1 n1 n1
+n1 n1 n1 n1 r1 r3 r3 n3 n3 n3 n3 n1 n1 n1 n1 n1 n3 n3 n3 n8 n8 n8 n8 n3 n3 n3 n3 n1 n1 n1
+n1 n1 n1 n1 n1 n3 r3 r3 r3 n3 n3 n1 n1 n1 r1 r1 r3 r3 r3 r8 r8 r8 n8 n3 n3 n3 n3 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 r1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1
+n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1 n1
+]]>
+    </data>
+</map>
