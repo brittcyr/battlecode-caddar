@@ -1,7 +1,5 @@
 package hq_search;
 
-import java.util.Arrays;
-
 import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -66,11 +64,7 @@ public class HQRobot extends BaseRobot {
                         if (gameBoard[x][y] == TerrainTile.ROAD) {
                             coarseMap[x / coarseness][y / coarseness] -= 1;
                         }
-                        // TODO: tweak this to prefer roads
                     }
-                }
-                for (int[] a : coarseMap) {
-                    System.out.println(Arrays.toString(a));
                 }
                 int startX = rc.senseEnemyHQLocation().x / coarseness;
                 int startY = rc.senseEnemyHQLocation().y / coarseness;
@@ -78,16 +72,9 @@ public class HQRobot extends BaseRobot {
             }
 
             // Run a graph search on coarseMap. with the cost of each edge being cost of target
-            // TODO: write a graph search to get the best path
-            // TODO: make dijkstra able to do across multiple turns
             if (Clock.getBytecodesLeft() > 9500 && !done && coarseMap != null) {
                 Dijkstra.doDijkstra();
                 done = Dijkstra.finished;
-                if (done) {
-                    for (int[] a : Dijkstra.previous) {
-                        System.out.println(Arrays.toString(a));
-                    }
-                }
             }
 
             // TODO: Once we have a best path grid, store it

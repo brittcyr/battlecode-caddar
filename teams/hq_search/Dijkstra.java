@@ -8,7 +8,6 @@ public class Dijkstra {
     static int         iters       = 0;
     static int[][]     previous           = null;
     static boolean     finished           = false;
-    static final int   INFINITY           = 999999999;
     static final int   UNSET       = 9;
     static int[][]     grid               = null;
     static boolean[][] set                = null;
