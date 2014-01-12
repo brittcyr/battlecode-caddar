@@ -2,6 +2,7 @@ package hq_search;
 
 import battlecode.common.Clock;
 
+
 public class Dijkstra {
     static int[][]     tentativeDistances = null;
     static int         width              = 0;
@@ -9,45 +10,59 @@ public class Dijkstra {
     static boolean[][] visited            = null;
     static int[][]     previous           = null;
     static boolean     finished           = false;
+    static final int   INFINITY           = 999999999;
+    static final int   UNSET              = 999999;
+    static int[][]     grid               = null;
+    static boolean[][] set                = null;
 
-    public static void doDijkstra(int[][] grid, int start_x, int start_y) {
-        width = grid.length;
-        height = grid[0].length;
-        tentativeDistances = new int[width][height];
-        visited = new boolean[width][height];
-        previous = new int[width][height];
+    public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
+        height = _grid.length;
+        width = _grid[0].length;
+        tentativeDistances = new int[height][width];
+        visited = new boolean[height][width];
+        previous = new int[height][width];
+        set = new boolean[height][width];
+        finished = false;
+        grid = _grid;
 
-        // 1. Initialize tentative distances to infinity except zero at source
+        // Initialize tentative distances to infinity except zero at source
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < width; y++) {
-                tentativeDistances[x][y] = 9999999;
-                previous[x][y] = 99999;
+                tentativeDistances[y][x] = INFINITY;
+                previous[y][x] = UNSET;
+                set[y][x] = false;
             }
         }
-        tentativeDistances[start_x][start_y] = 0;
-        previous[start_x][start_y] = 0;
+        tentativeDistances[start_y][start_x] = 0;
+        return;
+    }
 
+    public static void doDijkstra() {
         boolean done = false;
+
         while (!done) {
-            if (Clock.getBytecodesLeft() < 9000) {
+            if (Clock.getBytecodesLeft() < 1000) {
                 return;
             }
+
             // TODO: Use a better priority queue for distance
             // Find the position with minimum distance
-            int best = 999999999;
+            int best = INFINITY;
             int bestX = 0;
             int bestY = 0;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    if ((tentativeDistances[x][y] < best) && previous[x][y] == 99999) {
-                        best = tentativeDistances[x][y];
+                    if ((tentativeDistances[y][x] <= best) && !set[y][x]) {
+                        best = tentativeDistances[y][x];
                         bestX = x;
                         bestY = y;
                     }
                 }
             }
+            set[bestY][bestX] = true;
 
-            if (best > 9999999) {
+            if (best == INFINITY) {
+                System.out.println("DISCONNECTED");
                 // This is the case where it is not one connected component
                 return;
             }
@@ -63,11 +78,11 @@ public class Dijkstra {
                     }
 
                     // Here is where we are iterating over all neighbors
-                    int alt = tentativeDistances[bestX][bestY] + grid[x][y];
-                    if (alt < tentativeDistances[x][y]) {
+                    int alt = tentativeDistances[bestY][bestX] + grid[y][x];
+                    if (alt < tentativeDistances[y][x]) {
                         // Need to update
-                        tentativeDistances[x][y] = alt;
-                        previous[x][y] = bestX * 100 + bestY;
+                        tentativeDistances[y][x] = alt;
+                        previous[y][x] = toDir(bestX, bestY, x, y);
                     }
 
                 }
@@ -77,14 +92,50 @@ public class Dijkstra {
             done = true;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    if (tentativeDistances[x][y] == 9999999)
+                    if (set[y][x] == false)
                         done = false;
                 }
             }
-            System.out.println("ITER");
         }
 
         Dijkstra.finished = true;
         return;
+    }
+
+    private static int toDir(int endX, int endY, int startX, int startY) {
+        int diffX = startX - endX;
+        int diffY = startY - endY;
+
+        // Match directions which starts at north and goes clockwise
+        
+        switch (diffX)  {
+            case 1:
+                switch (diffY) {
+                    case -1:
+                        return 7;
+                    case 0:
+                        return 6;
+                    case 1:
+                        return 5;
+                }
+            case 0:  
+                switch (diffY) {
+                    case -1:
+                        return 4;
+                    case 1:
+                        return 0;
+                }
+            case -1:
+                switch (diffY) {
+                    case -1:
+                        return 3;
+                    case 0:
+                        return 2;
+                    case 1:
+                        return 1;
+                }
+        }
+
+        return UNSET;
     }
 }

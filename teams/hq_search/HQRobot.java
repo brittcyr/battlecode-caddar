@@ -1,7 +1,8 @@
 package hq_search;
 
-import battlecode.common.Clock;
 import java.util.Arrays;
+
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -20,7 +21,7 @@ public class HQRobot extends BaseRobot {
         int width = myRC.getMapWidth();
         int height = myRC.getMapHeight();
         gameBoard = new TerrainTile[width][height];
-        coarseness = 8;
+        coarseness = 4;
         coarseMap = null;
         done = false;
     }
@@ -51,14 +52,14 @@ public class HQRobot extends BaseRobot {
                 coarseMap = new int[(rc.getMapHeight() / coarseness) + 1][(rc.getMapWidth() / coarseness) + 1];
                 for (int x = 0; x < (rc.getMapHeight() / coarseness) + 1; x++) {
                     for (int y = 0; y < (rc.getMapWidth() / coarseness) + 1; y++) {
-                        coarseMap[x][y] = coarseness;
+                        coarseMap[x][y] = 0;// coarseness;
                     }
                 }
                 // Populate the coarseMap
                 for (int x = 0; x < rc.getMapHeight(); x++) {
                     for (int y = 0; y < rc.getMapWidth(); y++) {
                         if (gameBoard[x][y] == TerrainTile.VOID) {
-                            coarseMap[x / coarseness][y / coarseness] += 100;
+                            coarseMap[x / coarseness][y / coarseness] += 1;
                         }
                         // TODO: tweak this to prefer roads
                     }
@@ -66,18 +67,21 @@ public class HQRobot extends BaseRobot {
                 for (int[] a : coarseMap) {
                     System.out.println(Arrays.toString(a));
                 }
+                int startX = rc.senseEnemyHQLocation().x / coarseness;
+                int startY = rc.senseEnemyHQLocation().y / coarseness;
+                Dijkstra.setupDijkstra(coarseMap, startX, startY);
             }
 
             // Run a graph search on coarseMap. with the cost of each edge being cost of target
             // TODO: write a graph search to get the best path
             // TODO: make dijkstra able to do across multiple turns
             if (Clock.getBytecodesLeft() > 9500 && !done && coarseMap != null) {
-                int startX = rc.senseEnemyHQLocation().x / rc.getMapWidth();
-                int startY = rc.senseEnemyHQLocation().y / rc.getMapHeight();
-                Dijkstra.doDijkstra(coarseMap, startX, startY);
+                Dijkstra.doDijkstra();
                 done = Dijkstra.finished;
                 if (done) {
-                    System.out.println(Dijkstra.previous);
+                    for (int[] a : Dijkstra.previous) {
+                        System.out.println(Arrays.toString(a));
+                    }
                 }
             }
 
@@ -94,6 +98,7 @@ public class HQRobot extends BaseRobot {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             System.out.println("HQ Exception");
         }
     }
