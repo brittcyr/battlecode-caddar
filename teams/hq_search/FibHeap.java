@@ -2,10 +2,10 @@ package hq_search;
 
 public class FibHeap {
     int              size;
-    int[]            heap;
+    long[]           heap;
     int[]            locations;
     static final int INFINITY  = 999;
-    static final int MAX_VERTS = 100;
+    static final int MAX_VERTS = 128;
 
     public FibHeap(int _size) {
         int guess = 1;
@@ -13,9 +13,9 @@ public class FibHeap {
             guess *= 2;
         }
         size = guess - 1;
-        heap = new int[size];
+        heap = new long[size];
         locations = new int[size];
-        for (int x = 0; x < size; x++) {
+        for (int x = size - 1; x >= 0; x--) {
             heap[x] = INFINITY * MAX_VERTS + x;
             locations[x] = x;
         }
@@ -23,7 +23,7 @@ public class FibHeap {
 
     public int getVal(int ID) {
         int loc = locations[ID];
-        return heap[loc];
+        return (int) heap[loc];
     }
 
     public void decreaseKey(int ID, int newVal) {
@@ -36,7 +36,7 @@ public class FibHeap {
         // Heapify by going up the tree
         while (location > 0 && newItem < heap[(location - 1) / 2]) {
             // Update the location table and do swap
-            int otherID = heap[(location - 1) / 2] % MAX_VERTS;
+            int otherID = (int) heap[(location - 1) / 2] % MAX_VERTS;
             locations[ID] = (location - 1) / 2;
             locations[otherID] = location;
             heap[location] = heap[(location - 1) / 2];
@@ -48,18 +48,18 @@ public class FibHeap {
     }
 
     public int extractMin() {
-        int minID = heap[0] % MAX_VERTS;
+        int minID = (int) heap[0] % MAX_VERTS;
 
         // Once we remove the min, we must recurse down to reheapify
         int location = 0;
         while (location < size / 2) {
-            int leftVal = heap[(location + 1) * 2 - 1];
-            int rightVal = heap[(location + 1) * 2];
-            int locToPull = (location + 1) * 2 - 1;
-            if (leftVal > rightVal) {
-                locToPull++;
+            long leftVal = heap[(location + 1) * 2 - 1];
+            long rightVal = heap[(location + 1) * 2];
+            int locToPull = (location + 1) * 2;
+            if (leftVal < rightVal) {
+                locToPull--;
             }
-            int IDToPull = heap[locToPull] % MAX_VERTS;
+            int IDToPull = (int) heap[locToPull] % MAX_VERTS;
 
             // Do the move
             heap[location] = heap[locToPull];
