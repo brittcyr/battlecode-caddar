@@ -12,12 +12,10 @@ public class HQRobot extends BaseRobot {
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
-        // TODO Auto-generated constructor stub
     }
 
     public void run() {
         try {
-            // TODO organize the team
             int attackers = rc.readBroadcast(1000);
             rc.broadcast(1000, 0);
             if (attackers < 2) {

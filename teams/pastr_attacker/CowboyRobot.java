@@ -60,7 +60,6 @@ public class CowboyRobot extends BaseRobot {
             }
 
             // If a PASTR attacker and enemy has > 0 PASTRs, navigate to PASTR.
-            // TODO: Expensive calls to sensePastrLocations()?
             if (pastrAttacker && rc.sensePastrLocations(rc.getTeam().opponent()).length > 0) {
                 MapLocation enemyPastrs[] = rc.sensePastrLocations(rc.getTeam().opponent());
                 int closestInd = 0;
@@ -80,8 +79,15 @@ public class CowboyRobot extends BaseRobot {
             int action = (rc.getRobot().getID() * rand.nextInt(101) + 50) % 101;
             if (rc.senseCowsAtLocation(rc.getLocation()) > 2000
                     && rc.senseNearbyGameObjects(Robot.class, 35, rc.getTeam().opponent()).length == 0) {
-                rc.construct(RobotType.PASTR);
-                return;
+                Robot[] nearby = rc.senseNearbyGameObjects(Robot.class, 9, rc.getTeam());
+                boolean nearbyPASTR = false;
+                for (Robot r : nearby) {
+                    nearbyPASTR |= rc.senseRobotInfo(r).type == RobotType.PASTR;
+                }
+                if (!nearbyPASTR) {
+                    rc.construct(RobotType.PASTR);
+                    return;
+                }
             }
 
             // Construct a PASTR
@@ -96,15 +102,12 @@ public class CowboyRobot extends BaseRobot {
 
             // Sneak towards the enemy
             // TODO: waypoint shouldn't necessarily be enemy hq.
-            // TODO: Check distress channels. Hack: Distress channels checked and broadcasted to
-            // dependent upon your current map location.
             MapLocation waypoint = rc.senseEnemyHQLocation();
             BugNavigator.navigateTo(rc, waypoint);
 
             return;
         }
         catch (Exception e) {
-            System.out.println(e);
             System.out.println("Soldier Exception");
         }
     }

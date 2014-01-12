@@ -72,10 +72,6 @@ public class HQRobot extends BaseRobot {
                 Dijkstra.doDijkstra();
                 done = Dijkstra.finished;
             }
-            if (done) {
-                System.out.println(Clock.getRoundNum());
-                rc.suicide();
-            }
 
             if (doSpawn) {
                 rc.spawn(toEnemy);
