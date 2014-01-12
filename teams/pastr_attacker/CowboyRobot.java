@@ -91,11 +91,20 @@ public class CowboyRobot extends BaseRobot {
             }
 
             // Construct a PASTR
-            if (action < 1
+            if (action < 2
                     && rc.getLocation().distanceSquaredTo(rc.senseHQLocation()) > 20
                     && rc.senseCowGrowth()[rc.getLocation().x][rc.getLocation().y] > 0
                     && rc.senseNearbyGameObjects(Robot.class, 35, rc.getTeam().opponent()).length == 0
                     && rc.senseRobotCount() > 5) {
+                Robot[] nearby = rc.senseNearbyGameObjects(Robot.class, 9, rc.getTeam());
+                boolean nearbyPASTR = false;
+                for (Robot r : nearby) {
+                    nearbyPASTR |= rc.senseRobotInfo(r).type == RobotType.PASTR;
+                }
+                if (!nearbyPASTR) {
+                    rc.construct(RobotType.PASTR);
+                    return;
+                }
                 rc.construct(RobotType.PASTR);
                 return;
             }
