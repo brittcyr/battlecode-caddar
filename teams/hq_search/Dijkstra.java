@@ -14,6 +14,7 @@ public class Dijkstra {
     static final int   UNSET              = 999999;
     static int[][]     grid               = null;
     static boolean[][] set                = null;
+    static FibHeap     distFibHeap        = null;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
         height = _grid.length;
@@ -24,6 +25,7 @@ public class Dijkstra {
         set = new boolean[height][width];
         finished = false;
         grid = _grid;
+        distFibHeap = new FibHeap(height * width);
 
         // Initialize tentative distances to infinity except zero at source
         for (int x = 0; x < width; x++) {
@@ -39,11 +41,13 @@ public class Dijkstra {
 
     public static void doDijkstra() {
         boolean done = false;
+        int bytes = Clock.getBytecodesLeft();
 
         while (!done) {
-            if (Clock.getBytecodesLeft() < 1000) {
+            if (Clock.getBytecodesLeft() < 1000 || Clock.getBytecodesLeft() < bytes / 2) {
                 return;
             }
+            bytes = Clock.getBytecodesLeft();
 
             // TODO: Use a better priority queue for distance
             // Find the position with minimum distance
