@@ -12,7 +12,7 @@ import battlecode.common.TerrainTile;
 public class HQRobot extends BaseRobot {
     public TerrainTile[][] gameBoard;
     public int             scanRow    = 0;
-    public int             coarseness = 16;
+    public int             coarseness;
     public int[][]         coarseMap  = null;
     public boolean         done       = false;
 
@@ -48,19 +48,23 @@ public class HQRobot extends BaseRobot {
             }
 
             // Create new map for given coarseness
-            if (Clock.getBytecodesLeft() > 100 && coarseMap == null && scanRow == rc.getMapHeight()) {
+            if (Clock.getBytecodesLeft() > 1000 && coarseMap == null
+                    && scanRow == rc.getMapHeight()) {
                 coarseMap = new int[(rc.getMapHeight() / coarseness) + 1][(rc.getMapWidth() / coarseness) + 1];
                 for (int x = 0; x < (rc.getMapHeight() / coarseness) + 1; x++) {
                     for (int y = 0; y < (rc.getMapWidth() / coarseness) + 1; y++) {
                         // TODO: add a cost here since it is not free to walk on roads
-                        coarseMap[x][y] = 0;// coarseness;
+                        coarseMap[x][y] = 3 * coarseness * coarseness;// coarseness;
                     }
                 }
                 // Populate the coarseMap
                 for (int x = 0; x < rc.getMapHeight(); x++) {
                     for (int y = 0; y < rc.getMapWidth(); y++) {
                         if (gameBoard[x][y] == TerrainTile.VOID) {
-                            coarseMap[x / coarseness][y / coarseness] += 1;
+                            coarseMap[x / coarseness][y / coarseness] += 10;
+                        }
+                        if (gameBoard[x][y] == TerrainTile.ROAD) {
+                            coarseMap[x / coarseness][y / coarseness] -= 1;
                         }
                         // TODO: tweak this to prefer roads
                     }
@@ -86,9 +90,6 @@ public class HQRobot extends BaseRobot {
                 }
             }
 
-            // Direction[][] resultOfDijkstra = dijkstra(coarseMap, rc.senseHQLocation().x /
-            // rc.getMapWidth(), rc.senseHQLocation().y / rc.getMapHeight());
-
             // TODO: Once we have a best path grid, store it
             // TODO: Respond to requests from robots for the best path to target on macro level
             // TODO: coarseness /= 2;
@@ -101,7 +102,6 @@ public class HQRobot extends BaseRobot {
         catch (Exception e) {
             e.printStackTrace();
             System.out.println("HQ Exception");
-            rc.suicide();
         }
     }
 }

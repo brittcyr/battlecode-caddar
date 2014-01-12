@@ -4,7 +4,7 @@ public class FibHeap {
     int   size;
     int[] heap;
     int[] locations;
-    static final int INFINITY  = 9999;
+    static final int INFINITY  = 999;
     static final int MAX_VERTS = 100;
 
     public FibHeap(int _size) {
@@ -34,8 +34,7 @@ public class FibHeap {
         heap[location] = newItem;
 
         // Heapify by going up the tree
-        while (location > 0) {
-            if (newItem < heap[(location - 1) / 2]) {
+        while (location > 0 && newItem < heap[(location - 1) / 2]) {
                 // Update the location table and do swap
                 int otherID = heap[(location - 1) / 2] % MAX_VERTS;
                 locations[ID] = (location - 1) / 2;
@@ -45,10 +44,6 @@ public class FibHeap {
 
                 // Recurse
                 location = (location - 1) / 2;
-            }
-            else {
-                break;
-            }
         }
     }
 

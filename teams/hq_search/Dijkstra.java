@@ -2,25 +2,22 @@ package hq_search;
 
 import battlecode.common.Clock;
 
-
 public class Dijkstra {
     static int         width              = 0;
     static int         height             = 0;
-    static boolean[][] visited            = null;
+    static int         iters       = 0;
     static int[][]     previous           = null;
     static boolean     finished           = false;
     static final int   INFINITY           = 999999999;
-    static final int   UNSET              = 999999;
+    static final int   UNSET       = 9;
     static int[][]     grid               = null;
     static boolean[][] set                = null;
-    static int         iters       = 0;
     static FibHeap     distFibHeap        = null;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
         iters = 0;
         height = _grid.length;
         width = _grid[0].length;
-        visited = new boolean[height][width];
         previous = new int[height][width];
         set = new boolean[height][width];
         finished = false;
@@ -29,7 +26,7 @@ public class Dijkstra {
 
         // Initialize tentative distances to infinity except zero at source
         for (int x = 0; x < width; x++) {
-            for (int y = 0; y < width; y++) {
+            for (int y = 0; y < height; y++) {
                 previous[y][x] = UNSET;
                 set[y][x] = false;
             }
@@ -55,7 +52,8 @@ public class Dijkstra {
         int bytes = Clock.getBytecodesLeft();
 
         while (!done) {
-            if (Clock.getBytecodesLeft() < 1000 || Clock.getBytecodesLeft() < bytes / 2) {
+            int bc = Clock.getBytecodesLeft();
+            if (bc < 1000 || bc < bytes / 2) {
                 return;
             }
             bytes = Clock.getBytecodesLeft();
@@ -68,19 +66,11 @@ public class Dijkstra {
             int bestY = index_to_y(index);
             set[bestY][bestX] = true;
 
-            if (val == INFINITY) {
-                // This is the case where it is not one connected component
-                // Should not happen
-                return;
-            }
-
             // Iterated over all neighbors
             for (int x = bestX - 1; x <= bestX + 1; x++) {
                 for (int y = bestY - 1; y <= bestY + 1; y++) {
-                    if (x < 0 || y < 0 || x >= width || y >= height || set[y][x]) {
-                        continue;
-                    }
-                    if (x == bestX && y == bestY) {
+                    if (x < 0 || y < 0 || x >= width || y >= height || set[y][x]
+                            || (x == bestX && y == bestY)) {
                         continue;
                     }
 
