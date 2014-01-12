@@ -15,13 +15,25 @@ public class PastrRobot extends BaseRobot {
     public void run() {
         if (rc.getHealth() <= 10.5 * rc.senseNearbyGameObjects(Robot.class, 5, rc.getTeam()
                 .opponent()).length) {
-            rc.suicide();
+            try {
+                rc.selfDestruct();
+            }
+            catch (GameActionException e) {
+            }
         }
         if (lastHealth > rc.getHealth() * 2.01) {
-            rc.suicide();
+            try {
+                rc.selfDestruct();
+            }
+            catch (GameActionException e) {
+            }
         }
         if (rc.getHealth() < 11.0) {
-            rc.suicide();
+            try {
+                rc.selfDestruct();
+            }
+            catch (GameActionException e) {
+            }
         }
         lastHealth = rc.getHealth();
 
