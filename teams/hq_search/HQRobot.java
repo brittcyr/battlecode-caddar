@@ -10,7 +10,7 @@ import battlecode.common.TerrainTile;
 public class HQRobot extends BaseRobot {
     public TerrainTile[][] gameBoard;
     public int             scanRow    = 0;
-    public int             coarseness;
+    public int             coarseness = 1;
     public int[][]         coarseMap  = null;
     public boolean         done       = false;
 
@@ -19,9 +19,6 @@ public class HQRobot extends BaseRobot {
         int width = myRC.getMapWidth();
         int height = myRC.getMapHeight();
         gameBoard = new TerrainTile[width][height];
-        coarseness = 4;
-        coarseMap = null;
-        done = false;
     }
 
     public void run() {
@@ -51,8 +48,7 @@ public class HQRobot extends BaseRobot {
                 coarseMap = new int[(rc.getMapHeight() / coarseness) + 1][(rc.getMapWidth() / coarseness) + 1];
                 for (int x = 0; x < (rc.getMapHeight() / coarseness) + 1; x++) {
                     for (int y = 0; y < (rc.getMapWidth() / coarseness) + 1; y++) {
-                        // TODO: add a cost here since it is not free to walk on roads
-                        coarseMap[x][y] = 3 * coarseness * coarseness;// coarseness;
+                        coarseMap[x][y] = 3 * coarseness * coarseness;
                     }
                 }
                 // Populate the coarseMap
@@ -72,15 +68,10 @@ public class HQRobot extends BaseRobot {
             }
 
             // Run a graph search on coarseMap. with the cost of each edge being cost of target
-            if (Clock.getBytecodesLeft() > 9500 && !done && coarseMap != null) {
+            if (!done && coarseMap != null) {
                 Dijkstra.doDijkstra();
                 done = Dijkstra.finished;
             }
-
-            // TODO: Once we have a best path grid, store it
-            // TODO: Respond to requests from robots for the best path to target on macro level
-            // TODO: coarseness /= 2;
-            // TODO: repeat
 
             if (doSpawn) {
                 rc.spawn(toEnemy);

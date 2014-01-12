@@ -1,9 +1,9 @@
 package hq_search;
 
 public class FibHeap {
-    int   size;
-    int[] heap;
-    int[] locations;
+    int              size;
+    int[]            heap;
+    int[]            locations;
     static final int INFINITY  = 999;
     static final int MAX_VERTS = 100;
 
@@ -35,15 +35,15 @@ public class FibHeap {
 
         // Heapify by going up the tree
         while (location > 0 && newItem < heap[(location - 1) / 2]) {
-                // Update the location table and do swap
-                int otherID = heap[(location - 1) / 2] % MAX_VERTS;
-                locations[ID] = (location - 1) / 2;
-                locations[otherID] = location;
-                heap[location] = heap[(location - 1) / 2];
-                heap[(location - 1) / 2] = newItem;
+            // Update the location table and do swap
+            int otherID = heap[(location - 1) / 2] % MAX_VERTS;
+            locations[ID] = (location - 1) / 2;
+            locations[otherID] = location;
+            heap[location] = heap[(location - 1) / 2];
+            heap[(location - 1) / 2] = newItem;
 
-                // Recurse
-                location = (location - 1) / 2;
+            // Recurse
+            location = (location - 1) / 2;
         }
     }
 
