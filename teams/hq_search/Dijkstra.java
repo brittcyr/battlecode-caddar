@@ -66,8 +66,8 @@ public class Dijkstra {
             set[bestY][bestX] = true;
 
             if (best == INFINITY) {
-                System.out.println("DISCONNECTED");
                 // This is the case where it is not one connected component
+                // Should not happen
                 return;
             }
 

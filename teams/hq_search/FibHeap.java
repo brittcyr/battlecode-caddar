@@ -52,15 +52,24 @@ public class FibHeap {
 
         // Once we remove the min, we must recurse down to reheapify
         int location = 0;
-        while (location < size) {
+        while (location < size / 2) {
             int leftVal = heap[(location + 1) * 2 - 1];
             int rightVal = heap[(location + 1) * 2];
-            int locToSwap = (location + 1) * 2 - 1;
+            int locToPull = (location + 1) * 2 - 1;
             if (leftVal > rightVal) {
-                locToSwap++;
+                locToPull++;
             }
-            // TODO: Finish here
+            int IDToPull = heap[locToPull] % 10000;
+
+            // Do the move
+            heap[location] = heap[locToPull];
+            locations[IDToPull] = location;
+
+            // Recurse
+            location = locToPull;
         }
+        // Make it bigger than anything else since at bottom
+        heap[location] = INFINITY * 10000 * 2;
         return minVal;
     }
 
