@@ -52,6 +52,7 @@ public class HQRobot extends BaseRobot {
                 coarseMap = new int[(rc.getMapHeight() / coarseness) + 1][(rc.getMapWidth() / coarseness) + 1];
                 for (int x = 0; x < (rc.getMapHeight() / coarseness) + 1; x++) {
                     for (int y = 0; y < (rc.getMapWidth() / coarseness) + 1; y++) {
+                        // TODO: add a cost here since it is not free to walk on roads
                         coarseMap[x][y] = 0;// coarseness;
                     }
                 }
@@ -100,6 +101,7 @@ public class HQRobot extends BaseRobot {
         catch (Exception e) {
             e.printStackTrace();
             System.out.println("HQ Exception");
+            rc.suicide();
         }
     }
 }

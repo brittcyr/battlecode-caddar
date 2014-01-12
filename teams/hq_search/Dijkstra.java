@@ -4,7 +4,6 @@ import battlecode.common.Clock;
 
 
 public class Dijkstra {
-    static int[][]     tentativeDistances = null;
     static int         width              = 0;
     static int         height             = 0;
     static boolean[][] visited            = null;
@@ -14,12 +13,13 @@ public class Dijkstra {
     static final int   UNSET              = 999999;
     static int[][]     grid               = null;
     static boolean[][] set                = null;
+    static int         iters       = 0;
     static FibHeap     distFibHeap        = null;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
+        iters = 0;
         height = _grid.length;
         width = _grid[0].length;
-        tentativeDistances = new int[height][width];
         visited = new boolean[height][width];
         previous = new int[height][width];
         set = new boolean[height][width];
@@ -30,13 +30,24 @@ public class Dijkstra {
         // Initialize tentative distances to infinity except zero at source
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < width; y++) {
-                tentativeDistances[y][x] = INFINITY;
                 previous[y][x] = UNSET;
                 set[y][x] = false;
             }
         }
-        tentativeDistances[start_y][start_x] = 0;
+        distFibHeap.decreaseKey(to_index(start_y, start_x), 0);
         return;
+    }
+
+    private static int to_index(int start_y, int start_x) {
+        return start_y * width + start_x;
+    }
+
+    private static int index_to_x(int index) {
+        return index % width;
+    }
+
+    private static int index_to_y(int index) {
+        return index / width;
     }
 
     public static void doDijkstra() {
@@ -49,23 +60,15 @@ public class Dijkstra {
             }
             bytes = Clock.getBytecodesLeft();
 
-            // TODO: Use a better priority queue for distance
             // Find the position with minimum distance
-            int best = INFINITY;
-            int bestX = 0;
-            int bestY = 0;
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    if ((tentativeDistances[y][x] <= best) && !set[y][x]) {
-                        best = tentativeDistances[y][x];
-                        bestX = x;
-                        bestY = y;
-                    }
-                }
-            }
+            int val_index = distFibHeap.extractMin();
+            int index = val_index % FibHeap.MAX_VERTS;
+            int val = val_index / FibHeap.MAX_VERTS;
+            int bestX = index_to_x(index);
+            int bestY = index_to_y(index);
             set[bestY][bestX] = true;
 
-            if (best == INFINITY) {
+            if (val == INFINITY) {
                 // This is the case where it is not one connected component
                 // Should not happen
                 return;
@@ -74,32 +77,27 @@ public class Dijkstra {
             // Iterated over all neighbors
             for (int x = bestX - 1; x <= bestX + 1; x++) {
                 for (int y = bestY - 1; y <= bestY + 1; y++) {
-                    if (x == bestX && y == bestY) {
+                    if (x < 0 || y < 0 || x >= width || y >= height || set[y][x]) {
                         continue;
                     }
-                    if (x < 0 || y < 0 || x >= width || y >= height) {
+                    if (x == bestX && y == bestY) {
                         continue;
                     }
 
                     // Here is where we are iterating over all neighbors
-                    int alt = tentativeDistances[bestY][bestX] + grid[y][x];
-                    if (alt < tentativeDistances[y][x]) {
+                    int alt = val + grid[y][x];
+                    if (alt < distFibHeap.getVal(to_index(y, x))) {
                         // Need to update
-                        tentativeDistances[y][x] = alt;
+                        distFibHeap.decreaseKey(to_index(y, x), alt);
                         previous[y][x] = toDir(bestX, bestY, x, y);
                     }
 
                 }
             }
-
-            // Detect if we are done
-            done = true;
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    if (set[y][x] == false)
-                        done = false;
-                }
+            if (iters >= width * height - 1) {
+                done = true;
             }
+            iters++;
         }
 
         Dijkstra.finished = true;
