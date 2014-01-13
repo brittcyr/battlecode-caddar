@@ -1,6 +1,8 @@
 package hq_search;
 
-import battlecode.common.*;
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
+import battlecode.common.RobotType;
 
 public abstract class BaseRobot {
     public final RobotController rc;
@@ -9,14 +11,14 @@ public abstract class BaseRobot {
         rc = myRC;
     }
 
-    public void loop() {
+    public void loop() throws GameActionException {
         if (rc.isActive() || rc.getType() == RobotType.HQ) {
             run();
         }
         rc.yield();
     }
 
-    public void run() {
+    public void run() throws GameActionException {
         // pass
     }
 
