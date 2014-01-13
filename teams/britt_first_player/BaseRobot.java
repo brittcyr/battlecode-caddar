@@ -1,6 +1,7 @@
 package britt_first_player;
 
-import battlecode.common.*;
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
 
 public abstract class BaseRobot {
     public final RobotController rc;
@@ -9,14 +10,14 @@ public abstract class BaseRobot {
         rc = myRC;
     }
 
-    public void loop() {
+    public void loop() throws GameActionException {
         if (rc.isActive()) {
             run();
         }
         rc.yield();
     }
 
-    public void run() {
+    public void run() throws GameActionException {
         // pass
     }
 

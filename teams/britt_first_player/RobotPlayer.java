@@ -2,11 +2,7 @@ package britt_first_player;
 
 import java.util.Random;
 
-import battlecode.common.Direction;
-import battlecode.common.Robot;
 import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.*;
 
 public class RobotPlayer {
 	static Random rand;

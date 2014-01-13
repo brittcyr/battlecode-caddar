@@ -13,16 +13,16 @@ public class PastrRobot extends BaseRobot {
         // TODO Auto-generated constructor stub
     }
 
-    public void run() {
+    public void run() throws GameActionException {
         if (rc.getHealth() <= 10.5 * rc.senseNearbyGameObjects(Robot.class, 5, rc.getTeam()
                 .opponent()).length) {
-            rc.suicide();
+            rc.selfDestruct();
         }
         if (lastHealth > rc.getHealth() * 2.01) {
-            rc.suicide();
+            rc.selfDestruct();
         }
         if (rc.getHealth() < 11.0) {
-            rc.suicide();
+            rc.selfDestruct();
         }
         lastHealth = rc.getHealth();
 
