@@ -50,10 +50,14 @@ public class GeneralNavigation {
         int coarseX = GeneralNavigation.detectMyCoarseX(rc);
         int coarseY = GeneralNavigation.detectMyCoarseY(rc);
         int directionNum = Dijkstra.previous[coarseY][coarseX];
+
+        // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
             BugNavigator.navigateTo(rc, target);
             return;
         }
+
+        // If we have at least one more direction to go, then BugNavigate to waypoint
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
         BugNavigator.navigateTo(rc, waypoint);

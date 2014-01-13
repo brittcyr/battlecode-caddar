@@ -18,7 +18,6 @@ public class CowboyRobot extends BaseRobot {
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
         rand = new Random();
-        // TODO Auto-generated constructor stub
     }
 
     public void run() {
