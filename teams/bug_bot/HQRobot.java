@@ -13,7 +13,6 @@ public class HQRobot extends BaseRobot {
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
-        // TODO Auto-generated constructor stub
     }
 
     public void run() {

@@ -7,29 +7,49 @@ public class FibHeap {
     static final int INFINITY  = 99999;
     static final int MAX_VERTS = 1000;
 
+    /*
+     * Structure of heap: heap is implemented as an array of longs.
+     * 
+     * Each element of the heap contains the value and id. It is stored as VALUE * MAX_VERTS + ID
+     * That way they are separated into high bits for VALUE and low bits for ID which enables
+     * sorting
+     * 
+     * 
+     * The location array is indexed by the ID of an element and the value is the location in the
+     * heap. This provides O(1) access into the heap for get and set operations
+     */
+
     public FibHeap(int _size) {
+
+        // Make the size of the heap into the first power of 2 - 1 that is bigger than we need
         int guess = 1;
-        while (guess - 1 < _size) {
+        while (guess - 1 <= _size) {
             guess *= 2;
         }
         size = guess - 1;
+
+        // Instantiate the heap and locations array
         heap = new long[size];
         locations = new int[size];
         for (int x = size - 1; x >= 0; x--) {
+            // Set all values in the heap to be INFINITY and locations are trivial
             heap[x] = INFINITY * MAX_VERTS + x;
             locations[x] = x;
         }
     }
 
+    // Return the high bits containing the VALUE
     public int getVal(int ID) {
         int loc = locations[ID];
         return ((int) heap[loc]) / MAX_VERTS;
     }
 
-    public int both(int ID) {
-        int loc = locations[ID];
-        return (int) heap[loc];
-    }
+    /*
+     * To decrease a value in the heap, we use the location array to find the item Then, once we
+     * have it, we can reduce and reheapify. To heapify, we just recurse up to the root or until we
+     * can stop with heaping. Each of these is fast because O(1) access into heap. This gives an
+     * O(log n) decreaseKey
+     */
 
     public void decreaseKey(int ID, int newVal) {
         int location = locations[ID];
@@ -52,6 +72,10 @@ public class FibHeap {
         }
     }
 
+    /*
+     * To extract min, just pop the top off the heap and reheapify while maintaining the location
+     * array. This runs in O(log n)
+     */
     public int extractMin() {
         int minID = ((int) heap[0]) % MAX_VERTS;
 

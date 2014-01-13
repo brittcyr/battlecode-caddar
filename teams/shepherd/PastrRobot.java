@@ -7,7 +7,6 @@ public class PastrRobot extends BaseRobot {
 
     public PastrRobot(RobotController myRC) throws GameActionException {
         super(myRC);
-        // TODO Auto-generated constructor stub
     }
 
     public void run() {
@@ -16,7 +15,6 @@ public class PastrRobot extends BaseRobot {
                 rc.selfDestruct();
             }
             catch (GameActionException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

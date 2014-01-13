@@ -10,7 +10,6 @@ public class PastrRobot extends BaseRobot {
     public PastrRobot(RobotController myRC) throws GameActionException {
         super(myRC);
         lastHealth = myRC.getHealth();
-        // TODO Auto-generated constructor stub
     }
 
     public void run() throws GameActionException {

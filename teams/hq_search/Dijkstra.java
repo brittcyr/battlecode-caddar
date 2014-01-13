@@ -67,6 +67,8 @@ public class Dijkstra {
                         continue;
                     }
 
+                    // TODO: Add 1.4 penalty for diagonal moves
+
                     // Here is where we are iterating over all neighbors
                     int alt = val + grid[y][x];
                     int i = y * width + x;
@@ -78,10 +80,11 @@ public class Dijkstra {
 
                 }
             }
+
+            iters++;
             if (iters >= height * width) {
                 break;
             }
-            iters++;
         }
 
         Dijkstra.finished = true;
@@ -97,11 +100,11 @@ public class Dijkstra {
             case 1:
                 switch (diffY) {
                     case -1:
-                        return 7;
+                        return 5;
                     case 0:
                         return 6;
                     case 1:
-                        return 5;
+                        return 7;
                 }
             case 0:
                 switch (diffY) {
