@@ -9,20 +9,36 @@ import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
+import bug_bot.rpc.Clans;
 
 public class CowboyRobot extends BaseRobot {
-    static Random      rand;
-    static Direction[] directions = { Direction.NORTH, Direction.NORTH_EAST, Direction.EAST,
+    static Random             rand;
+    static Direction[]        directions = { Direction.NORTH, Direction.NORTH_EAST, Direction.EAST,
             Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST,
-            Direction.NORTH_WEST };
+            Direction.NORTH_WEST        };
+    public static int         clan       = -1;
+    public static MapLocation waypoint;
 
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
         rand = new Random(myRC.getRobot().getID());
+
+        for (int i = 0; i < Clans.numClans(); i++) {
+            if (Clans.getSize(i) < 5) {
+                // TODO: Other housekeeping
+                Clans.setMembership(myRC, i);
+                break;
+            }
+        }
+
+        waypoint = Clans.getWaypoint(clan);
     }
 
     public void run() {
+
         try {
+            waypoint = Clans.getWaypoint(clan);
+
             // Attack if possible prioritize attacking the enemy robots first
             Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 10, rc.getTeam()
                     .opponent());
@@ -56,20 +72,10 @@ public class CowboyRobot extends BaseRobot {
                 rc.construct(RobotType.PASTR);
                 return;
             }
-
-            int t = rc.readBroadcast(0);
-            if (t == 99999) {
-                Direction moveDirection = directions[rand.nextInt(8)];
-                if (rc.canMove(moveDirection)) {
-                    rc.move(moveDirection);
-                }
-                return;
-            }
-
-            MapLocation target = new MapLocation(t / 100, t % 100);
+            System.out.println(waypoint.toString());
 
             // Otherwise try to move to the target
-            BugNavigator.navigateTo(rc, target);
+            BugNavigator.navigateTo(rc, waypoint);
 
         }
         catch (Exception e) {

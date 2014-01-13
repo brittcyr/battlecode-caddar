@@ -8,23 +8,17 @@ import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
+import bug_bot.rpc.Clans;
 
 public class HQRobot extends BaseRobot {
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
+        Clans.setWaypoint(0, rc.senseHQLocation());
     }
 
     public void run() {
         try {
-            if (Clock.getRoundNum() > 100) {
-                MapLocation enemy = rc.senseEnemyHQLocation();
-                int target = 100 * enemy.x + enemy.y;
-                rc.broadcast(0, target);
-            }
-            else {
-                rc.broadcast(0, 99999);
-            }
             Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, rc.getTeam()
                     .opponent());
             if (nearbyEnemies.length > 0) {

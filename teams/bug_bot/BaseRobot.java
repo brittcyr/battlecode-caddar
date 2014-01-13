@@ -1,6 +1,7 @@
 package bug_bot;
 
 import battlecode.common.GameActionException;
+import bug_bot.rpc.Radio;
 import battlecode.common.RobotController;
 
 public abstract class BaseRobot {
@@ -8,6 +9,7 @@ public abstract class BaseRobot {
 
     public BaseRobot(RobotController myRC) throws GameActionException {
         rc = myRC;
+        Radio.setRobotController(rc);
     }
 
     public void loop() throws GameActionException {
