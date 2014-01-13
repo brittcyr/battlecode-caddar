@@ -26,7 +26,7 @@ public class HQRobot extends BaseRobot {
             boolean doSpawn = false;
             Direction toEnemy = null;
             // Check if a robot is spawnable and spawn one if it is
-            if (rc.isActive() && rc.senseRobotCount() < 25) {
+            if (rc.isActive() && rc.senseRobotCount() < 1) {
                 toEnemy = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
                 if (rc.senseObjectAtLocation(rc.getLocation().add(toEnemy)) == null) {
                     doSpawn = true;
@@ -69,7 +69,7 @@ public class HQRobot extends BaseRobot {
 
             // Run a graph search on coarseMap. with the cost of each edge being cost of target
             if (!done && coarseMap != null) {
-                Dijkstra.doDijkstra();
+                // Dijkstra.doDijkstra();
                 done = Dijkstra.finished;
             }
 

@@ -1,5 +1,7 @@
 package hq_search;
 
+import java.util.Arrays;
+
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -12,7 +14,7 @@ public class CowboyRobot extends BaseRobot {
             Direction.NORTH_WEST     };
     public TerrainTile[][] gameBoard;
     public int             scanRow    = 0;
-    public int             coarseness = 8;
+    public int             coarseness = 1;
     public int[][]         coarseMap  = null;
     public boolean         done       = false;
 
@@ -38,20 +40,25 @@ public class CowboyRobot extends BaseRobot {
 
             // Create new map for given coarseness
             if (coarseMap == null && scanRow == rc.getMapHeight()) {
-                coarseMap = new int[(rc.getMapHeight() / coarseness) + 1][(rc.getMapWidth() / coarseness) + 1];
-                for (int x = 0; x < (rc.getMapHeight() / coarseness) + 1; x++) {
-                    for (int y = 0; y < (rc.getMapWidth() / coarseness) + 1; y++) {
-                        coarseMap[x][y] = 3 * coarseness * coarseness;
+                int height = (int) Math.ceil((double) rc.getMapHeight() / coarseness);
+                int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
+                coarseMap = new int[height][width];
+                for (int x = 0; x < height; x++) {
+                    for (int y = 0; y < width; y++) {
+                        coarseMap[x][y] = 0;
                     }
                 }
                 // Populate the coarseMap
                 for (int x = 0; x < rc.getMapHeight(); x++) {
                     for (int y = 0; y < rc.getMapWidth(); y++) {
                         if (gameBoard[x][y] == TerrainTile.VOID) {
-                            coarseMap[x / coarseness][y / coarseness] += 10;
+                            coarseMap[x / coarseness][y / coarseness] += 1000;
                         }
                         if (gameBoard[x][y] == TerrainTile.ROAD) {
-                            coarseMap[x / coarseness][y / coarseness] -= 1;
+                            coarseMap[x / coarseness][y / coarseness] += 7;
+                        }
+                        if (gameBoard[x][y] == TerrainTile.NORMAL) {
+                            coarseMap[x / coarseness][y / coarseness] += 10;
                         }
                     }
                 }
@@ -67,17 +74,18 @@ public class CowboyRobot extends BaseRobot {
             }
 
             if (done) {
+                // System.out.println(Arrays.toString(Dijkstra.visited[6]));
                 // Do smart navigation to enemy
                 int coarseX = GeneralNavigation.detectMyCoarseX(rc, coarseness);
                 int coarseY = GeneralNavigation.detectMyCoarseY(rc, coarseness);
                 int directionNum = Dijkstra.previous[coarseY][coarseX];
                 if (directionNum == Dijkstra.UNSET) {
-                    BugNavigator.navigateTo(rc, rc.senseEnemyHQLocation());
+                    // BugNavigator.navigateTo(rc, rc.senseEnemyHQLocation());
                     return;
                 }
                 Direction toWaypoint = directions[directionNum];
                 MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
-                BugNavigator.navigateTo(rc, waypoint);
+                // BugNavigator.navigateTo(rc, waypoint);
             }
 
         }

@@ -4,8 +4,8 @@ public class FibHeap {
     int              size;
     long[]           heap;
     int[]            locations;
-    static final int INFINITY  = 999;
-    static final int MAX_VERTS = 128;
+    static final int INFINITY  = 99999;
+    static final int MAX_VERTS = 1000;
 
     public FibHeap(int _size) {
         int guess = 1;
@@ -23,6 +23,11 @@ public class FibHeap {
 
     public int getVal(int ID) {
         int loc = locations[ID];
+        return ((int) heap[loc]) / MAX_VERTS;
+    }
+
+    public int both(int ID) {
+        int loc = locations[ID];
         return (int) heap[loc];
     }
 
@@ -30,13 +35,13 @@ public class FibHeap {
         int location = locations[ID];
 
         // Update the value in the heap
-        int newItem = ID + MAX_VERTS * newVal;
+        int newItem = ID + (MAX_VERTS * newVal);
         heap[location] = newItem;
 
         // Heapify by going up the tree
         while (location > 0 && newItem < heap[(location - 1) / 2]) {
             // Update the location table and do swap
-            int otherID = (int) heap[(location - 1) / 2] % MAX_VERTS;
+            int otherID = ((int) heap[(location - 1) / 2]) % MAX_VERTS;
             locations[ID] = (location - 1) / 2;
             locations[otherID] = location;
             heap[location] = heap[(location - 1) / 2];
@@ -48,7 +53,7 @@ public class FibHeap {
     }
 
     public int extractMin() {
-        int minID = (int) heap[0] % MAX_VERTS;
+        int minID = ((int) heap[0]) % MAX_VERTS;
 
         // Once we remove the min, we must recurse down to reheapify
         int location = 0;
@@ -59,7 +64,7 @@ public class FibHeap {
             if (leftVal < rightVal) {
                 locToPull--;
             }
-            int IDToPull = (int) heap[locToPull] % MAX_VERTS;
+            int IDToPull = ((int) heap[locToPull]) % MAX_VERTS;
 
             // Do the move
             heap[location] = heap[locToPull];
@@ -72,5 +77,4 @@ public class FibHeap {
         heap[location] = INFINITY * MAX_VERTS * 2;
         return minID;
     }
-
 }

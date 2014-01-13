@@ -24,7 +24,7 @@ public class Dijkstra {
         finished = false;
         grid = _grid;
         distFibHeap = new FibHeap(height * width);
-        iters = height * width * -1 + 2;
+        iters = 0;
 
         // Initialize tentative distances to infinity except zero at source
         for (int[] p : previous) {
@@ -78,7 +78,7 @@ public class Dijkstra {
 
                 }
             }
-            if (iters >= 0) {
+            if (iters >= height * width) {
                 break;
             }
             iters++;
