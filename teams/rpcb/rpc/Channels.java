@@ -37,10 +37,13 @@ package rpcb.rpc;
 
 public class Channels {
 
+    // Used to map large game element IDs (e.g. rc.getRobot().getId()) to smaller addr space.
+    public static final int MAX_GAME_OBJS         = 1009;                            // 1009 prime.
+
     // Clan information.
     public static final int CLAN_ADDR_SPACE_START = 60000;
-    public static final int CLAN_MEMBERSHIPS      = CLAN_ADDR_SPACE_START;
-    public static final int MAX_GAME_OBJS         = 1009;                 // 1009 prime.
+    public static final int NUM_CLANS             = CLAN_ADDR_SPACE_START;
+    public static final int CLAN_MEMBERSHIPS      = CLAN_ADDR_SPACE_START + 1;
     public static final int CLAN_SIZES            = CLAN_MEMBERSHIPS + MAX_GAME_OBJS;
     public static final int CLAN_WAYPOINTS        = CLAN_SIZES + MAX_GAME_OBJS;
 

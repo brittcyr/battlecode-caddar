@@ -10,6 +10,10 @@ import battlecode.common.RobotController;
  */
 public class Clans {
 
+    public static int numClans() throws GameActionException {
+        return Radio.getData(Channels.NUM_CLANS, 1)[0];
+    }
+
     public static int getMembership(RobotController rc) throws GameActionException {
         int uid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
         return Radio.getData(Channels.CLAN_MEMBERSHIPS + uid, 1)[0];
