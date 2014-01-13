@@ -68,16 +68,14 @@ public class CowboyRobot extends BaseRobot {
 
     public void run() {
         try {
-
-            // Run a graph search on coarseMap. with the cost of each edge being cost of target
-            if (!done) {
+            MapLocation target = rc.senseEnemyHQLocation();
+            GeneralNavigation.setupNav(rc, coarseness, target);
+            if (!Dijkstra.finished) {
+                BugNavigator.navigateTo(rc, target);
+                // Run a graph search on coarseMap. with the cost of each edge being cost of target
                 Dijkstra.doDijkstra();
-                done = Dijkstra.finished;
             }
-
-            if (done) {
-                // TODO: Fix the setup nav
-                GeneralNavigation.setupNav(rc, coarseness, rc.senseEnemyHQLocation());
+            else {
                 GeneralNavigation.smartNav(rc);
             }
 

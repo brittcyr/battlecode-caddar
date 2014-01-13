@@ -15,6 +15,8 @@ public class BugNavigator {
     static int         direction_to_turn           = 1;
     static boolean     turned                      = false;
 
+    // TODO: Fix looping and create a bugging reset
+
     public static void navigateTo(RobotController rc, MapLocation target) {
         try {
             turned &= bugging;

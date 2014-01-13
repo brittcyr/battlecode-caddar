@@ -16,7 +16,7 @@ public class GeneralNavigation {
         coarseness = _coarseness;
         // TODO: Force Dijkstra to have the correct previous mapping with RPC
 
-        // Later this will be to pull it down from RPC, now it is do on your own
+        // Later this will be to pull it down from RPC, now it is do on your own in CowboyRobot
 
     }
 
