@@ -22,21 +22,25 @@ public class CowboyRobot extends BaseRobot {
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
         rand = new Random(myRC.getRobot().getID());
-
-        for (int i = 0; i < Clans.numClans(); i++) {
-            if (Clans.getSize(i) < 5) {
-                // TODO: Other housekeeping
-                Clans.setMembership(myRC, i);
-                break;
-            }
-        }
-
-        waypoint = Clans.getWaypoint(clan);
     }
 
     public void run() {
 
         try {
+            // Join a clan.
+            if (clan == -1) {
+                for (int i = 0; i < Clans.getNumClans() + 1; i++) {
+                    if (Clans.getSize(i) < 5) {
+                        clan = i;
+                        Clans.setMembership(rc, i);
+                        Clans.setSize(i, Clans.getSize(i) + 1);
+                        if (i == Clans.getNumClans())
+                            Clans.setNumClans(i + 1);
+                        break;
+                    }
+                }
+            }
+
             waypoint = Clans.getWaypoint(clan);
 
             // Attack if possible prioritize attacking the enemy robots first
@@ -72,11 +76,11 @@ public class CowboyRobot extends BaseRobot {
                 rc.construct(RobotType.PASTR);
                 return;
             }
-            System.out.println(waypoint.toString());
 
             // Otherwise try to move to the target
             BugNavigator.navigateTo(rc, waypoint);
 
+            return;
         }
         catch (Exception e) {
             e.printStackTrace();
