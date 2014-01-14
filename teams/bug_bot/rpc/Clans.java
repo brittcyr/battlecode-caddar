@@ -10,8 +10,12 @@ import battlecode.common.RobotController;
  */
 public class Clans {
 
-    public static int numClans() throws GameActionException {
+    public static int getNumClans() throws GameActionException {
         return Radio.getData(Channels.NUM_CLANS, 1)[0];
+    }
+
+    public static void setNumClans(int numClans) throws GameActionException {
+        Radio.putData(Channels.NUM_CLANS, new int[] { numClans });
     }
 
     public static int getMembership(RobotController rc) throws GameActionException {
