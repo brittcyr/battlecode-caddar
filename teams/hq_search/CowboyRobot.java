@@ -26,13 +26,11 @@ public class CowboyRobot extends BaseRobot {
         // Scan the grid
         int height = rc.getMapHeight();
         int width = rc.getMapWidth();
-        int scanRow = 0;
         gameBoard = new TerrainTile[width][height];
-        while (scanRow < height) {
-            for (int x = 0; x < width; x++) {
-                gameBoard[x][scanRow] = rc.senseTerrainTile(new MapLocation(scanRow, x));
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = width - 1; x >= 0; x--) {
+                gameBoard[x][y] = rc.senseTerrainTile(new MapLocation(y, x));
             }
-            scanRow++;
         }
     }
 
