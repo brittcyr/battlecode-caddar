@@ -65,11 +65,11 @@ public class Dijkstra {
 
             if (left >= 0) {
                 if (up >= 0 && !visited[up][left]) {
-                    int alt = val + grid[up][left];
+                    int alt = val + (int) ((double) grid[up][left] * 1.4);
                     int i = up * width + left;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
-                        previous[up][left] = toDir(bestX, bestY, left, up);
+                        previous[up][left] = 3;
                     }
                 }
                 if (!visited[bestY][left]) {
@@ -77,15 +77,15 @@ public class Dijkstra {
                     int i = bestY * width + left;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
-                        previous[bestY][left] = toDir(bestX, bestY, left, bestY);
+                        previous[bestY][left] = 2;
                     }
                 }
                 if (down < height && !visited[down][left]) {
-                    int alt = val + grid[down][left];
+                    int alt = val + (int) ((double) grid[down][left] * 1.4);
                     int i = down * width + left;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
-                        previous[down][left] = toDir(bestX, bestY, left, down);
+                        previous[down][left] = 1;
                     }
                 }
             }
@@ -95,7 +95,7 @@ public class Dijkstra {
                 int i = up * width + bestX;
                 if (alt < distFibHeap.getVal(i)) {
                     distFibHeap.decreaseKey(i, alt);
-                    previous[up][bestX] = toDir(bestX, bestY, bestX, up);
+                    previous[up][bestX] = 4;
                 }
             }
             if (down < height && !visited[down][bestX]) {
@@ -103,17 +103,17 @@ public class Dijkstra {
                 int i = down * width + bestX;
                 if (alt < distFibHeap.getVal(i)) {
                     distFibHeap.decreaseKey(i, alt);
-                    previous[down][bestX] = toDir(bestX, bestY, bestX, down);
+                    previous[down][bestX] = 0;
                 }
             }
 
             if (right < width) {
                 if (up >= 0 && !visited[up][right]) {
-                    int alt = val + grid[up][right];
+                    int alt = val + (int) ((double) grid[up][right] * 1.4);
                     int i = up * width + right;
                     if (alt < distFibHeap.getVal(i)) { // Need to update
                         distFibHeap.decreaseKey(i, alt);
-                        previous[up][right] = toDir(bestX, bestY, right, up);
+                        previous[up][right] = 5;
                     }
                 }
                 if (!visited[bestY][right]) {
@@ -121,15 +121,15 @@ public class Dijkstra {
                     int i = bestY * width + right;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
-                        previous[bestY][right] = toDir(bestX, bestY, right, bestY);
+                        previous[bestY][right] = 6;
                     }
                 }
                 if (down < height && !visited[down][right]) {
-                    int alt = val + grid[down][right];
+                    int alt = val + (int) ((double) grid[down][right] * 1.4);
                     int i = down * width + right;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
-                        previous[down][right] = toDir(bestX, bestY, right, down);
+                        previous[down][right] = 7;
                     }
                 }
             }
@@ -141,42 +141,5 @@ public class Dijkstra {
         }
 
         Dijkstra.finished = true;
-    }
-
-    private static int toDir(int endX, int endY, int startX, int startY) {
-        int diffX = startX - endX;
-        int diffY = startY - endY;
-
-        // Match directions which starts at north and goes clockwise
-
-        switch (diffX) {
-            case 1:
-                switch (diffY) {
-                    case -1:
-                        return 5;
-                    case 0:
-                        return 6;
-                    case 1:
-                        return 7;
-                }
-            case 0:
-                switch (diffY) {
-                    case -1:
-                        return 4;
-                    case 1:
-                        return 0;
-                }
-            case -1:
-                switch (diffY) {
-                    case -1:
-                        return 3;
-                    case 0:
-                        return 2;
-                    case 1:
-                        return 1;
-                }
-        }
-
-        return UNSET;
     }
 }

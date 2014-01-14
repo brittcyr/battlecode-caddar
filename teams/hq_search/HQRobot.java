@@ -2,6 +2,7 @@ package hq_search;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
+import battlecode.common.GameConstants;
 import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
 
@@ -21,7 +22,7 @@ public class HQRobot extends BaseRobot {
             boolean doSpawn = false;
             Direction toEnemy = null;
             // Check if a robot is spawnable and spawn one if it is
-            if (rc.isActive() && rc.senseRobotCount() < 1) {// GameConstants.MAX_ROBOTS) {
+            if (rc.isActive() && rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
                 toEnemy = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
                 if (rc.senseObjectAtLocation(rc.getLocation().add(toEnemy)) == null) {
                     doSpawn = true;
