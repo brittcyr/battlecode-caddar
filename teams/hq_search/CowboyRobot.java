@@ -43,9 +43,9 @@ public class CowboyRobot extends BaseRobot {
         int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
         coarseMap = new int[height][width];
         // Populate the coarseMap
-        for (int y = height - 1; y >= 0; y--) {
+        for (int y = 0; y < rc.getMapHeight(); y++) {
             int coarseY = y / coarseness;
-            for (int x = width - 1; x >= 0; x--) {
+            for (int x = 0; x < rc.getMapWidth(); x++) {
                 int coarseX = x / coarseness;
                 TerrainTile tile = gameBoard[y][x];
                 if (tile == TerrainTile.NORMAL) {
@@ -70,7 +70,7 @@ public class CowboyRobot extends BaseRobot {
 
             // TODO: Dijkstra.finished should be Dijkstra.finished || RPC.loaded
             if (!Dijkstra.finished) {
-                BugNavigator.navigateTo(rc, target);
+                // BugNavigator.navigateTo(rc, target);
                 // Run a graph search on coarseMap. with the cost of each edge being cost of target
                 Dijkstra.doDijkstra();
             }
