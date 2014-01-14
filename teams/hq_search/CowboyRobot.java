@@ -38,33 +38,33 @@ public class CowboyRobot extends BaseRobot {
 
     public void setupCoarseMap() {
         // Create new map for given coarseness
-        if (coarseMap == null) {
-            int height = (int) Math.ceil((double) rc.getMapHeight() / coarseness);
-            int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
-            coarseMap = new int[height][width];
-            for (int x = 0; x < height; x++) {
-                for (int y = 0; y < width; y++) {
-                    coarseMap[x][y] = 0;
+        int height = (int) Math.ceil((double) rc.getMapHeight() / coarseness);
+        int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
+        coarseMap = new int[height][width];
+        // Populate the coarseMap
+        for (int y = height - 1; y >= 0; y--) {
+            int coarseY = y / coarseness;
+            for (int x = width - 1; x >= 0; x--) {
+                int coarseX = x / coarseness;
+                TerrainTile tile = gameBoard[y][x];
+                if (tile == TerrainTile.NORMAL) {
+                    coarseMap[coarseY][coarseX] += 10;
+                }
+                else {
+                    if (tile == TerrainTile.ROAD) {
+                        coarseMap[coarseY][coarseX] += 7;
+                    }
+                    else {
+                        // Then it must be a void
+                        coarseMap[coarseY][coarseX] += 1000;
+                    }
                 }
             }
-            // Populate the coarseMap
-            for (int x = 0; x < rc.getMapHeight(); x++) {
-                for (int y = 0; y < rc.getMapWidth(); y++) {
-                    if (gameBoard[x][y] == TerrainTile.VOID) {
-                        coarseMap[x / coarseness][y / coarseness] += 1000;
-                    }
-                    if (gameBoard[x][y] == TerrainTile.ROAD) {
-                        coarseMap[x / coarseness][y / coarseness] += 7;
-                    }
-                    if (gameBoard[x][y] == TerrainTile.NORMAL) {
-                        coarseMap[x / coarseness][y / coarseness] += 10;
-                    }
-                }
-            }
-            int startX = rc.senseEnemyHQLocation().x / coarseness;
-            int startY = rc.senseEnemyHQLocation().y / coarseness;
-            Dijkstra.setupDijkstra(coarseMap, startX, startY);
         }
+        MapLocation target = rc.senseEnemyHQLocation();
+        int startX = target.x / coarseness;
+        int startY = target.y / coarseness;
+        Dijkstra.setupDijkstra(coarseMap, startX, startY);
     }
 
     public void run() {
