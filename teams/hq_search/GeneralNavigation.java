@@ -1,5 +1,6 @@
 package hq_search;
 
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
@@ -60,14 +61,13 @@ public class GeneralNavigation {
         }
 
         // If we have at least one more direction to go, then BugNavigate to waypoint
+        // TODO: If the waypoint is not very far away, we should use BFS
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
         if (!waypoint.equals(lastWaypoint)) {
             BugNavigator.bugReset();
             lastWaypoint = waypoint;
         }
-        // TODO: If the waypoint is not very far away, we should use BFS
-        // TODO: Once we switch out of bug navigating, we should bug reset
         BugNavigator.navigateTo(rc, waypoint);
     }
 

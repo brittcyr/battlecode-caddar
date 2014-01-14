@@ -1,5 +1,6 @@
 package hq_search;
 
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
@@ -27,21 +28,21 @@ public class BugNavigator {
     public static void navigateTo(RobotController rc, MapLocation target) {
         try {
             turned &= bugging;
-            Direction toTarget = rc.getLocation().directionTo(target);
+            MapLocation myLoc = rc.getLocation();
+            Direction toTarget = myLoc.directionTo(target);
             // If we are free from a wall
             if (!bugging) {
                 if (rc.canMove(toTarget)) {
                     rc.sneak(toTarget);
                     return;
                 }
-                last_wall = rc.getLocation().add(toTarget);
-                dist_to_target_at_bug_start = rc.getLocation().distanceSquaredTo(target);
+                last_wall = myLoc.add(toTarget);
+                dist_to_target_at_bug_start = myLoc.distanceSquaredTo(target);
 
                 double dist_plus = 9999;
                 double dist_minus = 9999;
                 for (int x = 1; x < 4; x++) {
-                    MapLocation possible = rc.getLocation().add(
-                            directions[(toTarget.ordinal() + x + 8) % 8]);
+                    MapLocation possible = myLoc.add(directions[(toTarget.ordinal() + x + 8) % 8]);
                     TerrainTile tile = rc.senseTerrainTile(possible);
                     if (tile == TerrainTile.NORMAL || tile == TerrainTile.ROAD) {
                         dist_plus = possible.distanceSquaredTo(target);
@@ -49,8 +50,7 @@ public class BugNavigator {
                     }
                 }
                 for (int x = 1; x < 4; x++) {
-                    MapLocation possible = rc.getLocation().add(
-                            directions[(toTarget.ordinal() - x + 8) % 8]);
+                    MapLocation possible = myLoc.add(directions[(toTarget.ordinal() - x + 8) % 8]);
                     TerrainTile tile = rc.senseTerrainTile(possible);
                     if (tile == TerrainTile.NORMAL || tile == TerrainTile.ROAD) {
                         dist_minus = possible.distanceSquaredTo(target);
@@ -64,7 +64,7 @@ public class BugNavigator {
             // Check if we should stop following wall
             if (bugging) {
                 // if we are closer than when we started
-                if (rc.getLocation().distanceSquaredTo(target) < dist_to_target_at_bug_start) {
+                if (myLoc.distanceSquaredTo(target) < dist_to_target_at_bug_start) {
                     if (rc.canMove(toTarget)) {
                         bugging = false;
                         // Call it again with navigating not in bugging mode
@@ -76,7 +76,7 @@ public class BugNavigator {
                 // Take the direction to wall and add one until valid terrain, then move that way
                 MapLocation next_square = null;
                 for (int x = 1; x < 8; x++) {
-                    Direction to_check = rc.getLocation().directionTo(last_wall);
+                    Direction to_check = myLoc.directionTo(last_wall);
                     next_square = rc.getLocation().add(
                             directions[(to_check.ordinal() + 1 * direction_to_turn + 8) % 8]);
                     if (rc.senseTerrainTile(next_square) == TerrainTile.VOID
@@ -92,7 +92,7 @@ public class BugNavigator {
                         }
                     }
                 }
-                Direction toNextSquare = rc.getLocation().directionTo(next_square);
+                Direction toNextSquare = myLoc.directionTo(next_square);
                 if (toNextSquare.opposite().equals(toTarget) && !turned) {
                     // TODO: Check if we have teammates nearby and tell to turn also
                     MapLocation possibleNextWall = last_wall;
