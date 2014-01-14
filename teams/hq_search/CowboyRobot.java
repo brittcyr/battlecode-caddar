@@ -1,5 +1,6 @@
 package hq_search;
 
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -73,11 +74,13 @@ public class CowboyRobot extends BaseRobot {
 
             // TODO: Dijkstra.finished should be Dijkstra.finished || RPC.loaded
             if (!Dijkstra.finished) {
-                BugNavigator.navigateTo(rc, target);
+                // BugNavigator.navigateTo(rc, target);
                 // Run a graph search on coarseMap. with the cost of each edge being cost of target
                 Dijkstra.doDijkstra();
             }
             else {
+                System.out.println(Clock.getRoundNum());
+                rc.selfDestruct();
                 GeneralNavigation.smartNav(rc);
             }
 

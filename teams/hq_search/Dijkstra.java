@@ -58,36 +58,79 @@ public class Dijkstra {
             visited[bestY][bestX] = true;
 
             // Iterated over all neighbors
-            /*
-             * TODO: change to manually iterate over all directions int left = bestX - 1; int right
-             * = bestX + 1; int up = bestY - 1; int down = bestY + 1;
-             * 
-             * if (left > 0) { if (up > 0 && !visited[left][up]) { int alt = val + grid[up][left];
-             * int i = up * width + left; if (alt < distFibHeap.getVal(i)) { // Need to update
-             * distFibHeap.decreaseKey(i, alt); previous[up][left] = toDir(bestX, bestY, left, up);
-             * } } }
-             */
+            int left = bestX - 1;
+            int right = bestX + 1;
+            int up = bestY - 1;
+            int down = bestY + 1;
 
-            for (int x = bestX - 1; x <= bestX + 1; x++) {
-                if (x < 0 || x >= width) {
-                    continue;
-                }
-                for (int y = bestY - 1; y <= bestY + 1; y++) {
-                    if (y < 0 || y >= height || visited[y][x] || (x == bestX && y == bestY)) {
-                        continue;
-                    }
-
-                    // TODO: Add 1.4 penalty for diagonal moves
-
-                    // Here is where we are iterating over all neighbors
-                    int alt = val + grid[y][x];
-                    int i = y * width + x;
+            if (left >= 0) {
+                if (up >= 0 && !visited[up][left]) {
+                    int alt = val + grid[up][left];
+                    int i = up * width + left;
                     if (alt < distFibHeap.getVal(i)) {
-                        // Need to update
                         distFibHeap.decreaseKey(i, alt);
-                        previous[y][x] = toDir(bestX, bestY, x, y);
+                        previous[up][left] = toDir(bestX, bestY, left, up);
                     }
+                }
+                if (!visited[bestY][left]) {
+                    int alt = val + grid[bestY][left];
+                    int i = bestY * width + left;
+                    if (alt < distFibHeap.getVal(i)) {
+                        distFibHeap.decreaseKey(i, alt);
+                        previous[bestY][left] = toDir(bestX, bestY, left, bestY);
+                    }
+                }
+                if (down < height && !visited[down][left]) {
+                    int alt = val + grid[down][left];
+                    int i = down * width + left;
+                    if (alt < distFibHeap.getVal(i)) {
+                        distFibHeap.decreaseKey(i, alt);
+                        previous[down][left] = toDir(bestX, bestY, left, down);
+                    }
+                }
+            }
 
+            if (up >= 0 && !visited[up][bestX]) {
+                int alt = val + grid[up][bestX];
+                int i = up * width + bestX;
+                if (alt < distFibHeap.getVal(i)) {
+                    distFibHeap.decreaseKey(i, alt);
+                    previous[up][bestX] = toDir(bestX, bestY, bestX, up);
+                }
+            }
+            if (down < height && !visited[down][bestX]) {
+                int alt = val + grid[down][bestX];
+                int i = down * width + bestX;
+                if (alt < distFibHeap.getVal(i)) {
+                    distFibHeap.decreaseKey(i, alt);
+                    previous[down][bestX] = toDir(bestX, bestY, bestX, down);
+                }
+            }
+
+            if (right < width) {
+                if (up >= 0 && !visited[up][right]) {
+                    int alt = val + grid[up][right];
+                    int i = up * width + right;
+                    if (alt < distFibHeap.getVal(i)) { // Need to update
+                        distFibHeap.decreaseKey(i, alt);
+                        previous[up][right] = toDir(bestX, bestY, right, up);
+                    }
+                }
+                if (!visited[bestY][right]) {
+                    int alt = val + grid[bestY][right];
+                    int i = bestY * width + right;
+                    if (alt < distFibHeap.getVal(i)) {
+                        distFibHeap.decreaseKey(i, alt);
+                        previous[bestY][right] = toDir(bestX, bestY, right, bestY);
+                    }
+                }
+                if (down < height && !visited[down][right]) {
+                    int alt = val + grid[down][right];
+                    int i = down * width + right;
+                    if (alt < distFibHeap.getVal(i)) {
+                        distFibHeap.decreaseKey(i, alt);
+                        previous[down][right] = toDir(bestX, bestY, right, down);
+                    }
                 }
             }
 
