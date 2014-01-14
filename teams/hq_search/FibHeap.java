@@ -4,8 +4,8 @@ public class FibHeap {
     int              size;
     long[]           heap;
     int[]            locations;
-    static final int INFINITY  = 99999;
-    static final int MAX_VERTS = 1000;
+    static final int INFINITY  = 2 ^ 10;
+    static final int MAX_VERTS = 2 ^ 32;
 
     /*
      * Structure of heap: heap is implemented as an array of longs.

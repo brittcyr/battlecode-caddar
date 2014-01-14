@@ -14,7 +14,7 @@ public class Dijkstra {
     static int[][]     grid        = null;
     static boolean[][] visited     = null;
     static FibHeap     distFibHeap = null;
-    static int         MAX_VERTS   = FibHeap.MAX_VERTS;
+    static final int   MAX_VERTS   = FibHeap.MAX_VERTS;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
         height = _grid.length;
