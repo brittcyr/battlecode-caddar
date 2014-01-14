@@ -11,9 +11,8 @@ public class CowboyRobot extends BaseRobot {
             Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST,
             Direction.NORTH_WEST     };
     public TerrainTile[][] gameBoard;
-    public int             coarseness = 4;
+    public int             coarseness = 2;
     public int[][]         coarseMap  = null;
-    public boolean         done       = false;
 
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -71,6 +70,8 @@ public class CowboyRobot extends BaseRobot {
     public void run() {
         try {
             MapLocation target = rc.senseEnemyHQLocation();
+
+            // TODO: Dijkstra.finished should be Dijkstra.finished || RPC.loaded
             if (!Dijkstra.finished) {
                 BugNavigator.navigateTo(rc, target);
                 // Run a graph search on coarseMap. with the cost of each edge being cost of target

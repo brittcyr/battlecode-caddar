@@ -92,6 +92,7 @@ public class BugNavigator {
                     boolean willGetOut = false;
 
                     // Check worst case range of sight
+                    // TODO: Change this to use terrainmap
                     for (int x = 0; (x + 1) * (x + 1) + 1 < 35; x++) {
                         possibleNextWall = possibleNextWall.add(toNextSquare);
                         if (rc.senseTerrainTile(next_square) == TerrainTile.ROAD

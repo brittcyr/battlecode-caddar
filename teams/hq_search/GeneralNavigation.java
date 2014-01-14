@@ -15,7 +15,6 @@ public class GeneralNavigation {
         target = _target;
         coarseness = _coarseness;
         // TODO: Force Dijkstra to have the correct previous mapping with RPC
-
         // Later this will be to pull it down from RPC, now it is do on your own in CowboyRobot
 
     }
@@ -53,6 +52,7 @@ public class GeneralNavigation {
 
         // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
+            // TODO: If we are within sight, we should use BFS
             BugNavigator.navigateTo(rc, target);
             return;
         }
@@ -60,6 +60,8 @@ public class GeneralNavigation {
         // If we have at least one more direction to go, then BugNavigate to waypoint
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
+        // TODO: If the waypoint is not very far away, we should use BFS
+        // TODO: Once we switch out of bug navigating, we should bug reset
         BugNavigator.navigateTo(rc, waypoint);
     }
 

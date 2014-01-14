@@ -58,6 +58,16 @@ public class Dijkstra {
             visited[bestY][bestX] = true;
 
             // Iterated over all neighbors
+            /*
+             * TODO: change to manually iterate over all directions int left = bestX - 1; int right
+             * = bestX + 1; int up = bestY - 1; int down = bestY + 1;
+             * 
+             * if (left > 0) { if (up > 0 && !visited[left][up]) { int alt = val + grid[up][left];
+             * int i = up * width + left; if (alt < distFibHeap.getVal(i)) { // Need to update
+             * distFibHeap.decreaseKey(i, alt); previous[up][left] = toDir(bestX, bestY, left, up);
+             * } } }
+             */
+
             for (int x = bestX - 1; x <= bestX + 1; x++) {
                 if (x < 0 || x >= width) {
                     continue;
