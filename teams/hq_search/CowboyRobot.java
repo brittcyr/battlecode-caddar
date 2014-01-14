@@ -19,6 +19,9 @@ public class CowboyRobot extends BaseRobot {
         setupGameBoard();
         setupCoarseMap();
         MapLocation target = rc.senseEnemyHQLocation();
+        int startX = target.x / coarseness;
+        int startY = target.y / coarseness;
+        Dijkstra.setupDijkstra(coarseMap, startX, startY);
         GeneralNavigation.setupNav(rc, coarseness, target);
     }
 
@@ -59,10 +62,6 @@ public class CowboyRobot extends BaseRobot {
                 }
             }
         }
-        MapLocation target = rc.senseEnemyHQLocation();
-        int startX = target.x / coarseness;
-        int startY = target.y / coarseness;
-        Dijkstra.setupDijkstra(coarseMap, startX, startY);
     }
 
     public void run() {

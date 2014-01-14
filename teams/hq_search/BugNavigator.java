@@ -15,7 +15,14 @@ public class BugNavigator {
     static int         direction_to_turn           = 1;
     static boolean     turned                      = false;
 
-    // TODO: Fix looping and create a bugging reset
+    // TODO: Fix looping
+    public static void bugReset() {
+        bugging = false;
+        dist_to_target_at_bug_start = 0.0;
+        last_wall = null;
+        direction_to_turn = 1;
+        turned = false;
+    }
 
     public static void navigateTo(RobotController rc, MapLocation target) {
         try {
