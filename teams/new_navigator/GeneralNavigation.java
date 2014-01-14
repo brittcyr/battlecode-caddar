@@ -3,6 +3,7 @@ package new_navigator;
 import java.util.Arrays;
 
 import battlecode.common.Direction;
+import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
@@ -18,6 +19,7 @@ public class GeneralNavigation {
     public static int[][]         coarseMap  = null;
 
     public static void setupNav(RobotController rc) {
+
         if (false) {
             // TODO: If we can read the terrain from the radio
         }
@@ -79,6 +81,7 @@ public class GeneralNavigation {
             BugNavigator.bugReset();
             lastWaypoint = waypoint;
         }
+
         BugNavigator.navigateTo(rc, waypoint);
     }
 
@@ -86,9 +89,9 @@ public class GeneralNavigation {
         // Scan the grid
         int height = rc.getMapHeight();
         int width = rc.getMapWidth();
-        gameBoard = new TerrainTile[width][height];
-        for (int y = height - 1; y >= 0; y--) {
-            for (int x = width - 1; x >= 0; x--) {
+        gameBoard = new TerrainTile[height][width];
+        for (int y = width - 1; y >= 0; y--) {
+            for (int x = height - 1; x >= 0; x--) {
                 gameBoard[x][y] = rc.senseTerrainTile(new MapLocation(y, x));
             }
         }
