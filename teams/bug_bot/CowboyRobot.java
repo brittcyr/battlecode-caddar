@@ -5,10 +5,7 @@ import java.util.Random;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
-import battlecode.common.Robot;
 import battlecode.common.RobotController;
-import battlecode.common.RobotInfo;
-import battlecode.common.RobotType;
 import bug_bot.rpc.Clans;
 
 public class CowboyRobot extends BaseRobot {
@@ -22,62 +19,27 @@ public class CowboyRobot extends BaseRobot {
     public CowboyRobot(RobotController myRC) throws GameActionException {
         super(myRC);
         rand = new Random(myRC.getRobot().getID());
+
+        // Join first clan with less than 5 members.
+        for (int i = 0; i < Clans.getNumClans() + 1; i++) {
+            if (Clans.getSize(i) < 5) {
+                Clans.joinClan(rc, i);
+                clan = i;
+                break;
+            }
+        }
+        waypoint = Clans.getWaypoint(clan);
     }
 
     public void run() {
-
         try {
-            // Join a clan.
-            if (clan == -1) {
-                for (int i = 0; i < Clans.getNumClans() + 1; i++) {
-                    if (Clans.getSize(i) < 5) {
-                        clan = i;
-                        Clans.setMembership(rc, i);
-                        Clans.setSize(i, Clans.getSize(i) + 1);
-                        if (i == Clans.getNumClans())
-                            Clans.setNumClans(i + 1);
-                        break;
-                    }
-                }
-            }
-
+            // Update radio information.
             waypoint = Clans.getWaypoint(clan);
 
-            // Attack if possible prioritize attacking the enemy robots first
-            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 10, rc.getTeam()
-                    .opponent());
-            for (int x = 0; x < nearbyEnemies.length; x++) {
-                RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[x]);
-                if (robotInfo.type == RobotType.SOLDIER) {
-                    rc.attackSquare(robotInfo.location);
-                    return;
-                }
-            }
-            for (int x = 0; x < nearbyEnemies.length; x++) {
-                RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[x]);
-                if (robotInfo.type != RobotType.HQ) {
-                    rc.attackSquare(robotInfo.location);
-                    return;
-                }
-            }
+            System.out.println("CLAN " + clan);
+            System.out.println("\twaypoint: " + waypoint);
 
-            // Construct a PASTR if the square is really good
-            if (rc.senseCowsAtLocation(rc.getLocation()) > 2000
-                    && rc.senseNearbyGameObjects(Robot.class, 30, rc.getTeam().opponent()).length == 0) {
-                rc.construct(RobotType.PASTR);
-                return;
-            }
-
-            // Construct a PASTR randomly
-            int action = (rc.getRobot().getID() * rand.nextInt(101) + 50) % 101;
-            if (action < 1 && rc.getLocation().distanceSquaredTo(rc.senseHQLocation()) > 20
-                    && rc.senseCowGrowth()[rc.getLocation().x][rc.getLocation().y] > 0
-                    && rc.senseRobotCount() > 5) {
-                rc.construct(RobotType.PASTR);
-                return;
-            }
-
-            // Otherwise try to move to the target
+            // Try to move to the target
             BugNavigator.navigateTo(rc, waypoint);
 
             return;

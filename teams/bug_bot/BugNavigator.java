@@ -17,6 +17,8 @@ public class BugNavigator {
 
     public static void navigateTo(RobotController rc, MapLocation target) {
         try {
+            rc.setIndicatorString(0, "buggin: " + bugging);
+            rc.setIndicatorString(1, "target: " + target);
             turned &= bugging;
             Direction toTarget = rc.getLocation().directionTo(target);
             // If we are free from a wall
