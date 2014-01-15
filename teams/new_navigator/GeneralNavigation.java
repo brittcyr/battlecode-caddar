@@ -2,8 +2,8 @@ package new_navigator;
 
 import java.util.Arrays;
 
+import battlecode.common.Clock;
 import battlecode.common.Direction;
-import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
@@ -20,12 +20,12 @@ public class GeneralNavigation {
 
     public static void setupNav(RobotController rc) {
 
-        if (false) {
-            // TODO: If we can read the terrain from the radio
-        }
-        else {
-            senseGameBoard(rc);
-        }
+        // if (false) {
+        // TODO: If we can read the terrain from the radio
+        // }
+        // else {
+        senseGameBoard(rc);
+        // }
 
         // We will only need a coarse map if we compute ourself hopefully will not have to
         lastWaypoint = null;
@@ -68,7 +68,10 @@ public class GeneralNavigation {
 
         // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            // TODO: If we are within sight, we should use A*
+            for (int[] a : Dijkstra.previous) {
+                System.out.println(Arrays.toString(a));
+            }
+            // TODO: If we are within sight, we should use A*, or BFS or augment Bug to use roads
             BugNavigator.navigateTo(rc, target);
             return;
         }

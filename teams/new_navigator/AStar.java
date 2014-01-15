@@ -1,5 +1,10 @@
 package new_navigator;
 
+import java.util.Arrays;
+
+import battlecode.common.Clock;
+import battlecode.common.MapLocation;
+
 public class AStar {
     static int         gridWidth   = 0;
     static int         gridHeight  = 0;
@@ -16,25 +21,6 @@ public class AStar {
     static final int   MAX_VERTS   = FibHeap.MAX_VERTS;
     static MapLocation target;
 
-    public static void setupAStar(int[][] _grid, MapLocation start, MapLocation _target,
-            int _height, int _width, int _topLeftX, int _topLeftY) {
-        gridHeight = _grid.length;
-        gridWidth = _grid[0].length;
-        myHeight = _height;
-        myWidth = _width;
-        topLeftX = _topLeftX;
-        topLeftY = _topLeftY;
-        target = _target;
-        previous = new int[gridHeight][gridWidth];
-        visited = new boolean[gridHeight][gridWidth];
-        finished = false;
-        grid = _grid;
-        distFibHeap = new FibHeap(_height * _width);
-
-        // TODO: get the index of the target some other way
-        distFibHeap.decreaseKey(to_index(start.x, start.y), 0);
-    }
-
     /*
      * This is the heuristic which is the road cost times the L_inf norm with target
      */
@@ -42,6 +28,37 @@ public class AStar {
         int deltaX = Math.abs(x - target.x);
         int deltaY = Math.abs(y - target.y);
         return Math.max(deltaX, deltaY) * 7;
+    }
+
+    /*
+     * Setup AStar algorithm
+     */
+    public static void setupAStar(int[][] _grid, MapLocation start, MapLocation _target,
+            int _height, int _width, MapLocation topLeft) {
+        gridHeight = _grid.length;
+        gridWidth = _grid[0].length;
+        myHeight = _height;
+        myWidth = _width;
+        topLeftX = topLeft.x;
+        topLeftY = topLeft.y;
+        target = _target;
+        previous = new int[gridHeight][gridWidth];
+        visited = new boolean[gridHeight][gridWidth];
+        finished = false;
+        grid = _grid;
+        distFibHeap = new FibHeap(_height * _width);
+
+        distFibHeap.decreaseKey(to_index(start.x, start.y), 0);
+    }
+
+    /*
+     * This converts global coordinates to local index
+     */
+    private static int to_index(int x, int y) {
+        int localX = x - topLeftX;
+        int localY = y - topLeftY;
+        int index = localY * myWidth + localX;
+        return index;
     }
 
     public static void doAStar() {
@@ -52,13 +69,15 @@ public class AStar {
             int val = val_index / MAX_VERTS;
 
             // We keep in fib heap as a relative value, but need to get true value
-            int relativeX = val_index % myWidth;
-            int relativeY = val_index / myWidth;
+            int relativeX = index % myWidth;
+            int relativeY = index / myWidth;
             int bestX = relativeX + topLeftX;
             int bestY = relativeY + topLeftY;
             visited[bestY][bestX] = true;
 
-            // TODO: make the break condition if we hit the target
+            if (bestY == target.y && bestX == target.x) {
+                break;
+            }
 
             // Iterated over all neighbors
             int left = bestX - 1;
@@ -66,29 +85,26 @@ public class AStar {
             int up = bestY - 1;
             int down = bestY + 1;
 
-            // TODO: Introduce a conversion because grid and visited are not same
-            // as the key in the fib heap
             if (left >= 0) {
                 if (up >= 0 && !visited[up][left]) {
-                    int alt = val + (int) ((double) grid[up][left] * 1.4);
-                    int i = up * width + left;
-                    // TODO: Convert i to a relative index
+                    int alt = val + (int) ((double) grid[up][left] * 1.4) + heuristic(up, left);
+                    int i = to_index(left, up);
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[up][left] = 3;
                     }
                 }
                 if (!visited[bestY][left]) {
-                    int alt = val + grid[bestY][left];
-                    int i = bestY * width + left;
+                    int alt = val + grid[bestY][left] + heuristic(bestY, left);
+                    int i = to_index(left, bestY);
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[bestY][left] = 2;
                     }
                 }
-                if (down < height && !visited[down][left]) {
-                    int alt = val + (int) ((double) grid[down][left] * 1.4);
-                    int i = down * width + left;
+                if (down < gridHeight && !visited[down][left]) {
+                    int alt = val + (int) ((double) grid[down][left] * 1.4) + heuristic(down, left);
+                    int i = to_index(left, down);
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[down][left] = 1;
@@ -97,42 +113,43 @@ public class AStar {
             }
 
             if (up >= 0 && !visited[up][bestX]) {
-                int alt = val + grid[up][bestX];
-                int i = up * width + bestX;
+                int alt = val + grid[up][bestX] + heuristic(up, bestX);
+                int i = to_index(bestX, up);
                 if (alt < distFibHeap.getVal(i)) {
                     distFibHeap.decreaseKey(i, alt);
                     previous[up][bestX] = 4;
                 }
             }
-            if (down < height && !visited[down][bestX]) {
-                int alt = val + grid[down][bestX];
-                int i = down * width + bestX;
+            if (down < gridHeight && !visited[down][bestX]) {
+                int alt = val + grid[down][bestX] + heuristic(down, bestX);
+                int i = to_index(bestX, down);
                 if (alt < distFibHeap.getVal(i)) {
                     distFibHeap.decreaseKey(i, alt);
                     previous[down][bestX] = 0;
                 }
             }
 
-            if (right < width) {
+            if (right < gridWidth) {
                 if (up >= 0 && !visited[up][right]) {
-                    int alt = val + (int) ((double) grid[up][right] * 1.4);
-                    int i = up * width + right;
+                    int alt = val + (int) ((double) grid[up][right] * 1.4) + heuristic(up, right);
+                    int i = to_index(right, up);
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[up][right] = 5;
                     }
                 }
                 if (!visited[bestY][right]) {
-                    int alt = val + grid[bestY][right];
-                    int i = bestY * width + right;
+                    int alt = val + grid[bestY][right] + heuristic(bestY, right);
+                    int i = to_index(right, bestY);
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[bestY][right] = 6;
                     }
                 }
-                if (down < height && !visited[down][right]) {
-                    int alt = val + (int) ((double) grid[down][right] * 1.4);
-                    int i = down * width + right;
+                if (down < gridHeight && !visited[down][right]) {
+                    int alt = val + (int) ((double) grid[down][right] * 1.4)
+                            + heuristic(down, right);
+                    int i = to_index(right, down);
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[down][right] = 7;

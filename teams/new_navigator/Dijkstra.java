@@ -65,7 +65,7 @@ public class Dijkstra {
 
             if (left >= 0) {
                 if (up >= 0 && !visited[up][left]) {
-                    int alt = val + (int) ((double) grid[up][left] * 1.4);
+                    int alt = val + (int) ((double) grid[up][left] * 1.01);
                     int i = up * width + left;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
@@ -81,7 +81,7 @@ public class Dijkstra {
                     }
                 }
                 if (down < height && !visited[down][left]) {
-                    int alt = val + (int) ((double) grid[down][left] * 1.4);
+                    int alt = val + (int) ((double) grid[down][left] * 1.01);
                     int i = down * width + left;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
@@ -109,9 +109,9 @@ public class Dijkstra {
 
             if (right < width) {
                 if (up >= 0 && !visited[up][right]) {
-                    int alt = val + (int) ((double) grid[up][right] * 1.4);
+                    int alt = val + (int) ((double) grid[up][right] * 1.01);
                     int i = up * width + right;
-                    if (alt < distFibHeap.getVal(i)) { // Need to update
+                    if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[up][right] = 5;
                     }
@@ -125,7 +125,7 @@ public class Dijkstra {
                     }
                 }
                 if (down < height && !visited[down][right]) {
-                    int alt = val + (int) ((double) grid[down][right] * 1.4);
+                    int alt = val + (int) ((double) grid[down][right] * 1.01);
                     int i = down * width + right;
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
