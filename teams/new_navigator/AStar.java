@@ -14,15 +14,17 @@ public class AStar {
     static boolean[][] visited     = null;
     static FibHeap     distFibHeap = null;
     static final int   MAX_VERTS   = FibHeap.MAX_VERTS;
+    static MapLocation target;
 
-    public static void setupAStar(int[][] _grid, int start_x, int start_y, int target_x,
-            int target_y, int _height, int _width, int _topLeftX, int _topLeftY) {
+    public static void setupAStar(int[][] _grid, MapLocation start, MapLocation _target,
+            int _height, int _width, int _topLeftX, int _topLeftY) {
         gridHeight = _grid.length;
         gridWidth = _grid[0].length;
         myHeight = _height;
         myWidth = _width;
         topLeftX = _topLeftX;
         topLeftY = _topLeftY;
+        target = _target;
         previous = new int[gridHeight][gridWidth];
         visited = new boolean[gridHeight][gridWidth];
         finished = false;
@@ -30,13 +32,13 @@ public class AStar {
         distFibHeap = new FibHeap(_height * _width);
 
         // TODO: get the index of the target some other way
-        distFibHeap.decreaseKey(to_index(start_y, start_x), 0);
+        distFibHeap.decreaseKey(to_index(start.x, start.y), 0);
     }
 
-    public static void doDijkstra() {
+    // TODO: Implement heuristic function
 
+    public static void doAStar() {
         while (true) {
-
             // Find the position with minimum distance
             int val_index = distFibHeap.extractMin();
             int index = val_index % MAX_VERTS;
@@ -48,6 +50,8 @@ public class AStar {
             int bestX = relativeX + topLeftX;
             int bestY = relativeY + topLeftY;
             visited[bestY][bestX] = true;
+
+            // TODO: make the break condition if we hit the target
 
             // Iterated over all neighbors
             int left = bestX - 1;
@@ -129,7 +133,6 @@ public class AStar {
                 }
             }
         }
-
         AStar.finished = true;
     }
 }
