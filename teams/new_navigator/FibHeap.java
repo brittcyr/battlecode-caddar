@@ -40,7 +40,7 @@ public class FibHeap {
     // Return the high bits containing the VALUE
     public int getVal(int ID) {
         int loc = locations[ID];
-        return ((int) heap[loc]) / MAX_VERTS;
+        return (int) (heap[loc] / MAX_VERTS);
     }
 
     /*
