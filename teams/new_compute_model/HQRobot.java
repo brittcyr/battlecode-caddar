@@ -25,7 +25,6 @@ public class HQRobot extends BaseRobot {
         // Check if a robot is spawnable and spawn one if it is
         if (rc.isActive() && rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
             for (int rot = 0; rot < 8; rot++) {
-
                 if (rc.senseObjectAtLocation(rc.getLocation().add(toSpawn)) == null) {
                     doSpawn = true;
                     break;
@@ -37,7 +36,7 @@ public class HQRobot extends BaseRobot {
         // TODO: Insert attack code here
 
         if (doSpawn) {
-            rc.spawn(toEnemy);
+            rc.spawn(toSpawn);
         }
     }
 
