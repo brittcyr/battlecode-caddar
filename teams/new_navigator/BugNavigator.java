@@ -101,6 +101,11 @@ public class BugNavigator {
 
             // Check if we should stop following wall
             if (bugging) {
+                if (rc.senseObjectAtLocation(last_wall) == null) {
+                    bugReset();
+                    navigateTo(rc, target);
+                    return;
+                }
                 // if we are closer than when we started
                 if (myLoc.distanceSquaredTo(target) < dist_to_target_at_bug_start) {
                     if (rc.canMove(toTarget)) {
