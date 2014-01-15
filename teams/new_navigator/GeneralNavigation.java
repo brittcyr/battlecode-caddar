@@ -1,8 +1,5 @@
 package new_navigator;
 
-import java.util.Arrays;
-
-import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
@@ -68,9 +65,6 @@ public class GeneralNavigation {
 
         // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            for (int[] a : Dijkstra.previous) {
-                System.out.println(Arrays.toString(a));
-            }
             // TODO: If we are within sight, we should use A*, or BFS or augment Bug to use roads
             BugNavigator.navigateTo(rc, target);
             return;
