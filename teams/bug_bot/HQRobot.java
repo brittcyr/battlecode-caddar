@@ -7,6 +7,7 @@ import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 import bug_bot.rpc.Clans;
+import bug_bot.rpc.Clans.ClanMode;
 
 public class HQRobot extends BaseRobot {
 
@@ -18,7 +19,23 @@ public class HQRobot extends BaseRobot {
     public void run() throws GameActionException {
 
         try {
-            Clans.setWaypoint(0, rc.senseHQLocation());
+            // Manage clan waypoints.
+            for (int i = 0; i < Clans.getNumClans(); i++) {
+                switch (Clans.getClanMode(i)) {
+                    case DEAD:
+                        break;
+                    case IDLE:
+                        if (Clans.getSize(i) >= 5) {
+                            Clans.setClanMode(i, ClanMode.RAIDER);
+                            Clans.setWaypoint(i, rc.senseEnemyHQLocation());
+                        } else {
+                            Clans.setWaypoint(i, rc.senseHQLocation());
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
 
             Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, rc.getTeam()
                     .opponent());
@@ -36,7 +53,6 @@ public class HQRobot extends BaseRobot {
                     rc.spawn(toEnemy);
                 }
             }
-
             else {
                 if (nearbyEnemies.length > 0) {
                     RobotInfo robotInfo = rc.senseRobotInfo(nearbyEnemies[0]);

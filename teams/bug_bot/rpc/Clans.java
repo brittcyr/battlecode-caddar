@@ -10,6 +10,10 @@ import battlecode.common.RobotController;
  */
 public class Clans {
 
+    public static enum ClanMode {
+        DEAD, IDLE, DEFENDER, RAIDER, BUILDER
+    }
+
     public static int getNumClans() throws GameActionException {
         return Radio.getData(Channels.NUM_CLANS, 1)[0];
     }
@@ -44,6 +48,36 @@ public class Clans {
     public static void setWaypoint(int clan, MapLocation mwp) throws GameActionException {
         int wp = Marshaler.MapLocationToInt(mwp);
         Radio.putData(Channels.CLAN_WAYPOINTS + clan, new int[] { wp });
+    }
+
+    // TODO: Use marshaler.
+    public static ClanMode getClanMode(int clan) throws GameActionException {
+        return ClanMode.values()[Radio.getData(Channels.CLAN_MODES + clan, 1)[0]];
+    }
+    
+    // TODO: Use marshaler.
+    public static void setClanMode(int clan, ClanMode mode) throws GameActionException {
+        Radio.putData(Channels.CLAN_MODES + clan, new int[] { mode.ordinal() });
+    }
+
+    // TODO: Do not exceed MAX_CLANS.
+    public static void createClan(int clan) throws GameActionException {
+        assert (Clans.getSize(clan) == 0);
+        assert (Clans.getClanMode(clan) == ClanMode.DEAD);
+
+        Clans.setClanMode(clan, ClanMode.IDLE);
+        Clans.setNumClans(Clans.getNumClans() + 1);
+    }
+
+    /*
+     * Add rc to clan. If clan does not exist, create it. Set rc to be in clan. Increase the size of
+     * clan by one.
+     */
+    public static void joinClan(RobotController rc, int clan) throws GameActionException {
+        if (Clans.getClanMode(clan) == ClanMode.DEAD)
+            Clans.createClan(clan);
+        Clans.setMembership(rc, clan);
+        Clans.setSize(clan, Clans.getSize(clan) + 1);
     }
 
 }
