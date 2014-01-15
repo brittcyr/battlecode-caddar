@@ -4,7 +4,7 @@ public class FibHeap {
     int              size;
     long[]           heap;
     int[]            locations;
-    static final int INFINITY  = 9999;
+    static final long INFINITY  = 9999;
     static final int MAX_VERTS = 10000;
 
     /*
@@ -20,7 +20,6 @@ public class FibHeap {
      */
 
     public FibHeap(int _size) {
-
         // Make the size of the heap into the first power of 2 - 1 that is bigger than we need
         int guess = 1;
         while (guess - 1 <= _size) {
@@ -55,13 +54,13 @@ public class FibHeap {
         int location = locations[ID];
 
         // Update the value in the heap
-        int newItem = ID + (MAX_VERTS * newVal);
+        long newItem = ID + (((long) MAX_VERTS) * newVal);
         heap[location] = newItem;
 
         // Heapify by going up the tree
         while (location > 0 && newItem < heap[(location - 1) / 2]) {
             // Update the location table and do swap
-            int otherID = ((int) heap[(location - 1) / 2]) % MAX_VERTS;
+            int otherID = (int) (heap[(location - 1) / 2] % MAX_VERTS);
             locations[ID] = (location - 1) / 2;
             locations[otherID] = location;
             heap[location] = heap[(location - 1) / 2];
@@ -77,7 +76,7 @@ public class FibHeap {
      * array. This runs in O(log n)
      */
     public int extractMin() {
-        int minID = ((int) heap[0]) % MAX_VERTS;
+        int minID = (int) (heap[0] % MAX_VERTS);
 
         // Once we remove the min, we must recurse down to reheapify
         int location = 0;
@@ -88,7 +87,7 @@ public class FibHeap {
             if (leftVal < rightVal) {
                 locToPull--;
             }
-            int IDToPull = ((int) heap[locToPull]) % MAX_VERTS;
+            int IDToPull = (int) (heap[locToPull] % MAX_VERTS);
 
             // Do the move
             heap[location] = heap[locToPull];
