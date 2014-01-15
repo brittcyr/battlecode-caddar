@@ -1,6 +1,5 @@
 package new_navigator;
 
-
 public class AStar {
     static int         gridWidth   = 0;
     static int         gridHeight  = 0;
@@ -17,29 +16,21 @@ public class AStar {
     static final int   MAX_VERTS   = FibHeap.MAX_VERTS;
 
     public static void setupAStar(int[][] _grid, int start_x, int start_y, int target_x,
-            int target_y, int _height, int _width) {
+            int target_y, int _height, int _width, int _topLeftX, int _topLeftY) {
         gridHeight = _grid.length;
         gridWidth = _grid[0].length;
         myHeight = _height;
         myWidth = _width;
-        previous = new int[_height][_width];
-        visited = new boolean[_height][_width];
+        topLeftX = _topLeftX;
+        topLeftY = _topLeftY;
+        previous = new int[gridHeight][gridWidth];
+        visited = new boolean[gridHeight][gridWidth];
         finished = false;
         grid = _grid;
         distFibHeap = new FibHeap(_height * _width);
 
-        // Initialize tentative distances to infinity except zero at source
-        for (int[] p : previous) {
-            // Saves a few hundred bytecode to use Array.fill
-            Arrays.fill(p, UNSET);
-        }
-
+        // TODO: get the index of the target some other way
         distFibHeap.decreaseKey(to_index(start_y, start_x), 0);
-    }
-
-    // TODO: Fix this. This is the major change from the original
-    private static int to_index(int start_y, int start_x) {
-        return start_y * width + start_x;
     }
 
     public static void doDijkstra() {
@@ -50,9 +41,12 @@ public class AStar {
             int val_index = distFibHeap.extractMin();
             int index = val_index % MAX_VERTS;
             int val = val_index / MAX_VERTS;
-            // TODO: shift back the index before bestX and bestY
-            int bestX = index % width;
-            int bestY = index / width;
+
+            // We keep in fib heap as a relative value, but need to get true value
+            int relativeX = val_index % myWidth;
+            int relativeY = val_index / myWidth;
+            int bestX = relativeX + topLeftX;
+            int bestY = relativeY + topLeftY;
             visited[bestY][bestX] = true;
 
             // Iterated over all neighbors
@@ -67,6 +61,7 @@ public class AStar {
                 if (up >= 0 && !visited[up][left]) {
                     int alt = val + (int) ((double) grid[up][left] * 1.4);
                     int i = up * width + left;
+                    // TODO: Convert i to a relative index
                     if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[up][left] = 3;
