@@ -32,6 +32,45 @@ public class BugNavigator {
             // If we are free from a wall
             if (!bugging) {
                 if (rc.canMove(toTarget)) {
+                    // If we can get there on a road, do that
+                    MapLocation next = myLoc.add(toTarget);
+                    if (rc.senseTerrainTile(next) == TerrainTile.ROAD) {
+                        rc.sneak(toTarget);
+                        return;
+                    }
+
+                    // First check the deltaX and deltaY to the target
+                    int deltaX = Math.abs(myLoc.add(toTarget).x - target.x);
+                    int deltaY = Math.abs(myLoc.add(toTarget).y - target.y);
+                    int bigger = Math.max(deltaX, deltaY);
+
+                    // Try left
+                    Direction left = directions[(toTarget.ordinal() + 7) % 8];
+                    if (rc.canMove(left)) {
+                        int leftDeltaX = Math.abs(myLoc.add(left).x - target.x);
+                        int leftDeltaY = Math.abs(myLoc.add(left).y - target.y);
+                        int biggerLeft = Math.max(leftDeltaX, leftDeltaY);
+                        boolean isRoad = rc.senseTerrainTile(myLoc.add(left)) == TerrainTile.ROAD;
+                        if (isRoad && biggerLeft == bigger) {
+                            rc.sneak(left);
+                            return;
+                        }
+                    }
+
+                    // Try right
+                    Direction right = directions[(toTarget.ordinal() + 1) % 8];
+                    if (rc.canMove(right)) {
+                        int rightDeltaX = Math.abs(myLoc.add(right).x - target.x);
+                        int rightDeltaY = Math.abs(myLoc.add(right).y - target.y);
+                        int biggerRight = Math.max(rightDeltaX, rightDeltaY);
+                        boolean isRoad = rc.senseTerrainTile(myLoc.add(right)) == TerrainTile.ROAD;
+                        if (isRoad && biggerRight == bigger) {
+                            rc.sneak(right);
+                            return;
+                        }
+                    }
+
+                    // Just follow the normal
                     rc.sneak(toTarget);
                     return;
                 }

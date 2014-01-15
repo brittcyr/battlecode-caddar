@@ -21,19 +21,22 @@ public class HQRobot extends BaseRobot {
 
     protected void doAction() throws GameActionException {
         boolean doSpawn = false;
-        Direction toEnemy = null;
+        Direction toSpawn = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
         // Check if a robot is spawnable and spawn one if it is
         if (rc.isActive() && rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
-            toEnemy = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
-            if (rc.senseObjectAtLocation(rc.getLocation().add(toEnemy)) == null) {
-                doSpawn = true;
+            for (int rot = 0; rot < 8; rot++) {
+                if (rc.senseObjectAtLocation(rc.getLocation().add(toSpawn)) == null) {
+                    doSpawn = true;
+                    break;
+                }
+                toSpawn = toSpawn.rotateLeft();
             }
         }
 
         // TODO: Insert attack code here
 
         if (doSpawn) {
-            rc.spawn(toEnemy);
+            rc.spawn(toSpawn);
         }
     }
 
