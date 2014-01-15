@@ -35,7 +35,14 @@ public class AStar {
         distFibHeap.decreaseKey(to_index(start.x, start.y), 0);
     }
 
-    // TODO: Implement heuristic function
+    /*
+     * This is the heuristic which is the road cost times the L_inf norm with target
+     */
+    public static int heuristic(int y, int x) {
+        int deltaX = Math.abs(x - target.x);
+        int deltaY = Math.abs(y - target.y);
+        return Math.max(deltaX, deltaY) * 7;
+    }
 
     public static void doAStar() {
         while (true) {
@@ -110,7 +117,7 @@ public class AStar {
                 if (up >= 0 && !visited[up][right]) {
                     int alt = val + (int) ((double) grid[up][right] * 1.4);
                     int i = up * width + right;
-                    if (alt < distFibHeap.getVal(i)) { // Need to update
+                    if (alt < distFibHeap.getVal(i)) {
                         distFibHeap.decreaseKey(i, alt);
                         previous[up][right] = 5;
                     }
