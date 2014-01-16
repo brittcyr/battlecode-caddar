@@ -5,7 +5,6 @@ import java.util.Arrays;
 import battlecode.common.Clock;
 
 public class AStar {
-    static int         iters;
     static int         width       = 0;
     static int         height      = 0;
     static int[][]     previous    = null;
@@ -24,14 +23,6 @@ public class AStar {
         finished = false;
         grid = _grid;
         distFibHeap = new FibHeap(height * width);
-        iters = 0;
-
-        // Initialize tentative distances to infinity except zero at source
-        for (int[] p : previous) {
-            // Saves a few hundred bytecode to use Array.fill
-            Arrays.fill(p, UNSET);
-        }
-
         distFibHeap.decreaseKey(to_index(start_y, start_x), 0);
     }
 
@@ -40,9 +31,7 @@ public class AStar {
     }
 
     public static void doAStar(int targetX, int targetY) {
-
         while (true) {
-
             // Find the position with minimum distance
             int val_index = distFibHeap.extractMin();
             int index = val_index % MAX_VERTS;
@@ -131,13 +120,7 @@ public class AStar {
                     }
                 }
             }
-
-            iters++;
-            if (iters >= height * width) {
-                break;
-            }
         }
-
         AStar.finished = true;
     }
 }
