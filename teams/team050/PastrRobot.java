@@ -1,7 +1,6 @@
 package team050;
 
 import battlecode.common.GameActionException;
-import battlecode.common.Robot;
 import battlecode.common.RobotController;
 
 public class PastrRobot extends BaseRobot {
@@ -19,10 +18,7 @@ public class PastrRobot extends BaseRobot {
     }
 
     public void doAction() throws GameActionException {
-        if (rc.getHealth() <= 30.5 * rc.senseNearbyGameObjects(Robot.class, 2, rc.getTeam()
-                .opponent()).length) {
-            rc.selfDestruct();
-        }
+        // New specs make self destruct really bad
     }
 
     protected void sendUpdates() {
