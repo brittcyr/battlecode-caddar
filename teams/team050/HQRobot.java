@@ -1,7 +1,7 @@
 package team050;
 
-import new_navigator_clans.rpc.Clans;
-import new_navigator_clans.rpc.Clans.ClanMode;
+import team050.rpc.Clans;
+import team050.rpc.Clans.ClanMode;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
@@ -10,7 +10,7 @@ import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.Team;
-import bug_bot.rpc.Channels;
+import team050.rpc.Channels;
 
 public class HQRobot extends BaseRobot {
 

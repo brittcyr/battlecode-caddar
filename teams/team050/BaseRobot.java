@@ -2,7 +2,7 @@ package team050;
 
 import java.util.Random;
 
-import new_navigator_clans.rpc.Radio;
+import team050.rpc.Radio;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 

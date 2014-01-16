@@ -1,7 +1,7 @@
 package team050;
 
-import new_navigator_clans.rpc.Clans;
-import new_navigator_clans.rpc.Clans.ClanMode;
+import team050.rpc.Clans;
+import team050.rpc.Clans.ClanMode;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
