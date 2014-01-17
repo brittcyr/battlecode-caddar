@@ -10,11 +10,11 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void getUpdates() {
-        // pass
+        // Read the radio and see what needs computing
     }
 
     protected void updateInternals() {
-        // pass
+        // This is where we should decide if we call for reinforcements
     }
 
     public void doAction() throws GameActionException {
@@ -22,11 +22,11 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void sendUpdates() {
-        // pass
+        // Send out the results of computing and send whether are under attack
     }
 
     protected void doCompute() {
-        // pass
+        // help with dijkstra
     }
 
 }
