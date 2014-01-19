@@ -132,12 +132,9 @@ public class BugNavigator {
                 }
                 Direction toNextSquare = myLoc.directionTo(next_square);
                 if (toNextSquare.opposite().equals(toTarget) && !turned) {
-                    // TODO: Check if we have teammates nearby and tell to turn also
                     MapLocation possibleNextWall = last_wall;
                     boolean willGetOut = false;
 
-                    // Check worst case range of sight
-                    // TODO: Change this to use terrainmap
                     for (int x = 0; (x + 1) * (x + 1) + 1 < 35; x++) {
                         possibleNextWall = possibleNextWall.add(toNextSquare);
                         if (rc.senseTerrainTile(next_square) == TerrainTile.ROAD
@@ -158,6 +155,8 @@ public class BugNavigator {
                 }
                 else {
                     // We are being blocked by our teammate
+                    // TODO: Have a bugging flag that next turn checks if
+                    // there are neighbors, if not. then reset
                     Direction moveDirection = directions[(toNextSquare.ordinal()
                             + direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {
