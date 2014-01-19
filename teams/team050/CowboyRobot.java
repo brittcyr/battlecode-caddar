@@ -101,7 +101,11 @@ public class CowboyRobot extends BaseRobot {
                     break;
                 }
 
-                // TODO: Check if we should Kamikazee
+                if (rc.getHealth() <= 40.0 && sightEnemies.length > 2) {
+                    type = engagementBehavior.KAMIKAZEE;
+                    break;
+                }
+
                 // This is if we cannot move away and have health problems
                 // And the enemy has a tighter formation
                 // TODO: Check if we have regrouped
