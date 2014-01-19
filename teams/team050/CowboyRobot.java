@@ -69,18 +69,20 @@ public class CowboyRobot extends BaseRobot {
                 // Once we are out of sight, then we are unengaged
                 Robot[] sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
                 if (sightEnemies.length == 0) {
+                    BugNavigator.bugReset();
                     type = engagementBehavior.UNENGAGED;
                     break;
                 }
                 if (sightEnemies.length == 1) {
                     double enemyHealth = rc.senseRobotInfo(sightEnemies[0]).health;
                     if (rc.getHealth() > enemyHealth) {
+                        BugNavigator.bugReset();
                         type = engagementBehavior.CHASE;
                         break;
                     }
                     // Check if it is the HQ
                     if (rc.senseRobotInfo(sightEnemies[0]).type == RobotType.HQ) {
-                        type = engagementBehavior.CHASE;
+                        type = engagementBehavior.RETREAT;
                         predator = sightEnemies[0];
                         predatorLocation = rc.senseRobotInfo(predator).location;
                         break;
@@ -143,6 +145,7 @@ public class CowboyRobot extends BaseRobot {
                 sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
                 if (sightEnemies.length > 0) {
                     // Always go check if we can get a better look
+                    BugNavigator.bugReset();
                     type = engagementBehavior.CHASE;
                 }
                 break;
@@ -151,6 +154,7 @@ public class CowboyRobot extends BaseRobot {
             case CHASE:
                 sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
                 if (sightEnemies.length == 0) {
+                    BugNavigator.bugReset();
                     // Always go check if we can get a better look
                     type = engagementBehavior.UNENGAGED;
                     break;

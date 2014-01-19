@@ -45,7 +45,7 @@ public class BugNavigator {
                     int bigger = Math.max(deltaX, deltaY);
 
                     // Try left
-                    Direction left = directions[(toTarget.ordinal() + 7) % 8];
+                    Direction left = toTarget.rotateLeft();
                     if (rc.canMove(left)) {
                         int leftDeltaX = Math.abs(myLoc.add(left).x - target.x);
                         int leftDeltaY = Math.abs(myLoc.add(left).y - target.y);
@@ -58,7 +58,7 @@ public class BugNavigator {
                     }
 
                     // Try right
-                    Direction right = directions[(toTarget.ordinal() + 1) % 8];
+                    Direction right = toTarget.rotateRight();
                     if (rc.canMove(right)) {
                         int rightDeltaX = Math.abs(myLoc.add(right).x - target.x);
                         int rightDeltaY = Math.abs(myLoc.add(right).y - target.y);
@@ -79,16 +79,20 @@ public class BugNavigator {
 
                 double dist_plus = 9999;
                 double dist_minus = 9999;
+                Direction dir = toTarget;
                 for (int x = 1; x < 4; x++) {
-                    MapLocation possible = myLoc.add(directions[(toTarget.ordinal() + x + 8) % 8]);
+                    dir = dir.rotateRight();
+                    MapLocation possible = myLoc.add(dir);
                     TerrainTile tile = rc.senseTerrainTile(possible);
                     if (tile == TerrainTile.NORMAL || tile == TerrainTile.ROAD) {
                         dist_plus = possible.distanceSquaredTo(target);
                         break;
                     }
                 }
+                dir = toTarget;
                 for (int x = 1; x < 4; x++) {
-                    MapLocation possible = myLoc.add(directions[(toTarget.ordinal() - x + 8) % 8]);
+                    dir = dir.rotateLeft();
+                    MapLocation possible = myLoc.add(dir);
                     TerrainTile tile = rc.senseTerrainTile(possible);
                     if (tile == TerrainTile.NORMAL || tile == TerrainTile.ROAD) {
                         dist_minus = possible.distanceSquaredTo(target);
@@ -102,7 +106,7 @@ public class BugNavigator {
             // Check if we should stop following wall
             if (bugging) {
                 // if we are closer than when we started
-                if (myLoc.distanceSquaredTo(target) < dist_to_target_at_bug_start) {
+                if (myLoc.distanceSquaredTo(target) <= dist_to_target_at_bug_start) {
                     if (rc.canMove(toTarget)) {
                         bugging = false;
                         // Call it again with navigating not in bugging mode
@@ -161,12 +165,14 @@ public class BugNavigator {
                             + direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {
                         rc.sneak(moveDirection);
+                        bugReset();
                         return;
                     }
                     // Check if we can go perpendicular around
                     moveDirection = directions[(toNextSquare.ordinal() + 2 * direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {
                         rc.sneak(moveDirection);
+                        bugReset();
                         return;
                     }
                     else {
