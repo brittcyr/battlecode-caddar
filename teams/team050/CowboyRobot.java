@@ -12,8 +12,8 @@ import battlecode.common.RobotType;
 import battlecode.common.Team;
 
 public class CowboyRobot extends BaseRobot {
-    public final Team         me;
-    public final Team         enemy;
+    public final Team  me;
+    public final Team  enemy;
     public int         clan;
 
     // This is the waypoint that our clan is moving towards
@@ -147,6 +147,8 @@ public class CowboyRobot extends BaseRobot {
                     // Always go check if we can get a better look
                     BugNavigator.bugReset();
                     type = engagementBehavior.CHASE;
+                    prey = sightEnemies[0];
+                    preyLocation = rc.senseRobotInfo(prey).location;
                 }
                 break;
 
@@ -194,6 +196,7 @@ public class CowboyRobot extends BaseRobot {
                         if (enemyInfo.health < leastHealth) {
                             leastHealth = enemyInfo.health;
                             prey = enemyRobot;
+                            preyLocation = rc.senseRobotInfo(prey).location;
                         }
                     }
                 }
@@ -292,7 +295,13 @@ public class CowboyRobot extends BaseRobot {
                         bestEnemies = rightEnemies;
                     }
                 }
-                rc.move(bestDirection);
+                if (rc.canMove(bestDirection)) {
+                    rc.move(bestDirection);
+                }
+                else {
+                    type = engagementBehavior.RETREAT;
+                    doAction();
+                }
                 break;
         }
 
