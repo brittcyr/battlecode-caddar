@@ -252,8 +252,18 @@ public class CowboyRobot extends BaseRobot {
                 break;
 
             case CHASE:
-                // TODO: If we are in a 1-1 chase, we should allow them to make the first move into
-                // striking distance
+                Robot[] sightFriendlies = rc.senseNearbyGameObjects(Robot.class, 15, me);
+                Robot[] sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
+                if (sightFriendlies.length == 0 && sightEnemies.length == 1) {
+                    // We are in a 1-1 situation and should not be the first into striking range
+                    int enemyDist = rc.getLocation().distanceSquaredTo(preyLocation);
+                    if (enemyDist > 15 && enemyDist <= 22) {
+                        if (rc.senseRobotInfo(prey).health + 10.0 >= rc.getHealth()) {
+                            // This is where we stand still and should not close the gap ourselves
+                            break;
+                        }
+                    }
+                }
                 BugNavigator.navigateTo(rc, preyLocation);
                 break;
 
