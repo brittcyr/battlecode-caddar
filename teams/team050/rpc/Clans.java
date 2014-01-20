@@ -14,6 +14,8 @@ public class Clans {
         DEAD, IDLE, DEFENDER, RAIDER, BUILDER
     }
 
+    public static final int DEFAULT_SIZE = 5;
+
     public static int getNumClans() throws GameActionException {
         return Radio.getData(Channels.NUM_CLANS, 1)[0];
     }
