@@ -252,6 +252,8 @@ public class CowboyRobot extends BaseRobot {
                 break;
 
             case CHASE:
+                // TODO: If we are in a 1-1 chase, we should allow them to make the first move into
+                // striking distance
                 BugNavigator.navigateTo(rc, preyLocation);
                 break;
 
