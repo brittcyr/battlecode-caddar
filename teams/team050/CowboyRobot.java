@@ -43,6 +43,7 @@ public class CowboyRobot extends BaseRobot {
         enemy = me.opponent();
 
         // Join first clan with less than 5 members.
+        // TODO: Change policy to join IDLE clan w/ < 5 members?
         for (int i = 0; i < Clans.getNumClans() + 1; i++) {
             if (Clans.getSize(i) < 5) {
                 Clans.joinClan(rc, i);
@@ -222,8 +223,24 @@ public class CowboyRobot extends BaseRobot {
                     BugNavigator.navigateTo(rc, rc.senseHQLocation());
                     // Do nothing when we are not active
                 }
-                else {
-                    BugNavigator.navigateTo(rc, target);
+                else if (Clans.getClanMode(clan) == ClanMode.BUILDER){
+                	// If "close enough to target" build a PASTR if clan hasn't built one yet.
+                	// If PASTR built and close enough, build NT.
+                	double rangeSquared = Math.pow(.05 * rc.getMapWidth(), 2);
+                	if (withinRangeSquared(target, rangeSquared)) {
+                		if (Clans.getClanPastrStatus(clan) == false) {
+                			rc.construct(RobotType.PASTR);
+                			Clans.setClanPastrStatus(clan, true);
+                		} else if (Clans.getClanNTStatus(clan) == false) {
+                			rc.construct(RobotType.NOISETOWER);
+                			Clans.setClanNTStatus(clan, true);
+                			Clans.setClanMode(clan, ClanMode.DEFENDER);
+                		}
+                	} else {
+                		BugNavigator.navigateTo(rc, target);
+                	}
+                } else {
+                	BugNavigator.navigateTo(rc, target);
                 }
                 break;
 
@@ -318,6 +335,10 @@ public class CowboyRobot extends BaseRobot {
         }
 
     }
+
+	private boolean withinRangeSquared(MapLocation target, double rangeSquared) {
+		return target.distanceSquaredTo(rc.getLocation()) < rangeSquared;
+	}
 
     protected void sendUpdates() {
         // pass
