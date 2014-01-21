@@ -15,4 +15,5 @@ Battlecode 2014
 # Battlecode cruft #
 .installationinformation
 
+bin
 RemoteSystemsTempFiles
