@@ -1,5 +1,6 @@
 package team050;
 
+import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
 import battlecode.common.Direction;
@@ -10,18 +11,21 @@ import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.Team;
-import team050.rpc.Channels;
 
 public class HQRobot extends BaseRobot {
+
+    public MapLocation pastrSite;
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
 
-        // Initialize clan waypoints.
+        // Initialize clan waypoints to base HQ.
         MapLocation hq = rc.senseHQLocation();
         for (int clan = 0; clan < Channels.MAX_CLANS; clan++) {
             Clans.setWaypoint(clan, hq);
         }
+
+        pastrSite = scoutNextPasture(hq);
     }
 
     protected void getUpdates() {
@@ -32,20 +36,19 @@ public class HQRobot extends BaseRobot {
         // Manage clans.
         for (int i = 0; i < Clans.getNumClans(); i++) {
             switch (Clans.getClanMode(i)) {
-                case DEAD:
-                    break;
                 case IDLE:
-                    if (Clans.getSize(i) >= 5) {
-                        Clans.setClanMode(i, ClanMode.RAIDER);
-                        Clans.setWaypoint(i, rc.senseEnemyHQLocation());
-                    }
-                    else {
-                        Clans.setWaypoint(i, rc.senseHQLocation());
-                        break;
-                    }
+                    manageIdleClan(i);
+                    break;
                 default:
                     break;
             }
+        }
+    }
+
+    public void manageIdleClan(int clan) throws GameActionException {
+        if (Clans.getSize(clan) >= Clans.DEFAULT_SIZE) {
+            Clans.setClanMode(clan, ClanMode.BUILDER);
+            Clans.setWaypoint(clan, pastrSite);
         }
     }
 
@@ -123,6 +126,32 @@ public class HQRobot extends BaseRobot {
 
     protected void doCompute() {
         // pass
+    }
+
+    public MapLocation scoutNextPasture(MapLocation hq) {
+        double[][] cowGrowth = rc.senseCowGrowth();
+        double bestGrowth = cowGrowth[0][0];
+        MapLocation bestSite = new MapLocation(0, 0);
+
+        int mapWidth = rc.getMapWidth();
+        int mapHeight = rc.getMapHeight();
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
+                MapLocation loc = new MapLocation(x, y);
+                double growth = cowGrowth[x][y];
+                if (growth >= bestGrowth) {
+                    if ((growth == bestGrowth)
+                            && (hq.distanceSquaredTo(loc) > hq.distanceSquaredTo(bestSite))) {
+                        continue;  // Skip far symmetric case.
+                    }
+                    else {
+                        bestSite = loc;
+                        bestGrowth = growth;
+                    }
+                }
+            }
+        }
+        return bestSite;
     }
 
 }
