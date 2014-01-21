@@ -39,10 +39,12 @@ public class StringHeap {
 
     public int extractMin() {
         // TODO: This is always called after getMinVal, so not repeat indexof z
+        // Instead, combine and store in static
         int minIndex = data.indexOf("Z");
         char x = data.charAt(minIndex + 1);
         char y = data.charAt(minIndex + 2);
         data.delete(minIndex, minIndex + 3);
+        // TODO: leave the x and y in static variable so do not pack and unpack
         return xyToInt(x, y);
     }
 
@@ -65,6 +67,7 @@ public class StringHeap {
     }
 
     public int getVal(int key) {
+        // TODO: Make a cache for these values so do not need to parse int every time
         String str = keyToString(key);
         int indexOfKey = data.indexOf(str);
         int startOfNumber = data.lastIndexOf("X", indexOfKey);

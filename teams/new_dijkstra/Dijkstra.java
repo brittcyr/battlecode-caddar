@@ -59,6 +59,7 @@ public class Dijkstra {
                     int alt = val + (int) ((double) grid[up][left] * 1.4);
                     // TODO: add 101 and change on stringheap so that do not do twice in some cases
                     int i = up + 100 * left;
+                    // TODO: Cache the stringHeap
                     if (alt < distStringHeap.getVal(i)) {
                         distStringHeap.decreaseKey(i, alt);
                         previous[up][left] = 3;
