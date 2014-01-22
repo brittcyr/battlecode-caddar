@@ -11,6 +11,7 @@ import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.Team;
+import battlecode.common.TerrainTile;
 
 public class HQRobot extends BaseRobot {
 
@@ -25,7 +26,7 @@ public class HQRobot extends BaseRobot {
             Clans.setWaypoint(clan, hq);
         }
 
-        	nextPastrSite = scoutNextPasture(hq);
+        nextPastrSite = scoutNextPasture(hq);
     }
 
     protected void getUpdates() {
@@ -59,7 +60,10 @@ public class HQRobot extends BaseRobot {
         // Check if a robot is spawnable and spawn one if it is
         if (rc.isActive() && rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
             for (int rot = 0; rot < 8; rot++) {
-                if (rc.senseObjectAtLocation(rc.getLocation().add(toSpawn)) == null) {
+                MapLocation test = rc.getLocation().add(toSpawn);
+                if (rc.senseTerrainTile(test) != TerrainTile.VOID
+                        && rc.senseTerrainTile(test) != TerrainTile.OFF_MAP
+                        && rc.senseObjectAtLocation(test) == null) {
                     doSpawn = true;
                     break;
                 }
@@ -130,7 +134,7 @@ public class HQRobot extends BaseRobot {
     }
 
     public MapLocation scoutNextPasture(MapLocation hq) {
-    	// TODO: Do not select a site if we already have a PASTR there.
+        // TODO: Do not select a site if we already have a PASTR there.
         double[][] cowGrowth = rc.senseCowGrowth();
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);
