@@ -1,6 +1,7 @@
 package team050;
 
 import battlecode.common.Direction;
+import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
@@ -58,7 +59,7 @@ public class GeneralNavigation {
         return myCenter.add(d, coarseness);
     }
 
-    public static void smartNav(RobotController rc) {
+    public static void smartNav(RobotController rc) throws GameActionException {
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(rc);
         int coarseY = GeneralNavigation.detectMyCoarseY(rc);
