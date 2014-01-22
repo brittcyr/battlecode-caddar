@@ -12,6 +12,7 @@ public class Dijkstra {
     static int[][]     grid        = null;
     static boolean[][] visited     = null;
     static StringHeap  distStringHeap = null;
+    static int[]       vals;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
         height = _grid.length;
@@ -22,6 +23,9 @@ public class Dijkstra {
         grid = _grid;
         distStringHeap = new StringHeap(width, height);
         iters = 0;
+        vals = new int[100 * Math.max(height, width)];
+
+        Arrays.fill(vals, 999);
 
         // Initialize tentative distances to infinity except zero at source
         for (int[] p : previous) {
@@ -30,6 +34,7 @@ public class Dijkstra {
         }
 
         distStringHeap.decreaseKey(start_y + 100 * start_x, 0);
+        vals[start_y + 100 * start_x] = 0;
 
         // TODO: Map all the void heavy areas as visited in the beginning
     }
@@ -59,25 +64,27 @@ public class Dijkstra {
                     int alt = val + (int) ((double) grid[up][left] * 1.4);
                     // TODO: add 101 and change on stringheap so that do not do twice in some cases
                     int i = up + 100 * left;
-                    // TODO: Cache the stringHeap
-                    if (alt < distStringHeap.getVal(i)) {
+                    if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
+                        vals[i] = alt;
                         previous[up][left] = 3;
                     }
                 }
                 if (!visited[bestY][left]) {
                     int alt = val + grid[bestY][left];
                     int i = bestY + 100 * left;
-                    if (alt < distStringHeap.getVal(i)) {
+                    if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
+                        vals[i] = alt;
                         previous[bestY][left] = 2;
                     }
                 }
                 if (down < height && !visited[down][left]) {
                     int alt = val + (int) ((double) grid[down][left] * 1.4);
                     int i = down + 100 * left;
-                    if (alt < distStringHeap.getVal(i)) {
+                    if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
+                        vals[i] = alt;
                         previous[down][left] = 1;
                     }
                 }
@@ -86,16 +93,18 @@ public class Dijkstra {
             if (up >= 0 && !visited[up][bestX]) {
                 int alt = val + grid[up][bestX];
                 int i = up + 100 * bestX;
-                if (alt < distStringHeap.getVal(i)) {
+                if (alt < vals[i]) {
                     distStringHeap.decreaseKey(i, alt);
+                    vals[i] = alt;
                     previous[up][bestX] = 4;
                 }
             }
             if (down < height && !visited[down][bestX]) {
                 int alt = val + grid[down][bestX];
                 int i = down + 100 * bestX;
-                if (alt < distStringHeap.getVal(i)) {
+                if (alt < vals[i]) {
                     distStringHeap.decreaseKey(i, alt);
+                    vals[i] = alt;
                     previous[down][bestX] = 0;
                 }
             }
@@ -104,24 +113,27 @@ public class Dijkstra {
                 if (up >= 0 && !visited[up][right]) {
                     int alt = val + (int) ((double) grid[up][right] * 1.4);
                     int i = up + 100 * right;
-                    if (alt < distStringHeap.getVal(i)) {
+                    if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
+                        vals[i] = alt;
                         previous[up][right] = 5;
                     }
                 }
                 if (!visited[bestY][right]) {
                     int alt = val + grid[bestY][right];
                     int i = bestY + 100 * right;
-                    if (alt < distStringHeap.getVal(i)) {
+                    if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
+                        vals[i] = alt;
                         previous[bestY][right] = 6;
                     }
                 }
                 if (down < height && !visited[down][right]) {
                     int alt = val + (int) ((double) grid[down][right] * 1.4);
                     int i = down + 100 * right;
-                    if (alt < distStringHeap.getVal(i)) {
+                    if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
+                        vals[i] = alt;
                         previous[down][right] = 7;
                     }
                 }
