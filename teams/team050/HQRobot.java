@@ -14,7 +14,7 @@ import battlecode.common.Team;
 
 public class HQRobot extends BaseRobot {
 
-    public MapLocation pastrSite;
+    public MapLocation nextPastrSite;
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -25,7 +25,7 @@ public class HQRobot extends BaseRobot {
             Clans.setWaypoint(clan, hq);
         }
 
-        pastrSite = scoutNextPasture(hq);
+        	nextPastrSite = scoutNextPasture(hq);
     }
 
     protected void getUpdates() {
@@ -46,9 +46,10 @@ public class HQRobot extends BaseRobot {
     }
 
     public void manageIdleClan(int clan) throws GameActionException {
-        if (Clans.getSize(clan) >= Clans.DEFAULT_SIZE) {
+        if (Clans.getSize(clan) >= Clans.DEFAULT_CLAN_SIZE) {
             Clans.setClanMode(clan, ClanMode.BUILDER);
-            Clans.setWaypoint(clan, pastrSite);
+            Clans.setWaypoint(clan, nextPastrSite);
+            nextPastrSite = scoutNextPasture(rc.senseHQLocation());
         }
     }
 
@@ -129,6 +130,7 @@ public class HQRobot extends BaseRobot {
     }
 
     public MapLocation scoutNextPasture(MapLocation hq) {
+    	// TODO: Do not select a site if we already have a PASTR there.
         double[][] cowGrowth = rc.senseCowGrowth();
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);

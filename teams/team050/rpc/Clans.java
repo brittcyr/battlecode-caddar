@@ -14,8 +14,8 @@ public class Clans {
         DEAD, IDLE, DEFENDER, RAIDER, BUILDER
     }
 
-    public static final int DEFAULT_SIZE = 5;
-
+    public static final int DEFAULT_CLAN_SIZE = 5;
+    
     public static int getNumClans() throws GameActionException {
         return Radio.getData(Channels.NUM_CLANS, 1)[0];
     }
@@ -82,4 +82,49 @@ public class Clans {
         Clans.setSize(clan, Clans.getSize(clan) + 1);
     }
 
+    public static int[] getClanPrivateMemory(int clan, int offset, int len) throws GameActionException {
+    	assert(offset + len <= Channels.CLAN_PRIV_MEM_SZ);
+    	int channel = Channels.CLAN_MEM + clan * Channels.CLAN_PRIV_MEM_SZ + offset;
+    	return Radio.getData(channel, len);
+    }
+    
+    public static void setClanPrivateMemory(int clan, int offset, int[] data) throws GameActionException {
+    	// TODO: assert check.
+    	int channel = Channels.CLAN_MEM + clan * Channels.CLAN_PRIV_MEM_SZ + offset;
+    	Radio.putData(channel, data);
+    }
+    
+    public static boolean getClanPastrStatus(int clan) throws GameActionException {
+    	// TODO: Use marshaler.
+    	if (Clans.getClanPrivateMemory(clan, Channels.BUILDER_PASTR_EXISTS_OFFSET,
+    			Channels.BUILDER_PASTR_EXISTS_SZ)[0] == 1) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
+    public static void setClanPastrStatus(int clan, boolean status) throws GameActionException {
+    	// TODO: Use marshaler.
+    	int val = (status) ? 1 : 0;
+    	int[] data = {val};
+    	Clans.setClanPrivateMemory(clan, Channels.BUILDER_PASTR_EXISTS_OFFSET, data);
+    }
+
+    public static boolean getClanNTStatus(int clan) throws GameActionException {
+    	// TODO: Use marshaler.
+    	if (Clans.getClanPrivateMemory(clan, Channels.BUILDER_NT_EXISTS_OFFSET,
+    			Channels.BUILDER_NT_EXISTS_SZ)[0] == 1) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
+    public static void setClanNTStatus(int clan, boolean status) throws GameActionException {
+    	// TODO: Use marshaler.
+    	int val = (status) ? 1 : 0;
+    	int[] data = {val};
+    	Clans.setClanPrivateMemory(clan, Channels.BUILDER_NT_EXISTS_OFFSET, data);
+    }
 }
