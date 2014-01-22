@@ -1,6 +1,7 @@
 package team050;
 
 import battlecode.common.Direction;
+import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
@@ -24,7 +25,12 @@ public class BugNavigator {
         turned = false;
     }
 
-    public static void navigateTo(RobotController rc, MapLocation target) {
+    public static void navigateTo(RobotController rc, MapLocation target)
+            throws GameActionException {
+        rc.sneak(getDirectionTo(rc, target));
+    }
+
+    public static Direction getDirectionTo(RobotController rc, MapLocation target) {
         try {
             turned &= bugging;
             MapLocation myLoc = rc.getLocation();
@@ -35,8 +41,7 @@ public class BugNavigator {
                     // If we can get there on a road, do that
                     MapLocation next = myLoc.add(toTarget);
                     if (rc.senseTerrainTile(next) == TerrainTile.ROAD) {
-                        rc.sneak(toTarget);
-                        return;
+                        return toTarget;
                     }
 
                     // First check the deltaX and deltaY to the target
@@ -52,8 +57,7 @@ public class BugNavigator {
                         int biggerLeft = Math.max(leftDeltaX, leftDeltaY);
                         boolean isRoad = rc.senseTerrainTile(myLoc.add(left)) == TerrainTile.ROAD;
                         if (isRoad && biggerLeft == bigger) {
-                            rc.sneak(left);
-                            return;
+                            return left;
                         }
                     }
 
@@ -65,14 +69,12 @@ public class BugNavigator {
                         int biggerRight = Math.max(rightDeltaX, rightDeltaY);
                         boolean isRoad = rc.senseTerrainTile(myLoc.add(right)) == TerrainTile.ROAD;
                         if (isRoad && biggerRight == bigger) {
-                            rc.sneak(right);
-                            return;
+                            return right;
                         }
                     }
 
                     // Just follow the normal
-                    rc.sneak(toTarget);
-                    return;
+                    return toTarget;
                 }
                 last_wall = myLoc.add(toTarget);
                 dist_to_target_at_bug_start = myLoc.distanceSquaredTo(target);
@@ -110,8 +112,7 @@ public class BugNavigator {
                     if (rc.canMove(toTarget)) {
                         bugging = false;
                         // Call it again with navigating not in bugging mode
-                        navigateTo(rc, target);
-                        return;
+                        return getDirectionTo(rc, target);
                     }
                 }
 
@@ -149,13 +150,11 @@ public class BugNavigator {
                     if (!willGetOut) {
                         direction_to_turn *= -1;
                         turned = true;
-                        navigateTo(rc, target);
-                        return;
+                        return getDirectionTo(rc, target);
                     }
                 }
                 if (rc.canMove(toNextSquare)) {
-                    rc.sneak(toNextSquare);
-                    return;
+                    return toNextSquare;
                 }
                 else {
                     // We are being blocked by our teammate
@@ -164,23 +163,20 @@ public class BugNavigator {
                     Direction moveDirection = directions[(toNextSquare.ordinal()
                             + direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {
-                        rc.sneak(moveDirection);
                         bugReset();
-                        return;
+                        return moveDirection;
                     }
                     // Check if we can go perpendicular around
                     moveDirection = directions[(toNextSquare.ordinal() + 2 * direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {
-                        rc.sneak(moveDirection);
                         bugReset();
-                        return;
+                        return moveDirection;
                     }
                     else {
                         // Otherwise we will go other way
                         direction_to_turn *= -1;
                         turned = true;
-                        navigateTo(rc, target);
-                        return;
+                        return getDirectionTo(rc, target);
                     }
                 }
             }
@@ -189,5 +185,6 @@ public class BugNavigator {
             e.printStackTrace();
             System.out.println("Soldier Exception");
         }
+        return Direction.NONE;
     }
 }
