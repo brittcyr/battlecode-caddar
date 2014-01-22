@@ -3,6 +3,7 @@ package team050;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
+import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.Team;
 
@@ -28,12 +29,21 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     protected void updateInternals() {
-
+        // TODO: Check which lines are valid to bring in cows
+        // TODO: Compute how to bring in cows in unusual maps
     }
 
     public void doAction() throws GameActionException {
         MapLocation[] myPastrs = rc.sensePastrLocations(me);
         MapLocation[] enemyPastrs = rc.sensePastrLocations(enemy);
+        // If we don't see anything, then selfdestruct to help with spawn rate
+        if (enemyPastrs.length == 0 && myPastrs.length == 0) {
+            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
+            Robot[] nearbyFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
+            if (nearbyEnemies.length >= nearbyFriendlies.length) {
+                rc.selfDestruct();
+            }
+        }
 
         if (enemyPastrs.length > 0) {
             // Be offensive
@@ -62,6 +72,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
     protected void doCompute() {
         // pass
+        // TODO: Do spare computing for offense
     }
 
 }

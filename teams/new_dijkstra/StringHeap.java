@@ -59,7 +59,6 @@ data.append(
     }
 
     public int getVal(int key) {
-        // TODO: Make a cache for these values so do not need to parse int every time
         String str = keyToString(key);
         int indexOfKey = data.indexOf(str);
         int startOfNumber = data.lastIndexOf("X", indexOfKey);
