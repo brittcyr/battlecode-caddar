@@ -31,7 +31,6 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     protected void updateInternals() {
-        // TODO: Check which lines are valid to bring in cows
         // TODO: Compute how to bring in cows in unusual maps
     }
 
@@ -55,8 +54,8 @@ public class NoiseTowerRobot extends BaseRobot {
                         .getLocation()) ? p : myPastr;
             }
 
-            dist -= 5;
-            if (dist < 5) {
+            dist -= 4;
+            if (dist < 4) {
                 dir = dir.rotateRight();
                 dir = dir.rotateRight();
                 dir = dir.rotateRight();
@@ -73,6 +72,10 @@ public class NoiseTowerRobot extends BaseRobot {
                 }
 
                 dist = 15;
+                // This tries to handle the off the map situation
+                while (!rc.canAttackSquare(myPastr.add(dir, dist)) && dist > 0) {
+                    dist -= 1;
+                }
             }
 
             target = myPastr.add(dir, dist);
