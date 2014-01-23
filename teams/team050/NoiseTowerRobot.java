@@ -94,12 +94,10 @@ public class NoiseTowerRobot extends BaseRobot {
             target = myPastr.add(dir, dist);
         }
 
-        if (enemyPastr != null) {
-            // Be offensive only if they are in range
-            if (rc.canAttackSquare(enemyPastr)) {
-                target = enemyPastr;
-            }
-        }
+        /*
+         * if (enemyPastr != null) { // Be offensive only if they are in range if
+         * (rc.canAttackSquare(enemyPastr)) { target = enemyPastr; } }
+         */
 
         if (rc.canAttackSquare(target)) {
             rc.attackSquare(target);
@@ -117,10 +115,9 @@ public class NoiseTowerRobot extends BaseRobot {
 
     public int checkDirection(MapLocation pastr, Direction dir) {
         MapLocation target = pastr;
-        int d = 0;
+        int d = 1;
 
         while (rc.canAttackSquare(target)) {
-            d++;
             TerrainTile terrain = rc.senseTerrainTile(target);
             if (terrain == TerrainTile.OFF_MAP) {
                 break;
@@ -143,6 +140,7 @@ public class NoiseTowerRobot extends BaseRobot {
                     return d;
                 }
             }
+            d++;
         }
         return d;
     }
