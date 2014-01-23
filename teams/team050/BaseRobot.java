@@ -2,6 +2,7 @@ package team050;
 
 import java.util.Random;
 
+import team050.rpc.Liveness;
 import team050.rpc.Radio;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
@@ -31,7 +32,7 @@ public abstract class BaseRobot {
             doAction();
         }
 
-        // Tell others
+        // Tell others.
         sendUpdates();
 
         // Use spare compute cycles if possible
@@ -42,7 +43,9 @@ public abstract class BaseRobot {
 
     protected abstract void doCompute();
 
-    protected abstract void sendUpdates();
+    protected void sendUpdates() throws GameActionException {
+        Liveness.updateLiveness(rc);
+    }
 
     protected abstract void updateInternals() throws GameActionException;
 

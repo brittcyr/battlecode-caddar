@@ -3,7 +3,6 @@ package team050;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
-import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.Team;
 import battlecode.common.TerrainTile;
@@ -75,7 +74,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
                 for (int x = 0; x < 9; x++) {
                     int dirDist = checkDirection(myPastr, dir);
-                    if (dirDist < 10) {
+                    if (dirDist < 6) {
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
@@ -104,8 +103,8 @@ public class NoiseTowerRobot extends BaseRobot {
         }
     }
 
-    protected void sendUpdates() {
-        // pass
+    protected void sendUpdates() throws GameActionException {
+        super.sendUpdates();
     }
 
     protected void doCompute() {
@@ -115,7 +114,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
     public int checkDirection(MapLocation pastr, Direction dir) {
         MapLocation target = pastr;
-        int d = 1;
+        int d = 3;
 
         while (rc.canAttackSquare(target)) {
             TerrainTile terrain = rc.senseTerrainTile(target);
@@ -133,7 +132,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
                 if ((isValidTerrain(left1) && isValidTerrain(left2))
                         || (isValidTerrain(right1) && isValidTerrain(right2))) {
-                    target = target.add(dir);
+                    target = pastr.add(dir, d);
                 }
                 else {
                     // Otherwise, cows will not get around
