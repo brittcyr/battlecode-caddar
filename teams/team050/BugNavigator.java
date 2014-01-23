@@ -142,8 +142,8 @@ public class BugNavigator {
 
                     for (int x = 0; (x + 1) * (x + 1) + 1 < 35; x++) {
                         possibleNextWall = possibleNextWall.add(toNextSquare);
-                        if (rc.senseTerrainTile(next_square) == TerrainTile.ROAD
-                                || rc.senseTerrainTile(next_square) == TerrainTile.NORMAL) {
+                        if (rc.senseTerrainTile(possibleNextWall) == TerrainTile.ROAD
+                                || rc.senseTerrainTile(possibleNextWall) == TerrainTile.NORMAL) {
                             willGetOut = true;
                         }
                     }
