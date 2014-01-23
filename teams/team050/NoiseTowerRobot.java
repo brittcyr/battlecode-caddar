@@ -1,6 +1,5 @@
 package team050;
 
-import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -31,20 +30,13 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     protected void updateInternals() {
-        // TODO: Compute how to bring in cows in unusual maps
+        // TODO: Compute dijkstra on a really coarse map, 4x4 on region around noise tower
+        // But this weighting does not care about roads
     }
 
     public void doAction() throws GameActionException {
         MapLocation[] myPastrs = rc.sensePastrLocations(me);
         MapLocation[] enemyPastrs = rc.sensePastrLocations(enemy);
-        // If we don't see anything, then selfdestruct to help with spawn rate
-        if (enemyPastrs.length == 0 && myPastrs.length == 0) {
-            Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
-            Robot[] nearbyFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
-            if (nearbyEnemies.length >= nearbyFriendlies.length) {
-                rc.selfDestruct();
-            }
-        }
 
         if (myPastrs.length > 0) {
             // Pick the nearest pastr
