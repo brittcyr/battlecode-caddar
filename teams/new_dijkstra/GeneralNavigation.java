@@ -1,6 +1,5 @@
 package new_dijkstra;
 
-import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
@@ -20,19 +19,19 @@ public class GeneralNavigation {
         // TODO: Use the radio to determine if Dijkstra is available for our target
     }
 
-    public static int detectMyCoarseX(RobotController rc) {
+    private static int detectMyCoarseX(RobotController rc) {
         MapLocation myLoc = rc.getLocation();
         int myX = myLoc.x;
         return myX / coarseness;
     }
 
-    public static int detectMyCoarseY(RobotController rc) {
+    private static int detectMyCoarseY(RobotController rc) {
         MapLocation myLoc = rc.getLocation();
         int myY = myLoc.y;
         return myY / coarseness;
     }
 
-    public static MapLocation getMyCenter(RobotController rc) {
+    private static MapLocation getMyCenter(RobotController rc) {
         int coarseX = detectMyCoarseX(rc);
         int coarseY = detectMyCoarseY(rc);
         int fineX = coarseX * coarseness + coarseness / 2;
@@ -40,7 +39,7 @@ public class GeneralNavigation {
         return new MapLocation(fineX, fineY);
     }
 
-    public static MapLocation getNextCenter(RobotController rc, int coarseness, Direction d) {
+    private static MapLocation getNextCenter(RobotController rc, int coarseness, Direction d) {
         MapLocation myCenter = getMyCenter(rc);
         return myCenter.add(d, coarseness);
     }
@@ -49,6 +48,7 @@ public class GeneralNavigation {
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(rc);
         int coarseY = GeneralNavigation.detectMyCoarseY(rc);
+        // TODO: get this from something local instead of Dijkstra.previous
         int directionNum = Dijkstra.previous[coarseY][coarseX];
 
         // This means that we are close to the target and should just use bug
