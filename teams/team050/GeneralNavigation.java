@@ -1,5 +1,6 @@
 package team050;
 
+import new_dijkstra.Dijkstra;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -7,45 +8,32 @@ import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
 
 public class GeneralNavigation {
-    public static Direction[]     directions = { Direction.NORTH, Direction.NORTH_EAST,
+    public static Direction[]     directions   = { Direction.NORTH, Direction.NORTH_EAST,
             Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST,
             Direction.WEST, Direction.NORTH_WEST };
-    public static MapLocation     target;
-    public static MapLocation     lastWaypoint;
-    public static int             coarseness = 2;
-    public static TerrainTile[][] gameBoard;
-    public static int[][]         coarseMap  = null;
-
-    public static void setupNav(RobotController rc) {
-
-        // if (false) {
-        // TODO: If we can read the terrain from the radio
-        // }
-        // else {
-        senseGameBoard(rc);
-        // }
-
-        // We will only need a coarse map if we compute ourself hopefully will not have to
-        lastWaypoint = null;
-    }
+    public static MapLocation     target       = null;
+    public static MapLocation     lastWaypoint = null;
+    public static int             coarseness   = 2;
+    public static TerrainTile[][] gameBoard    = null;
+    public static int[][]         coarseMap    = null;
 
     public static void setTarget(MapLocation _target) {
         target = _target;
     }
 
-    public static int detectMyCoarseX(RobotController rc) {
+    private static int detectMyCoarseX(RobotController rc) {
         MapLocation myLoc = rc.getLocation();
         int myX = myLoc.x;
         return myX / coarseness;
     }
 
-    public static int detectMyCoarseY(RobotController rc) {
+    private static int detectMyCoarseY(RobotController rc) {
         MapLocation myLoc = rc.getLocation();
         int myY = myLoc.y;
         return myY / coarseness;
     }
 
-    public static MapLocation getMyCenter(RobotController rc) {
+    private static MapLocation getMyCenter(RobotController rc) {
         int coarseX = detectMyCoarseX(rc);
         int coarseY = detectMyCoarseY(rc);
         int fineX = coarseX * coarseness + coarseness / 2;
@@ -53,32 +41,9 @@ public class GeneralNavigation {
         return new MapLocation(fineX, fineY);
     }
 
-    public static MapLocation getNextCenter(RobotController rc, int coarseness, Direction d) {
+    private static MapLocation getNextCenter(RobotController rc, int coarseness, Direction d) {
         MapLocation myCenter = getMyCenter(rc);
         return myCenter.add(d, coarseness);
-    }
-
-    public static void smartNav(RobotController rc) throws GameActionException {
-        // Do smart navigation to enemy
-        int coarseX = GeneralNavigation.detectMyCoarseX(rc);
-        int coarseY = GeneralNavigation.detectMyCoarseY(rc);
-        int directionNum = Dijkstra.previous[coarseY][coarseX];
-
-        // This means that we are close to the target or in a bad area and should just use bug
-        if (directionNum == Dijkstra.UNSET) {
-            BugNavigator.navigateTo(rc, target);
-            return;
-        }
-
-        // If we have at least one more direction to go, then BugNavigate to waypoint
-        Direction toWaypoint = directions[directionNum];
-        MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
-        if (!waypoint.equals(lastWaypoint)) {
-            BugNavigator.bugReset();
-            lastWaypoint = waypoint;
-        }
-
-        rc.move(BugNavigator.getDirectionTo(rc, waypoint));
     }
 
     public static void senseGameBoard(RobotController rc) {
@@ -123,6 +88,46 @@ public class GeneralNavigation {
                 return 100;
         }
         return 100;
+    }
+
+    public static void prepareCompute(RobotController rc, MapLocation target) {
+        // This is the test if we are preparing our first computation
+        if (gameBoard == null) {
+            // TODO: Check the radio to see if these are available there
+            senseGameBoard(rc);
+            setupCoarseMap(rc);
+        }
+
+        int startX = target.x / coarseness;
+        int startY = target.y / coarseness;
+        Dijkstra.setupDijkstra(coarseMap, startX, startY);
+    }
+
+    public static void doCompute() {
+        Dijkstra.doDijkstra();
+    }
+
+    public static void smartNav(RobotController rc) throws GameActionException {
+        // Do smart navigation to enemy
+        int coarseX = GeneralNavigation.detectMyCoarseX(rc);
+        int coarseY = GeneralNavigation.detectMyCoarseY(rc);
+        int directionNum = Dijkstra.previous[coarseY][coarseX];
+
+        // This means that we are close to the target or in a bad area and should just use bug
+        if (directionNum == Dijkstra.UNSET) {
+            BugNavigator.navigateTo(rc, target);
+            return;
+        }
+
+        // If we have at least one more direction to go, then BugNavigate to waypoint
+        Direction toWaypoint = directions[directionNum];
+        MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
+        if (!waypoint.equals(lastWaypoint)) {
+            BugNavigator.bugReset();
+            lastWaypoint = waypoint;
+        }
+
+        rc.move(BugNavigator.getDirectionTo(rc, waypoint));
     }
 
 }

@@ -51,7 +51,6 @@ public class CowboyRobot extends BaseRobot {
                 break;
             }
         }
-        GeneralNavigation.setupNav(rc);
     }
 
     protected void getUpdates() throws GameActionException {
@@ -223,25 +222,28 @@ public class CowboyRobot extends BaseRobot {
                     BugNavigator.navigateTo(rc, rc.senseHQLocation());
                     // Do nothing when we are not active
                 }
-                else if (Clans.getClanMode(clan) == ClanMode.BUILDER){
+                else if (Clans.getClanMode(clan) == ClanMode.BUILDER) {
                     // TODO: Do not build overlapping PASTR since they share cows
-                	// If "close enough to target" build a PASTR if clan hasn't built one yet.
-                	// If PASTR built and close enough, build NT.
-                	double rangeSquared = Math.pow(.05 * rc.getMapWidth(), 2);
-                	if (withinRangeSquared(target, rangeSquared)) {
-                		if (Clans.getClanPastrStatus(clan) == false) {
-                			rc.construct(RobotType.PASTR);
-                			Clans.setClanPastrStatus(clan, true);
-                		} else if (Clans.getClanNTStatus(clan) == false) {
-                			rc.construct(RobotType.NOISETOWER);
-                			Clans.setClanNTStatus(clan, true);
-                			Clans.setClanMode(clan, ClanMode.DEFENDER);
-                		}
-                	} else {
-                		BugNavigator.navigateTo(rc, target);
-                	}
-                } else {
-                	BugNavigator.navigateTo(rc, target);
+                    // If "close enough to target" build a PASTR if clan hasn't built one yet.
+                    // If PASTR built and close enough, build NT.
+                    double rangeSquared = Math.pow(.05 * rc.getMapWidth(), 2);
+                    if (withinRangeSquared(target, rangeSquared)) {
+                        if (Clans.getClanPastrStatus(clan) == false) {
+                            rc.construct(RobotType.PASTR);
+                            Clans.setClanPastrStatus(clan, true);
+                        }
+                        else if (Clans.getClanNTStatus(clan) == false) {
+                            rc.construct(RobotType.NOISETOWER);
+                            Clans.setClanNTStatus(clan, true);
+                            Clans.setClanMode(clan, ClanMode.DEFENDER);
+                        }
+                    }
+                    else {
+                        BugNavigator.navigateTo(rc, target);
+                    }
+                }
+                else {
+                    BugNavigator.navigateTo(rc, target);
                 }
                 break;
 
@@ -337,9 +339,9 @@ public class CowboyRobot extends BaseRobot {
 
     }
 
-	private boolean withinRangeSquared(MapLocation target, double rangeSquared) {
-		return target.distanceSquaredTo(rc.getLocation()) < rangeSquared;
-	}
+    private boolean withinRangeSquared(MapLocation target, double rangeSquared) {
+        return target.distanceSquaredTo(rc.getLocation()) < rangeSquared;
+    }
 
     protected void sendUpdates() {
         // pass

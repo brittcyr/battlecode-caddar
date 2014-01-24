@@ -5,16 +5,16 @@ import java.util.Arrays;
 import battlecode.common.Clock;
 
 public class Dijkstra {
-    static int         iters;
-    static int         width       = 0;
-    static int         height      = 0;
-    static int[][]     previous    = null;
-    static boolean     finished    = false;
-    static final int   UNSET       = 9;
-    static int[][]     grid        = null;
-    static boolean[][] visited     = null;
-    static FibHeap     distFibHeap = null;
-    static final int   MAX_VERTS   = FibHeap.MAX_VERTS;
+    public static int         iters;
+    public static int         width       = 0;
+    public static int         height      = 0;
+    public static int[][]     previous    = null;
+    public static boolean     finished    = false;
+    public static final int   UNSET       = 9;
+    public static int[][]     grid        = null;
+    public static boolean[][] visited     = null;
+    public static FibHeap     distFibHeap = null;
+    public static final int   MAX_VERTS   = FibHeap.MAX_VERTS;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
         height = _grid.length;
