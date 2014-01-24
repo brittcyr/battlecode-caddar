@@ -45,4 +45,5 @@ public class DijkstraTest {
 
         assertTrue(java.util.Arrays.deepEquals(expected, Dijkstra.previous));
     }
+
 }

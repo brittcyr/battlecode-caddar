@@ -15,6 +15,11 @@ public class RobotPlayer {
                     br = new HQRobot(rc);
                     break;
                 case SOLDIER:
+                    int mapWidth = rc.getMapWidth();
+                    int mapHeight = rc.getMapHeight();
+                    if (mapWidth * mapHeight > 900) {
+                        CowboyRobot.coarseness = 3;
+                    }
                     br = new CowboyRobot(rc);
                     break;
                 case PASTR:

@@ -17,6 +17,7 @@ public class GeneralNavigation {
         target = _target;
         coarseness = _coarseness;
         lastWaypoint = null;
+        // TODO: Use the radio to determine if Dijkstra is available for our target
     }
 
     public static int detectMyCoarseX(RobotController rc) {
@@ -52,13 +53,11 @@ public class GeneralNavigation {
 
         // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            // TODO: If we are within sight, we should use A*
             BugNavigator.navigateTo(rc, target);
             return;
         }
 
         // If we have at least one more direction to go, then BugNavigate to waypoint
-        // TODO: If the waypoint is not very far away, we should use BFS
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
         if (!waypoint.equals(lastWaypoint)) {
