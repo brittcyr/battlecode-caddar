@@ -4,17 +4,11 @@ import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
 import battlecode.common.RobotController;
-import battlecode.common.TerrainTile;
 
 public class HQRobot extends BaseRobot {
-    public TerrainTile[][] gameBoard;
-    public int[][]         coarseMap = null;
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
-        int width = myRC.getMapWidth();
-        int height = myRC.getMapHeight();
-        gameBoard = new TerrainTile[width][height];
     }
 
     public void run() {
