@@ -8,14 +8,36 @@ import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
 
 public class GeneralNavigation {
-    public static Direction[]     directions   = { Direction.NORTH, Direction.NORTH_EAST,
+    public static Direction[]     directions      = { Direction.NORTH, Direction.NORTH_EAST,
             Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST,
             Direction.WEST, Direction.NORTH_WEST };
-    public static MapLocation     target       = null;
-    public static MapLocation     lastWaypoint = null;
-    public static int             coarseness   = 2;
-    public static TerrainTile[][] gameBoard    = null;
-    public static int[][]         coarseMap    = null;
+    public static MapLocation     target          = null;
+    public static MapLocation     lastWaypoint    = null;
+    public static int             coarseness      = 2;
+    public static TerrainTile[][] gameBoard       = null;
+    public static int[][]         coarseMap       = null;
+    public static MapLocation     currentlyLoaded = null;
+    public static int[][]         previous        = null;
+
+    /*
+     * Here is how to use GeneralNavigation
+     * 
+     * There are two types of uses, either we are offering to compute something or are requesting
+     * directions
+     * 
+     * 
+     * DOING COMPUTATION 1. prepareCompute(MapLocation target) 2. doCompute()
+     * 
+     * Setup this way so that prepareCompute can be called once and then doCompute can be called in
+     * the robot's doCompute once this returns, the dijkstra is ready and the results will be put
+     * into previous
+     * 
+     * 
+     * REQUESTING DIRECTIONS 1. setTarget 2. getNextDirection
+     * 
+     * This should handle checking if the currently computed map is correct, if it is not, then we
+     * will request it and in the mean time, just bug
+     */
 
     public static void setTarget(MapLocation _target) {
         target = _target;
@@ -46,7 +68,7 @@ public class GeneralNavigation {
         return myCenter.add(d, coarseness);
     }
 
-    public static void senseGameBoard(RobotController rc) {
+    private static void senseGameBoard(RobotController rc) {
         // Scan the grid
         int height = rc.getMapHeight();
         int width = rc.getMapWidth();
@@ -58,7 +80,7 @@ public class GeneralNavigation {
         }
     }
 
-    public static void setupCoarseMap(RobotController rc) {
+    private static void setupCoarseMap(RobotController rc) {
         // Create new map for given coarseness
         int height = (int) Math.ceil((double) rc.getMapHeight() / coarseness);
         int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
@@ -74,7 +96,6 @@ public class GeneralNavigation {
                 coarseMap[coarseY][coarseX] += getTileValue(tile);
             }
         }
-        Dijkstra.setupDijkstra(coarseMap, target.x / coarseness, target.y / coarseness);
     }
 
     private static int getTileValue(TerrainTile tile) {
@@ -105,9 +126,12 @@ public class GeneralNavigation {
 
     public static void doCompute() {
         Dijkstra.doDijkstra();
+        previous = Dijkstra.previous;
     }
 
-    public static void smartNav(RobotController rc) throws GameActionException {
+    public static Direction getNextDirection(RobotController rc) throws GameActionException {
+        // TODO: Check if the current loaded previous is correct, otherwise request it and just bug
+
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(rc);
         int coarseY = GeneralNavigation.detectMyCoarseY(rc);
@@ -115,8 +139,7 @@ public class GeneralNavigation {
 
         // This means that we are close to the target or in a bad area and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            BugNavigator.navigateTo(rc, target);
-            return;
+            return BugNavigator.getDirectionTo(rc, target);
         }
 
         // If we have at least one more direction to go, then BugNavigate to waypoint
@@ -127,7 +150,10 @@ public class GeneralNavigation {
             lastWaypoint = waypoint;
         }
 
-        rc.move(BugNavigator.getDirectionTo(rc, waypoint));
+        return BugNavigator.getDirectionTo(rc, waypoint);
     }
+
+    // TODO: Implement a function imReady which says whether we have loaded in the right computation
+    // by checking for the 9 in the previous map and matching against target
 
 }
