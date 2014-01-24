@@ -1,6 +1,5 @@
 package new_dijkstra;
 
-import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
