@@ -52,6 +52,7 @@ public class CowboyRobot extends BaseRobot {
             }
         }
 
+        // This pads the last coarse square so that there is no unfair edge bonus
         for (int y = rc.getMapHeight(); y < height * coarseness; y++) {
             int coarseY = y / coarseness;
             for (int x = 0; x < rc.getMapWidth(); x++) {
@@ -61,6 +62,7 @@ public class CowboyRobot extends BaseRobot {
             }
         }
 
+        // This pads the last coarse square so that there is no unfair edge bonus
         for (int y = 0; y < rc.getMapHeight(); y++) {
             int coarseY = y / coarseness;
             for (int x = rc.getMapWidth(); x < width * coarseness; x++) {

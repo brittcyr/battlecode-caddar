@@ -15,6 +15,7 @@ public class RobotPlayer {
                     br = new HQRobot(rc);
                     break;
                 case SOLDIER:
+                    // This tells us whether the map is big enough to justify a larger coarseness
                     int mapWidth = rc.getMapWidth();
                     int mapHeight = rc.getMapHeight();
                     if (mapWidth * mapHeight > 900) {

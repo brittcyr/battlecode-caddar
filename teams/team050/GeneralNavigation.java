@@ -15,7 +15,6 @@ public class GeneralNavigation {
     public static int             coarseness = 2;
     public static TerrainTile[][] gameBoard;
     public static int[][]         coarseMap  = null;
-    public static int[][]         grid       = null;
 
     public static void setupNav(RobotController rc) {
 
@@ -103,7 +102,6 @@ public class GeneralNavigation {
         int height = (int) Math.ceil((double) rc.getMapHeight() / coarseness);
         int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
         coarseMap = new int[height][width];
-        grid = new int[rc.getMapHeight()][rc.getMapWidth()];
         // Populate the coarseMap
         int mapHeight = rc.getMapHeight();
         int mapWidth = rc.getMapWidth();
@@ -112,25 +110,23 @@ public class GeneralNavigation {
             for (int x = mapWidth; --x >= 0;) {
                 int coarseX = x / coarseness;
                 TerrainTile tile = gameBoard[y][x];
-                if (tile == TerrainTile.NORMAL) {
-                    coarseMap[coarseY][coarseX] += 10;
-                    grid[y][x] += 10;
-                }
-                else {
-                    if (tile == TerrainTile.ROAD) {
-                        coarseMap[coarseY][coarseX] += 7;
-                        grid[y][x] += 7;
-                    }
-                    else {
-                        // Then it must be a void
-                        coarseMap[coarseY][coarseX] += 1000;
-                        grid[y][x] += 1000;
-                    }
-                }
+                coarseMap[coarseY][coarseX] += getTileValue(tile);
             }
         }
         Dijkstra.setupDijkstra(coarseMap, target.x / coarseness, target.y / coarseness);
-        AStar.setupAStar(grid, target.x, target.y);
+    }
+
+    private static int getTileValue(TerrainTile tile) {
+        switch (tile) {
+            case NORMAL:
+                return 2;
+            case ROAD:
+                return 1;
+            case VOID:
+            case OFF_MAP:
+                return 100;
+        }
+        return 100;
     }
 
 }
