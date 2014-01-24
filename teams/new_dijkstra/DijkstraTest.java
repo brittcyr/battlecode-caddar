@@ -31,4 +31,18 @@ public class DijkstraTest {
 
         assertTrue(java.util.Arrays.deepEquals(expected, Dijkstra.previous));
     }
+
+    @Test
+    // This test checks for longer paths that are actually better
+    public void test4x4LongerPath() {
+        int[][] grid = { { 10, 20, 30, 10 }, { 10, 300, 30, 10 }, { 10, 300, 30, 10 },
+                { 10, 400, 30, 10 } };
+
+        Dijkstra.setupDijkstra(grid, 0, 1); // grid, x, y
+        Dijkstra.doDijkstra();
+
+        int[][] expected = { { 4, 5, 6, 6 }, { 9, 6, 7, 7 }, { 0, 6, 0, 0 }, { 0, 6, 2, 0 } };
+
+        assertTrue(java.util.Arrays.deepEquals(expected, Dijkstra.previous));
+    }
 }

@@ -4,13 +4,13 @@ import java.util.Arrays;
 
 public class Dijkstra {
     static int         iters;
-    static int         width       = 0;
-    static int         height      = 0;
-    static int[][]     previous    = null;
-    static boolean     finished    = false;
-    static final int   UNSET       = 9;
-    static int[][]     grid        = null;
-    static boolean[][] visited     = null;
+    static int         width          = 0;
+    static int         height         = 0;
+    static int[][]     previous       = null;
+    static boolean     finished       = false;
+    static final int   UNSET          = 9;
+    static int[][]     grid           = null;
+    static boolean[][] visited        = null;
     static StringHeap  distStringHeap = null;
     static int[]       vals;
 
@@ -35,8 +35,6 @@ public class Dijkstra {
 
         distStringHeap.decreaseKey(start_y + 100 * start_x, 0);
         vals[start_y + 100 * start_x] = 0;
-
-        // TODO: Map all the void heavy areas as visited in the beginning
     }
 
     public static void doDijkstra() {
@@ -57,12 +55,9 @@ public class Dijkstra {
             int up = bestY - 1;
             int down = bestY + 1;
 
-            // TODO: Pad the outsides and set to visited to avoid constant edge checks
-            // TODO: flip visited to avoid extra ! operation
             if (left >= 0) {
                 if (up >= 0 && !visited[up][left]) {
                     int alt = val + (int) ((double) grid[up][left] * 1.4);
-                    // TODO: add 101 and change on stringheap so that do not do twice in some cases
                     int i = up + 100 * left;
                     if (alt < vals[i]) {
                         distStringHeap.decreaseKey(i, alt);
