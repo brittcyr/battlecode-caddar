@@ -64,6 +64,14 @@ public class NoiseTowerRobot extends BaseRobot {
 
     public void doAction() throws GameActionException {
 
+        // Offense
+        if (enemyPastr != null) {
+            // Be offensive only if they are in range
+            if (rc.canAttackSquare(enemyPastr)) {
+                target = enemyPastr;
+            }
+        }
+
         // Leave this code here since we only want it to run whenever the NT is active
         if (myPastr != null) {
             dist -= 3;
@@ -92,11 +100,6 @@ public class NoiseTowerRobot extends BaseRobot {
             }
             target = myPastr.add(dir, dist);
         }
-
-        /*
-         * if (enemyPastr != null) { // Be offensive only if they are in range if
-         * (rc.canAttackSquare(enemyPastr)) { target = enemyPastr; } }
-         */
 
         if (rc.canAttackSquare(target)) {
             rc.attackSquare(target);
