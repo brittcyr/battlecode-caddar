@@ -64,15 +64,13 @@ public class GeneralNavigation {
         int coarseY = GeneralNavigation.detectMyCoarseY(rc);
         int directionNum = Dijkstra.previous[coarseY][coarseX];
 
-        // This means that we are close to the target and should just use bug
+        // This means that we are close to the target or in a bad area and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            // TODO: If we are within sight, we should use A*, or BFS or augment Bug to use roads
             BugNavigator.navigateTo(rc, target);
             return;
         }
 
         // If we have at least one more direction to go, then BugNavigate to waypoint
-        // TODO: If the waypoint is not very far away, we should use BFS
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
         if (!waypoint.equals(lastWaypoint)) {
@@ -80,9 +78,7 @@ public class GeneralNavigation {
             lastWaypoint = waypoint;
         }
 
-        AStar.doAStar(rc.getLocation().x, rc.getLocation().y);
-
-        BugNavigator.navigateTo(rc, waypoint);
+        rc.move(BugNavigator.getDirectionTo(rc, waypoint));
     }
 
     public static void senseGameBoard(RobotController rc) {
