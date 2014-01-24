@@ -33,7 +33,7 @@ public class Liveness {
         RobotType type = rc.getType();
         int word = roundAndTypeToInt(roundNum, type);
 
-        int gid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
+        int gid = Clans.robotIdToGid(rc);
         Radio.putData(Channels.BOT_LIVENESS + gid, new int[] { word });
     }
 

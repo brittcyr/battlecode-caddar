@@ -10,6 +10,34 @@ import battlecode.common.RobotController;
  */
 public class Clans {
 
+    // Return -1 if not in table.
+    public static int robotIdToGid(RobotController rc) throws GameActionException {
+        int robotId = rc.getRobot().getID();
+        int origX = robotId % Channels.MAX_GAME_OBJS;
+        int x = origX;
+        while (Radio.getData(Channels.PRESENT_TABLE + x, 1)[0] != robotId) {
+            x = (x + 1) % Channels.MAX_GAME_OBJS;
+            if (x == origX)
+                return -1;
+        }
+        return x;
+    }
+
+    // Return GID of this robot controller after it has been added to table.
+    // Return -1 if table is full.
+    public static int mapRobotGid(RobotController rc) throws GameActionException {
+        int robotId = rc.getRobot().getID();
+        int origX = robotId % Channels.MAX_GAME_OBJS;
+        int x = origX;
+        while (Radio.getData(Channels.PRESENT_TABLE + x, 1)[0] != 0) {
+            x = (x + 1) % Channels.MAX_GAME_OBJS;
+            if (x == origX)
+                return -1;
+        }
+        Radio.putData(Channels.PRESENT_TABLE + x, new int[] { robotId });
+        return x;
+    }
+
     public static enum ClanMode {
         DEAD, IDLE, DEFENDER, RAIDER, BUILDER
     }
@@ -25,8 +53,8 @@ public class Clans {
     }
 
     public static int getMembership(RobotController rc) throws GameActionException {
-        int uid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
-        return Radio.getData(Channels.CLAN_MEMBERSHIPS + uid, 1)[0];
+        int gid = Clans.robotIdToGid(rc);
+        return Radio.getData(Channels.CLAN_MEMBERSHIPS + gid, 1)[0];
     }
 
     public static int getMembershipByGid(int gid) throws GameActionException {
@@ -34,8 +62,8 @@ public class Clans {
     }
 
     public static void setMembership(RobotController rc, int clanId) throws GameActionException {
-        int uid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
-        Radio.putData(Channels.CLAN_MEMBERSHIPS + uid, new int[] { clanId });
+        int gid = Clans.robotIdToGid(rc);
+        Radio.putData(Channels.CLAN_MEMBERSHIPS + gid, new int[] { clanId });
     }
 
     public static int getSize(int clan) throws GameActionException {

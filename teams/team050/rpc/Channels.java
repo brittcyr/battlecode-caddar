@@ -10,9 +10,12 @@ package team050.rpc;
 public class Channels {
 
     // Used to map large game element IDs (e.g. rc.getRobot().getId()) to smaller addr space.
-    public static final int MAX_GAME_OBJS               = 1009;                                  // 1009
-                                                                                                  // prime.
-    public static final int MAX_CLANS                   = 20;
+    // Actual max game objects is 25. 29 is next largest prime, which is better for open addressing.
+    public static final int MAX_GAME_OBJS               = 29;
+    public static final int MAX_CLANS                   = 5;
+
+    // An index in [0, MAX_GAME_OBJS) is used to retrieve information about the robot.
+    // Call the index gid. We use open addressing to determine the location in the table.
 
     // We store the radio "address" at which each section starts, as well as the size of that
     // section (*_SZ). Then functions can index into that section to retrieve the information they
@@ -30,8 +33,13 @@ public class Channels {
     // Clan information.
     public static final int CLAN_ADDR_SPACE_START       = 40000;
 
+    // Store the rc.getRobot().getID() located in each GID position from [0, MAX_GAME_OBJS). A value
+    // of -1 means "vacated" in the context of open addressing.
+    public static final int PRESENT_TABLE               = CLAN_ADDR_SPACE_START;
+    public static final int PRESENT_TABLE_SZ            = MAX_GAME_OBJS;
+
     // The total number of clans.
-    public static final int NUM_CLANS                   = CLAN_ADDR_SPACE_START;
+    public static final int NUM_CLANS                   = PRESENT_TABLE + PRESENT_TABLE_SZ;
     public static final int NUM_CLANS_SZ                = 1;
 
     // What clan each robot is in.
@@ -57,4 +65,5 @@ public class Channels {
     // Clan-private memory.
     public static final int CLAN_MEM                    = CLAN_MODES + CLAN_MODES_SZ;
     public static final int CLAN_MEM_SZ                 = MAX_CLANS * CLAN_PRIV_MEM_SZ;
+
 }

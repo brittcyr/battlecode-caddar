@@ -3,6 +3,8 @@ package team050;
 import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
+import team050.rpc.Liveness;
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
@@ -34,6 +36,30 @@ public class HQRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
+        // Update state of each robot every round.
+        int curRound = Clock.getRoundNum();
+        if (curRound >= 2) {
+            System.out.println("Round " + curRound);
+            System.out.println("\tGarbage collecting game state.");
+            for (int i = 0; i < Channels.MAX_GAME_OBJS; i++) {
+                // If robot didn't update last round, it died.
+                if (!robotIsDead(curRound, i)) {
+                    continue;
+                }
+                // Robot must be dead.
+                // - Update the present table.
+                // - Decrease its clan size.
+                // - Depending on its type, clan might need to rebuild some structures.
+                /*
+                 * int clan = Clans.getMembershipByGid(i); Clans.setSize(clan, Clans.getSize(clan) -
+                 * 1); switch (Clans.getClanMode(clan)) { case DEFENDER: case BUILDER: switch
+                 * (Liveness.getLastPostedTypeByGid(i)) { case NOISETOWER:
+                 * Clans.setClanNTStatus(clan, false); break; case PASTR:
+                 * Clans.setClanPastrStatus(clan, false); break; } break; default: break; }
+                 */
+            }
+        }
+
         // Manage clans.
         for (int i = 0; i < Clans.getNumClans(); i++) {
             switch (Clans.getClanMode(i)) {
@@ -44,6 +70,12 @@ public class HQRobot extends BaseRobot {
                     break;
             }
         }
+
+    }
+
+    private boolean robotIsDead(int curRound, int gid) throws GameActionException {
+        // Robots are considered dead if they did not update their state last round.
+        return Liveness.getLastPostedRoundByGid(gid) < (curRound - 1);
     }
 
     public void manageIdleClan(int clan) throws GameActionException {
@@ -125,8 +157,8 @@ public class HQRobot extends BaseRobot {
         }
     }
 
-    protected void sendUpdates() {
-        // pass
+    protected void sendUpdates() throws GameActionException {
+        super.sendUpdates();
     }
 
     protected void doCompute() {

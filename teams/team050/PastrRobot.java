@@ -21,8 +21,9 @@ public class PastrRobot extends BaseRobot {
         // New specs make self destruct really bad
     }
 
-    protected void sendUpdates() {
+    protected void sendUpdates() throws GameActionException {
         // Send out the results of computing and send whether are under attack
+        super.sendUpdates();
     }
 
     protected void doCompute() {
