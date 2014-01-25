@@ -30,8 +30,6 @@ public class HQRobot extends BaseRobot {
             }
         }
 
-        // TODO: Insert attack code here
-
         if (doSpawn) {
             rc.spawn(toEnemy);
         }

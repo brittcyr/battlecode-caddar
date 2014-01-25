@@ -87,7 +87,6 @@ public class BugNavigator {
                 }
                 Direction toNextSquare = rc.getLocation().directionTo(next_square);
                 if (toNextSquare.opposite().equals(toTarget) && !turned) {
-                    // TODO: Check if we have teammates nearby and tell to turn also
                     MapLocation possibleNextWall = last_wall;
                     boolean willGetOut = false;
 

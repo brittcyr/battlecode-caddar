@@ -50,17 +50,14 @@ public class Clans {
         Radio.putData(Channels.CLAN_WAYPOINTS + clan, new int[] { wp });
     }
 
-    // TODO: Use marshaler.
     public static ClanMode getClanMode(int clan) throws GameActionException {
         return ClanMode.values()[Radio.getData(Channels.CLAN_MODES + clan, 1)[0]];
     }
     
-    // TODO: Use marshaler.
     public static void setClanMode(int clan, ClanMode mode) throws GameActionException {
         Radio.putData(Channels.CLAN_MODES + clan, new int[] { mode.ordinal() });
     }
 
-    // TODO: Do not exceed MAX_CLANS.
     public static void createClan(int clan) throws GameActionException {
         assert (Clans.getSize(clan) == 0);
         assert (Clans.getClanMode(clan) == ClanMode.DEAD);

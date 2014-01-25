@@ -22,7 +22,6 @@ public class CowboyRobot extends BaseRobot {
     public void run() {
         try {
             // Check if HQ requesting new pastrAttacker.
-            // TODO: Use constants for radio channels.
             if (rc.readBroadcast(1001) == 1 && !pastrAttacker) {
                 rc.broadcast(1001, 0);
                 pastrAttacker = true;
@@ -110,7 +109,6 @@ public class CowboyRobot extends BaseRobot {
             }
 
             // Sneak towards the enemy
-            // TODO: waypoint shouldn't necessarily be enemy hq.
             MapLocation waypoint = rc.senseEnemyHQLocation();
             BugNavigator.navigateTo(rc, waypoint);
 

@@ -16,13 +16,7 @@ public class GeneralNavigation {
     public static int[][]         coarseMap  = null;
 
     public static void setupNav(RobotController rc) {
-
-        // if (false) {
-        // TODO: If we can read the terrain from the radio
-        // }
-        // else {
         senseGameBoard(rc);
-        // }
 
         // We will only need a coarse map if we compute ourself hopefully will not have to
         lastWaypoint = null;
@@ -65,13 +59,10 @@ public class GeneralNavigation {
 
         // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            // TODO: If we are within sight, we should use A*, or BFS or augment Bug to use roads
             BugNavigator.navigateTo(rc, target);
             return;
         }
 
-        // If we have at least one more direction to go, then BugNavigate to waypoint
-        // TODO: If the waypoint is not very far away, we should use BFS
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
         if (!waypoint.equals(lastWaypoint)) {

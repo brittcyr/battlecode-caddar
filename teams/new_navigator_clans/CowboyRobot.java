@@ -35,15 +35,9 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void updateInternals() {
-        // TODO: This is the state update where we will have to do our own computing
-        // Dijkstra.setupDijkstra(coarseMap, target.x, target.y);
     }
 
     protected void doAction() throws GameActionException {
-        /*
-         * if (Dijkstra.finished) { GeneralNavigation.smartNav(rc); } else { //
-         * BugNavigator.navigateTo(rc, target); }
-         */
         // pass
         
         /* Move around randomly until Clan not Idle. */

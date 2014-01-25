@@ -18,8 +18,6 @@ public abstract class BaseRobot {
     }
 
     public void loop() throws GameActionException {
-        // TODO: Apply Clock time checks into each step and make estimates for each length
-
         // Get updates mostly just reading radio
         getUpdates();
 

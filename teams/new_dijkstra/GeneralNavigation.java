@@ -16,7 +16,6 @@ public class GeneralNavigation {
         target = _target;
         coarseness = _coarseness;
         lastWaypoint = null;
-        // TODO: Use the radio to determine if Dijkstra is available for our target
     }
 
     private static int detectMyCoarseX(RobotController rc) {
@@ -48,7 +47,6 @@ public class GeneralNavigation {
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(rc);
         int coarseY = GeneralNavigation.detectMyCoarseY(rc);
-        // TODO: get this from something local instead of Dijkstra.previous
         int directionNum = Dijkstra.previous[coarseY][coarseX];
 
         // This means that we are close to the target and should just use bug

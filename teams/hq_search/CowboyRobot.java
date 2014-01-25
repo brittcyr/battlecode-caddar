@@ -66,12 +66,7 @@ public class CowboyRobot extends BaseRobot {
 
     public void run() {
         try {
-            MapLocation target = rc.senseEnemyHQLocation();
-
-            // TODO: Dijkstra.finished should be Dijkstra.finished || RPC.loaded
             if (!Dijkstra.finished) {
-                // BugNavigator.navigateTo(rc, target);
-                // Run a graph search on coarseMap. with the cost of each edge being cost of target
                 Dijkstra.doDijkstra();
             }
             else {

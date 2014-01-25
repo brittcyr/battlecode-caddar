@@ -1,6 +1,5 @@
 package hq_search;
 
-import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
@@ -16,7 +15,6 @@ public class BugNavigator {
     static int         direction_to_turn           = 1;
     static boolean     turned                      = false;
 
-    // TODO: Fix looping
     public static void bugReset() {
         bugging = false;
         dist_to_target_at_bug_start = 0.0;
@@ -94,12 +92,10 @@ public class BugNavigator {
                 }
                 Direction toNextSquare = myLoc.directionTo(next_square);
                 if (toNextSquare.opposite().equals(toTarget) && !turned) {
-                    // TODO: Check if we have teammates nearby and tell to turn also
                     MapLocation possibleNextWall = last_wall;
                     boolean willGetOut = false;
 
                     // Check worst case range of sight
-                    // TODO: Change this to use terrainmap
                     for (int x = 0; (x + 1) * (x + 1) + 1 < 35; x++) {
                         possibleNextWall = possibleNextWall.add(toNextSquare);
                         if (rc.senseTerrainTile(next_square) == TerrainTile.ROAD

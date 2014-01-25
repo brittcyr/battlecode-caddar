@@ -16,7 +16,6 @@ public class BugNavigator {
     static int         direction_to_turn           = 1;
     static boolean     turned                      = false;
 
-    // TODO: Fix looping
     public static void bugReset() {
         bugging = false;
         dist_to_target_at_bug_start = 0.0;
@@ -157,9 +156,6 @@ public class BugNavigator {
                     return toNextSquare;
                 }
                 else {
-                    // We are being blocked by our teammate
-                    // TODO: Have a bugging flag that next turn checks if
-                    // there are neighbors, if not. then reset
                     Direction moveDirection = directions[(toNextSquare.ordinal()
                             + direction_to_turn + 8) % 8];
                     if (rc.canMove(moveDirection)) {

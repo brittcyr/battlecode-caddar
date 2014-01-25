@@ -15,9 +15,7 @@ public class BugNavigator {
     static int         direction_to_turn           = 1;
     static boolean     turned                      = false;
 
-    // TODO: Should be called "navigardToward()?"
-    // TODO: Have walkToward() and runToward(), which pass a flag to navigateToward()?
-    public static void navigateTo(RobotController rc, MapLocation target) {
+     public static void navigateTo(RobotController rc, MapLocation target) {
         try {
             turned &= bugging;
             Direction toTarget = rc.getLocation().directionTo(target);
@@ -87,7 +85,6 @@ public class BugNavigator {
                 }
                 Direction toNextSquare = rc.getLocation().directionTo(next_square);
                 if (toNextSquare.opposite().equals(toTarget) && !turned) {
-                    // TODO: Check if we have teammates nearby and tell to turn also
                     MapLocation possibleNextWall = last_wall;
                     boolean willGetOut = false;
 

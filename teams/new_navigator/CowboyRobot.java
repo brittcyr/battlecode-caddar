@@ -23,8 +23,6 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void updateInternals() {
-        // TODO: This is the state update where we will have to do our own computing
-        // Dijkstra.setupDijkstra(coarseMap, target.x, target.y);
     }
 
     protected void doAction() throws GameActionException {

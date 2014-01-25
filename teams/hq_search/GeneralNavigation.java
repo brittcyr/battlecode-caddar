@@ -1,6 +1,5 @@
 package hq_search;
 
-import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
@@ -17,9 +16,6 @@ public class GeneralNavigation {
         target = _target;
         coarseness = _coarseness;
         lastWaypoint = null;
-        // TODO: Force Dijkstra to have the correct previous mapping with RPC
-        // Later this will be to pull it down from RPC, now it is do on your own in CowboyRobot
-
     }
 
     public static int detectMyCoarseX(RobotController rc) {
@@ -55,13 +51,10 @@ public class GeneralNavigation {
 
         // This means that we are close to the target and should just use bug
         if (directionNum == Dijkstra.UNSET) {
-            // TODO: If we are within sight, we should use A*
             BugNavigator.navigateTo(rc, target);
             return;
         }
 
-        // If we have at least one more direction to go, then BugNavigate to waypoint
-        // TODO: If the waypoint is not very far away, we should use BFS
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
         if (!waypoint.equals(lastWaypoint)) {

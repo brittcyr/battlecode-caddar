@@ -60,7 +60,7 @@ public class CowboyRobot extends BaseRobot {
             int action = (rc.getRobot().getID() * rand.nextInt(101) + 50) % 101;
 
             // Construct a PASTR
-            if (rc.getLocation().distanceSquaredTo(rc.senseHQLocation()) > 5  // TODO: map-dependent
+            if (rc.getLocation().distanceSquaredTo(rc.senseHQLocation()) > 5
                     && sufficientNearbyCows()) {
                 rc.construct(RobotType.PASTR);
             }
@@ -84,7 +84,7 @@ public class CowboyRobot extends BaseRobot {
         }
     }
 
-    private static boolean sufficientNearbyCows() {    // TODO: PASTR_RANGE is circle not bounding box
+    private static boolean sufficientNearbyCows() {
         final int sqLength = GameConstants.PASTR_RANGE;  // Length of bounding box to search in around curPos
         final double cowThreshold = 3000;
         double totalCowsNearby = 0;
