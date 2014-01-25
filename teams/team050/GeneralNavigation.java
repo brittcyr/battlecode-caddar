@@ -100,8 +100,10 @@ public class GeneralNavigation {
 
     private static int getTileValue(TerrainTile tile) {
         switch (tile) {
+        // A normal square takes 2 turns of action delay wait
             case NORMAL:
                 return 2;
+                // On a road, there is 1 action delay
             case ROAD:
                 return 1;
             case VOID:
