@@ -130,7 +130,11 @@ public class GeneralNavigation {
     }
 
     public static Direction getNextDirection(RobotController rc) throws GameActionException {
-        // TODO: Check if the current loaded previous is correct, otherwise request it and just bug
+        // Check if we are ready to use big navigation or if we have to use bug nav
+        if (!imReady()) {
+            // TODO: check if it is available via radio otherwise just bug navigate
+            return BugNavigator.getDirectionTo(rc, target);
+        }
 
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(rc);
@@ -153,7 +157,9 @@ public class GeneralNavigation {
         return BugNavigator.getDirectionTo(rc, waypoint);
     }
 
-    // TODO: Implement a function imReady which says whether we have loaded in the right computation
-    // by checking for the 9 in the previous map and matching against target
-
+    private static boolean imReady() {
+        int coarseX = target.x / coarseness;
+        int coarseY = target.y / coarseness;
+        return (previous != null && previous[coarseY][coarseX] == Dijkstra.UNSET);
+    }
 }
