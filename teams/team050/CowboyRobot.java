@@ -239,11 +239,11 @@ public class CowboyRobot extends BaseRobot {
                         }
                     }
                     else {
-                        BugNavigator.navigateTo(rc, target);
+                    	rc.move(BugNavigator.getDirectionTo(rc, target));
                     }
                 }
                 else {
-                    BugNavigator.navigateTo(rc, target);
+                	rc.move(BugNavigator.getDirectionTo(rc, target));
                 }
                 break;
 
@@ -256,7 +256,7 @@ public class CowboyRobot extends BaseRobot {
 
                 // Reset for the best direction in the opposite direction
                 BugNavigator.bugReset();
-                BugNavigator.navigateTo(rc, awayFromPredator);
+                rc.move(BugNavigator.getDirectionTo(rc, awayFromPredator));
                 break;
 
             case FIGHT:
@@ -284,7 +284,7 @@ public class CowboyRobot extends BaseRobot {
                         }
                     }
                 }
-                BugNavigator.navigateTo(rc, preyLocation);
+                rc.move(BugNavigator.getDirectionTo(rc, preyLocation));
                 break;
 
             case KAMIKAZEE:
