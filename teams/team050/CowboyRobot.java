@@ -239,11 +239,17 @@ public class CowboyRobot extends BaseRobot {
                         }
                     }
                     else {
-                    	rc.move(BugNavigator.getDirectionTo(rc, target));
+                        rc.move(BugNavigator.getDirectionTo(rc, target));
                     }
                 }
                 else {
-                	rc.move(BugNavigator.getDirectionTo(rc, target));
+                    if (Clans.getClanMode(clan) == ClanMode.DEFENDER) {
+                        Defense.initDirs(rc);
+                        Defense.doDefense(rc);
+                    }
+                    else {
+                        rc.move(BugNavigator.getDirectionTo(rc, target));
+                    }
                 }
                 break;
 
