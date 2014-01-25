@@ -1,6 +1,6 @@
 package team050;
 
-import new_dijkstra.Dijkstra;
+import team050.Dijkstra;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
