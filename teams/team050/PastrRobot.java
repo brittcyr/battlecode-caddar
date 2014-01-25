@@ -10,23 +10,26 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void getUpdates() {
-        // Read the radio and see what needs computing
+    	// TODO: Check if there are any requests for computation
     }
 
     protected void updateInternals() {
+    	// TODO: Potential distress signal
         // This is where we should decide if we call for reinforcements
     }
 
     public void doAction() throws GameActionException {
-        // New specs make self destruct really bad
+    	GeneralNavigation.prepareCompute(rc, rc.getLocation());
+    	GeneralNavigation.doCompute();
     }
 
     protected void sendUpdates() {
-        // Send out the results of computing and send whether are under attack
+    	// TODO: send the results
     }
 
     protected void doCompute() {
-        // help with dijkstra
+    	// pass
+    	// The action of pastr is just computing
     }
 
 }
