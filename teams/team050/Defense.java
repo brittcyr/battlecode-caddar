@@ -5,7 +5,6 @@ import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
-import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
 public class Defense {
@@ -29,6 +28,9 @@ public class Defense {
     // Initialize how far we can go in each direction
     public static void initDirs(RobotController rc) throws GameActionException {
         pastr = Clans.getWaypoint(CowboyRobot.clan);
+        if (distInDir != null) {
+            return;
+        }
         distInDir = new int[8];
         for (int dir = 0; dir < 8; dir++) {
             int range = 0;
