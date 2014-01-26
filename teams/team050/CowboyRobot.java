@@ -59,6 +59,12 @@ public class CowboyRobot extends BaseRobot {
             BugNavigator.bugReset();
             target = Clans.getWaypoint(clan);
         }
+
+        // Do not just build a structure so that it can get destroyed
+        if (rc.isConstructing() && type != engagementBehavior.UNENGAGED
+                && rc.getConstructingRounds() < 10) {
+            rc.selfDestruct();
+        }
     }
 
     protected void updateInternals() throws GameActionException {
@@ -211,6 +217,7 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void doAction() throws GameActionException {
+        rc.setIndicatorString(0, "" + type);
         switch (type) {
             case UNENGAGED:
                 if (Clans.getClanMode(clan) == ClanMode.IDLE) {
@@ -226,6 +233,7 @@ public class CowboyRobot extends BaseRobot {
                         if (Clans.getClanPastrStatus(clan) == false) {
                             rc.construct(RobotType.PASTR);
                             Clans.setClanPastrStatus(clan, true);
+                            Clans.setWaypoint(clan, rc.getLocation());
                         }
                         else if (Clans.getClanNTStatus(clan) == false) {
                             rc.construct(RobotType.NOISETOWER);
@@ -303,7 +311,7 @@ public class CowboyRobot extends BaseRobot {
                     Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
                     // If there are more enemies than friendlies
-                    if (splashEnemies.length < splashFriendlies.length) {
+                    if (splashEnemies.length > splashFriendlies.length) {
                         rc.selfDestruct();
                         return;
                     }
