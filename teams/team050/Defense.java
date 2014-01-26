@@ -31,7 +31,7 @@ public class Defense {
             pastr = rc.sensePastrLocations(rc.getTeam())[0];
         }
         else {
-            pastr = rc.getLocation();
+            pastr = rc.senseEnemyHQLocation();
         }
         distInDir = new int[8];
         for (int dir = 0; dir < 8; dir++) {

@@ -10,6 +10,7 @@ import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 import battlecode.common.Team;
+import battlecode.common.TerrainTile;
 
 public class CowboyRobot extends BaseRobot {
     public final Team  me;
@@ -62,7 +63,6 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
-        // TODO: Try to avoid going near the enemy HQ
 
         switch (type) {
             case RETREAT:
@@ -262,7 +262,13 @@ public class CowboyRobot extends BaseRobot {
 
                 // Reset for the best direction in the opposite direction
                 BugNavigator.bugReset();
-                rc.move(BugNavigator.getDirectionTo(rc, awayFromPredator));
+                Direction dirToMove = BugNavigator.getDirectionTo(rc, awayFromPredator);
+
+                // If we are trying to move in a direction that is not next to away, then we stuck
+                if (Math.abs(dirToMove.ordinal() - away.ordinal()) > 1) {
+                    type = engagementBehavior.KAMIKAZEE;
+                    doAction();
+                }
                 break;
 
             case FIGHT:
