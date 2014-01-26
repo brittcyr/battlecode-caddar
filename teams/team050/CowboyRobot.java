@@ -223,38 +223,38 @@ public class CowboyRobot extends BaseRobot {
     protected void doAction() throws GameActionException {
         switch (type) {
             case UNENGAGED:
-                if (Clans.getClanMode(clan) == ClanMode.IDLE) {
-                    BugNavigator.navigateTo(rc, rc.senseHQLocation());
-                    // Do nothing when we are not active
-                }
-                else if (Clans.getClanMode(clan) == ClanMode.BUILDER) {
-                    // If "close enough to target" build a PASTR if clan hasn't built one yet.
-                    // If PASTR built and close enough, build NT.
-                    double rangeSquared = .05 * rc.getMapWidth() * .05 * rc.getMapHeight();
-                    if (withinRangeSquared(target, rangeSquared)) {
-                        if (Clans.getClanPastrStatus(clan) == false) {
-                            rc.construct(RobotType.PASTR);
-                            Clans.setClanPastrStatus(clan, true);
-                            Clans.setWaypoint(clan, rc.getLocation());
+                switch (Clans.getClanMode(clan)) {
+                    case IDLE:
+                        BugNavigator.navigateTo(rc, rc.senseHQLocation());
+                        // Do nothing when we are not active
+                        break;
+                    case BUILDER:
+                        // If "close enough to target" build a PASTR if clan hasn't built one yet.
+                        // If PASTR built and close enough, build NT.
+                        double rangeSquared = .05 * rc.getMapWidth() * .05 * rc.getMapHeight();
+                        if (withinRangeSquared(target, rangeSquared)) {
+                            if (Clans.getClanPastrStatus(clan) == false) {
+                                rc.construct(RobotType.PASTR);
+                                Clans.setClanPastrStatus(clan, true);
+                                Clans.setWaypoint(clan, rc.getLocation());
+                            }
+                            else if (Clans.getClanNTStatus(clan) == false) {
+                                rc.construct(RobotType.NOISETOWER);
+                                Clans.setClanNTStatus(clan, true);
+                                Clans.setClanMode(clan, ClanMode.DEFENDER);
+                            }
                         }
-                        else if (Clans.getClanNTStatus(clan) == false) {
-                            rc.construct(RobotType.NOISETOWER);
-                            Clans.setClanNTStatus(clan, true);
-                            Clans.setClanMode(clan, ClanMode.DEFENDER);
+                        else {
+                            rc.move(BugNavigator.getDirectionTo(rc, target));
                         }
-                    }
-                    else {
-                        rc.move(BugNavigator.getDirectionTo(rc, target));
-                    }
-                }
-                else {
-                    if (Clans.getClanMode(clan) == ClanMode.DEFENDER) {
+                        break;
+                    case DEFENDER:
                         Defense.initDirs(rc);
                         Defense.doDefense(rc);
-                    }
-                    else {
+                        break;
+                    default:
                         rc.move(BugNavigator.getDirectionTo(rc, target));
-                    }
+                        break;
                 }
                 break;
 
