@@ -24,6 +24,9 @@ public class NoiseTowerRobot extends BaseRobot {
         enemy = me.opponent();
         dir = Direction.NORTH;
         dist = 20;
+
+        // TODO: Scan the nearby area and decide which coarse squares are worth attacking
+        // TODO: Create a heap of squares that we need to pull cows from and follow the dirs
     }
 
     protected void getUpdates() {

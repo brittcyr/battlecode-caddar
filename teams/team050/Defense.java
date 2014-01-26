@@ -44,7 +44,6 @@ public class Defense {
     }
 
     public static void doDefense(RobotController rc) throws GameActionException {
-        rc.setIndicatorString(0, goingIn + "");
         if (goingIn) {
             // Check if we have push cows into the pastr
             if (rc.getLocation().distanceSquaredTo(pastr) > 7) {
