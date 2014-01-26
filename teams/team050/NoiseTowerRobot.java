@@ -85,7 +85,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
                 for (int x = 0; x < 9; x++) {
                     int dirDist = checkDirection(myPastr, dir);
-                    if (dirDist < 6) {
+                    if (dirDist < 5) {
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
