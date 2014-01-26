@@ -252,6 +252,9 @@ public class CowboyRobot extends BaseRobot {
                         Defense.initDirs(rc);
                         Defense.doDefense(rc);
                         break;
+                    case RAIDER:
+                        rc.move(BugNavigator.getDirectionTo(rc, target));
+                        break;
                     default:
                         rc.move(BugNavigator.getDirectionTo(rc, target));
                         break;

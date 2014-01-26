@@ -41,9 +41,29 @@ public class HQRobot extends BaseRobot {
                 case IDLE:
                     manageIdleClan(i);
                     break;
+                case RAIDER:
+                    manageRaider(i);
                 default:
                     break;
             }
+        }
+    }
+
+    public void manageRaider(int clan) throws GameActionException {
+        MapLocation target = Clans.getWaypoint(clan);
+
+        // TODO: not have to check this every turn
+
+        // Update to the location that is nearest to where you were
+        MapLocation[] pastrLocations = rc.sensePastrLocations(rc.getTeam().opponent());
+        if (pastrLocations.length > 0) {
+            MapLocation possible = pastrLocations[0];
+            for (MapLocation p : pastrLocations) {
+                if (p.distanceSquaredTo(target) < possible.distanceSquaredTo(target)) {
+                    possible = p;
+                }
+            }
+            target = possible;
         }
     }
 
@@ -135,7 +155,6 @@ public class HQRobot extends BaseRobot {
     }
 
     public MapLocation scoutNextPasture(MapLocation hq) {
-        // TODO: Do not select a site if we already have a PASTR there.
         cowGrowth = rc.senseCowGrowth();
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);
