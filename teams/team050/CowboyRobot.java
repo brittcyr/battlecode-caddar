@@ -228,7 +228,6 @@ public class CowboyRobot extends BaseRobot {
                     // Do nothing when we are not active
                 }
                 else if (Clans.getClanMode(clan) == ClanMode.BUILDER) {
-                    // TODO: Do not build overlapping PASTR since they share cows
                     // If "close enough to target" build a PASTR if clan hasn't built one yet.
                     // If PASTR built and close enough, build NT.
                     double rangeSquared = .05 * rc.getMapWidth() * .05 * rc.getMapHeight();
