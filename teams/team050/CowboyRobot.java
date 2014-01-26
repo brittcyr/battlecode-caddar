@@ -217,7 +217,6 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void doAction() throws GameActionException {
-        rc.setIndicatorString(0, "" + type);
         switch (type) {
             case UNENGAGED:
                 if (Clans.getClanMode(clan) == ClanMode.IDLE) {
@@ -228,7 +227,7 @@ public class CowboyRobot extends BaseRobot {
                     // TODO: Do not build overlapping PASTR since they share cows
                     // If "close enough to target" build a PASTR if clan hasn't built one yet.
                     // If PASTR built and close enough, build NT.
-                    double rangeSquared = Math.pow(.05 * rc.getMapWidth(), 2);
+                    double rangeSquared = .05 * rc.getMapWidth() * .05 * rc.getMapHeight();
                     if (withinRangeSquared(target, rangeSquared)) {
                         if (Clans.getClanPastrStatus(clan) == false) {
                             rc.construct(RobotType.PASTR);

@@ -162,6 +162,8 @@ public class HQRobot extends BaseRobot {
     }
 
     public double scorePastrSite(int x, int y) {
+        // TODO: Check that this is actually reachable and not on a map with an unreachable bait
+
         if (x == 0 || y == 0 || x == rc.getMapWidth() - 1 || y == rc.getMapHeight() - 1) {
             return 0.0;
         }
@@ -169,6 +171,7 @@ public class HQRobot extends BaseRobot {
                 + cowGrowth[x][y - 1] + cowGrowth[x][y] + cowGrowth[x][y + 1]
                 + cowGrowth[x + 1][y - 1] + cowGrowth[x + 1][y] + cowGrowth[x + 1][y + 1];
 
+        growth += .0001 * (new MapLocation(x, y).distanceSquaredTo(rc.senseEnemyHQLocation()));
         // TODO: make a check for the lanes of how good clear direction is
         return growth;
     }
