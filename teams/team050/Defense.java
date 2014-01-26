@@ -36,7 +36,7 @@ public class Defense {
         distInDir = new int[8];
         for (int dir = 0; dir < 8; dir++) {
             int range = 0;
-            for (range = 0; range < 7; range++) {
+            for (range = 0; range < 9; range++) {
                 TerrainTile terrain = rc.senseTerrainTile(pastr.add(directions[dir], range));
                 if (terrain == TerrainTile.VOID || terrain == TerrainTile.OFF_MAP) {
                     range--;
@@ -67,7 +67,7 @@ public class Defense {
         }
 
         if (!goingIn) {
-            if (rc.getLocation().distanceSquaredTo(pastr) > Math.min(35, distInDir[direction] ^ 2)) {
+            if (rc.getLocation().distanceSquaredTo(pastr) > Math.min(48, distInDir[direction] ^ 2)) {
                 goingIn = true;
                 return;
             }
