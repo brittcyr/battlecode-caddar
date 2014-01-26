@@ -77,8 +77,8 @@ public class NoiseTowerRobot extends BaseRobot {
 
         // Leave this code here since we only want it to run whenever the NT is active
         if (myPastr != null) {
-            dist -= 3;
-            if (dist < 4) {
+            dist -= 2;
+            if (dist < 3) {
                 dir = dir.rotateRight();
                 dir = dir.rotateRight();
                 dir = dir.rotateRight();

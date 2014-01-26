@@ -65,6 +65,23 @@ public class HQRobot extends BaseRobot {
             }
             target = possible;
         }
+        else {
+            MapLocation[] broadcast = rc.senseBroadcastingRobotLocations();
+            if (broadcast.length > 0) {
+                MapLocation possible = broadcast[0];
+                for (MapLocation p : broadcast) {
+                    if (p.distanceSquaredTo(target) < possible.distanceSquaredTo(target)
+                            && (p.x != rc.senseEnemyHQLocation().x && p.y != rc
+                                    .senseEnemyHQLocation().y)) {
+                        possible = p;
+                    }
+                }
+                target = possible;
+            }
+            else {
+                // We are going to stay put then
+            }
+        }
     }
 
     public void manageIdleClan(int clan) throws GameActionException {
