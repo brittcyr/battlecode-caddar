@@ -10,12 +10,11 @@ import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 import battlecode.common.Team;
-import battlecode.common.TerrainTile;
 
 public class CowboyRobot extends BaseRobot {
     public final Team  me;
     public final Team  enemy;
-    public int         clan;
+    public static int  clan;
 
     // This is the waypoint that our clan is moving towards
     public MapLocation target;
@@ -107,10 +106,6 @@ public class CowboyRobot extends BaseRobot {
                     type = engagementBehavior.KAMIKAZEE;
                     break;
                 }
-
-                // This is if we cannot move away and have health problems
-                // And the enemy has a tighter formation
-                // TODO: Check if we have regrouped
 
                 break;
             case KAMIKAZEE:

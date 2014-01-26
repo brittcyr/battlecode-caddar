@@ -1,5 +1,6 @@
 package team050;
 
+import team050.rpc.Clans;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -26,13 +27,8 @@ public class Defense {
     public static int         direction  = 4;
 
     // Initialize how far we can go in each direction
-    public static void initDirs(RobotController rc) {
-        if (rc.sensePastrLocations(rc.getTeam()).length > 0) {
-            pastr = rc.sensePastrLocations(rc.getTeam())[0];
-        }
-        else {
-            pastr = rc.senseEnemyHQLocation();
-        }
+    public static void initDirs(RobotController rc) throws GameActionException {
+        pastr = Clans.getWaypoint(CowboyRobot.clan);
         distInDir = new int[8];
         for (int dir = 0; dir < 8; dir++) {
             int range = 0;
