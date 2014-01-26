@@ -15,7 +15,8 @@ import battlecode.common.TerrainTile;
 
 public class HQRobot extends BaseRobot {
 
-    public MapLocation nextPastrSite;
+    public MapLocation       nextPastrSite;
+    public static double[][] cowGrowth;
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -135,7 +136,7 @@ public class HQRobot extends BaseRobot {
 
     public MapLocation scoutNextPasture(MapLocation hq) {
         // TODO: Do not select a site if we already have a PASTR there.
-        double[][] cowGrowth = rc.senseCowGrowth();
+        cowGrowth = rc.senseCowGrowth();
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);
 
@@ -144,7 +145,7 @@ public class HQRobot extends BaseRobot {
         for (int x = 0; x < mapWidth; x++) {
             for (int y = 0; y < mapHeight; y++) {
                 MapLocation loc = new MapLocation(x, y);
-                double growth = cowGrowth[x][y];
+                double growth = scorePastrSite(x, y);
                 if (growth >= bestGrowth) {
                     if ((growth == bestGrowth)
                             && (hq.distanceSquaredTo(loc) > hq.distanceSquaredTo(bestSite))) {
@@ -158,6 +159,18 @@ public class HQRobot extends BaseRobot {
             }
         }
         return bestSite;
+    }
+
+    public double scorePastrSite(int x, int y) {
+        if (x == 0 || y == 0 || x == rc.getMapWidth() - 1 || y == rc.getMapHeight() - 1) {
+            return 0.0;
+        }
+        double growth = cowGrowth[x - 1][y - 1] + cowGrowth[x - 1][y] + cowGrowth[x - 1][y + 1]
+                + cowGrowth[x][y - 1] + cowGrowth[x][y] + cowGrowth[x][y + 1]
+                + cowGrowth[x + 1][y - 1] + cowGrowth[x + 1][y] + cowGrowth[x + 1][y + 1];
+
+        // TODO: make a check for the lanes of how good clear direction is
+        return growth;
     }
 
 }
