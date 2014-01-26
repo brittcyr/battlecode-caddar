@@ -183,7 +183,10 @@ public class CowboyRobot extends BaseRobot {
                 }
                 Robot[] rangeEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
                 if (rangeEnemies.length > 0) {
+                    prey = rangeEnemies[0];
+                    preyLocation = rc.senseRobotInfo(prey).location;
                     type = engagementBehavior.FIGHT;
+
                     // always attack the weakest
                     double leastHealth = 999.9;
                     for (Robot enemyRobot : rangeEnemies) {
@@ -194,7 +197,8 @@ public class CowboyRobot extends BaseRobot {
                             preyLocation = rc.senseRobotInfo(prey).location;
                             break;
                         }
-                        if (enemyInfo.health < leastHealth) {
+                        if (enemyInfo.health < leastHealth
+                                && enemyInfo.type != RobotType.NOISETOWER) {
                             leastHealth = enemyInfo.health;
                             prey = enemyRobot;
                             preyLocation = rc.senseRobotInfo(prey).location;
