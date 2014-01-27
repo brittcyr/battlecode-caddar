@@ -102,6 +102,10 @@ public class NoiseTowerRobot extends BaseRobot {
                 }
             }
             target = myPastr.add(dir, dist);
+
+            if (target == null) {
+                rc.selfDestruct();
+            }
         }
 
         if (rc.canAttackSquare(target)) {
