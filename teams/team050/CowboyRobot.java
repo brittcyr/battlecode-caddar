@@ -82,6 +82,7 @@ public class CowboyRobot extends BaseRobot {
                     double enemyHealth = rc.senseRobotInfo(sightEnemies[0]).health;
                     if (rc.getHealth() > enemyHealth) {
                         BugNavigator.bugReset();
+                        // TODO: We don't want to walk into the first shot though
                         type = engagementBehavior.CHASE;
                         break;
                     }
@@ -237,7 +238,7 @@ public class CowboyRobot extends BaseRobot {
                     case BUILDER:
                         // If "close enough to target" build a PASTR if clan hasn't built one yet.
                         // If PASTR built and close enough, build NT.
-                        double rangeSquared = .05 * rc.getMapWidth() * .05 * rc.getMapHeight();
+                        double rangeSquared = .02 * rc.getMapWidth() * .05 * rc.getMapHeight();
                         if (withinRangeSquared(target, rangeSquared)) {
                             if (Clans.getClanPastrStatus(clan) == false) {
                                 rc.construct(RobotType.PASTR);
