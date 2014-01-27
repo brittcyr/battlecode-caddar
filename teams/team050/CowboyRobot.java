@@ -172,7 +172,12 @@ public class CowboyRobot extends BaseRobot {
 
                 // This is smaller because we have to be close to consider ourselves to be up
                 Robot[] sightFriendlies = rc.senseNearbyGameObjects(Robot.class, 15, me);
-                boolean advantage = (sightFriendlies.length + 1) >= numRealEnemies;
+                int actualSightFriendlies = 0;
+                for (Robot r : sightFriendlies) {
+                    actualSightFriendlies += rc.senseRobotInfo(r).type == RobotType.SOLDIER ? 1 : 0;
+                }
+                boolean advantage = ((actualSightFriendlies + 1) >= numRealEnemies && rc
+                        .getHealth() > 10.0);
 
                 // We moved in last turn. Must make the Fight or Flight choice
                 if (!advantage) {
