@@ -182,8 +182,8 @@ public class HQRobot extends BaseRobot {
         enemyHQ = rc.senseEnemyHQLocation();
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
-        for (int x = 0; x < mapWidth; x = x + 3) {
-            for (int y = 0; y < mapHeight; y = y + 3) {
+        for (int x = 1; x < mapWidth - 1; x = x + 3) {
+            for (int y = 1; y < mapHeight - 1; y = y + 3) {
                 MapLocation loc = new MapLocation(x, y);
                 double growth = scorePastrSite(x, y, loc);
                 if (growth >= bestGrowth) {
@@ -197,10 +197,6 @@ public class HQRobot extends BaseRobot {
 
     public double scorePastrSite(int x, int y, MapLocation loc) {
         // TODO: Check that this is actually reachable and not on a map with an unreachable bait
-
-        if (x == 0 || y == 0 || x == mapWidth - 1 || y == mapHeight - 1) {
-            return 0.0;
-        }
         double growth = cowGrowth[x - 1][y - 1] + cowGrowth[x - 1][y] + cowGrowth[x - 1][y + 1]
                 + cowGrowth[x][y - 1] + cowGrowth[x][y] + cowGrowth[x][y + 1]
                 + cowGrowth[x + 1][y - 1] + cowGrowth[x + 1][y] + cowGrowth[x + 1][y + 1];
