@@ -17,6 +17,9 @@ public class HQRobot extends BaseRobot {
 
     public MapLocation       nextPastrSite;
     public static double[][] cowGrowth;
+    public int               mapWidth;
+    public int               mapHeight;
+    public MapLocation       enemyHQ;
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -176,40 +179,34 @@ public class HQRobot extends BaseRobot {
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);
 
-        int mapWidth = rc.getMapWidth();
-        int mapHeight = rc.getMapHeight();
-        for (int x = 0; x < mapWidth; x++) {
-            for (int y = 0; y < mapHeight; y++) {
+        enemyHQ = rc.senseEnemyHQLocation();
+        mapWidth = rc.getMapWidth();
+        mapHeight = rc.getMapHeight();
+        for (int x = 0; x < mapWidth; x = x + 3) {
+            for (int y = 0; y < mapHeight; y = y + 3) {
                 MapLocation loc = new MapLocation(x, y);
-                double growth = scorePastrSite(x, y);
+                double growth = scorePastrSite(x, y, loc);
                 if (growth >= bestGrowth) {
-                    if ((growth == bestGrowth)
-                            && (hq.distanceSquaredTo(loc) > hq.distanceSquaredTo(bestSite))) {
-                        continue;  // Skip far symmetric case.
-                    }
-                    else {
-                        bestSite = loc;
-                        bestGrowth = growth;
-                    }
+                    bestSite = loc;
+                    bestGrowth = growth;
                 }
             }
         }
         return bestSite;
     }
 
-    public double scorePastrSite(int x, int y) {
+    public double scorePastrSite(int x, int y, MapLocation loc) {
         // TODO: Check that this is actually reachable and not on a map with an unreachable bait
 
-        if (x == 0 || y == 0 || x == rc.getMapWidth() - 1 || y == rc.getMapHeight() - 1) {
+        if (x == 0 || y == 0 || x == mapWidth - 1 || y == mapHeight - 1) {
             return 0.0;
         }
         double growth = cowGrowth[x - 1][y - 1] + cowGrowth[x - 1][y] + cowGrowth[x - 1][y + 1]
                 + cowGrowth[x][y - 1] + cowGrowth[x][y] + cowGrowth[x][y + 1]
                 + cowGrowth[x + 1][y - 1] + cowGrowth[x + 1][y] + cowGrowth[x + 1][y + 1];
 
-        growth += .0001 * (new MapLocation(x, y).distanceSquaredTo(rc.senseEnemyHQLocation()));
+        growth += .0001 * (loc.distanceSquaredTo(enemyHQ));
         // TODO: make a check for the lanes of how good clear direction is
         return growth;
     }
-
 }
