@@ -176,9 +176,9 @@ public class CowboyRobot extends BaseRobot {
                 for (Robot r : sightFriendlies) {
                     actualSightFriendlies += rc.senseRobotInfo(r).type == RobotType.SOLDIER ? 1 : 0;
                 }
-                boolean advantage = ((actualSightFriendlies + 1) >= numRealEnemies && rc
-                        .getHealth() > 10.0);
-
+                boolean advantage = ((actualSightFriendlies + 1) >= numRealEnemies && (rc
+                        .getHealth() > 10.0 || (numRealEnemies == 0 && rc.senseRobotInfo(sightEnemies[0]).health <= 10.0)));
+                
                 // We moved in last turn. Must make the Fight or Flight choice
                 if (!advantage) {
                     type = engagementBehavior.RETREAT;
