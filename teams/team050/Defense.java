@@ -59,9 +59,13 @@ public class Defense {
             BugNavigator.bugReset();
             direction += 5;
             direction %= 8;
-            while (distInDir[direction] < 4) {
+            for (int x = 0; x < 8; x++) {
+            	if (distInDir[direction] < 4) {
                 direction += 5;
                 direction %= 8;
+            	} else {
+            		break;
+            	}
             }
         }
 
