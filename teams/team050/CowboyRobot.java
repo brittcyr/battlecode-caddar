@@ -249,7 +249,7 @@ public class CowboyRobot extends BaseRobot {
                     case BUILDER:
                         // If "close enough to target" build a PASTR if clan hasn't built one yet.
                         // If PASTR built and close enough, build NT.
-                        double rangeSquared = .02 * rc.getMapWidth() * .05 * rc.getMapHeight();
+                        double rangeSquared = 2;
                         if (withinRangeSquared(target, rangeSquared)) {
                             if (Clans.getClanPastrStatus(clan) == false) {
                                 rc.construct(RobotType.PASTR);

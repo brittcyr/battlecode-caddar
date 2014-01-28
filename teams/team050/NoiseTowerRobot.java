@@ -17,6 +17,7 @@ public class NoiseTowerRobot extends BaseRobot {
     public MapLocation[] enemyPastrs;
     public Direction     dir;
     public int           dist;
+    public double[][] cowGrowth;
 
     public NoiseTowerRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -24,6 +25,7 @@ public class NoiseTowerRobot extends BaseRobot {
         enemy = me.opponent();
         dir = Direction.NORTH;
         dist = 20;
+        cowGrowth = myRC.senseCowGrowth();
 
         // TODO: Scan the nearby area and decide which coarse squares are worth attacking
         // TODO: Create a heap of squares that we need to pull cows from and follow the dirs
@@ -156,7 +158,8 @@ public class NoiseTowerRobot extends BaseRobot {
 
     private boolean isValidTerrain(MapLocation m) {
         TerrainTile t = rc.senseTerrainTile(m);
-        return (t == TerrainTile.NORMAL || t == TerrainTile.ROAD);
+        double growth = cowGrowth[m.x][m.y];
+        return (t == TerrainTile.NORMAL || t == TerrainTile.ROAD) && growth > 0.0;
     }
 
 }
