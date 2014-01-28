@@ -44,17 +44,19 @@ public class BugNavigator {
                     }
 
                     // First check the deltaX and deltaY to the target
-                    int deltaX = Math.abs(myLoc.add(toTarget).x - target.x);
-                    int deltaY = Math.abs(myLoc.add(toTarget).y - target.y);
+                    MapLocation nextSquare = myLoc.add(toTarget);
+                    int deltaX = Math.abs(nextSquare.x - target.x);
+                    int deltaY = Math.abs(nextSquare.y - target.y);
                     int bigger = Math.max(deltaX, deltaY);
 
                     // Try left
                     Direction left = toTarget.rotateLeft();
                     if (rc.canMove(left)) {
-                        int leftDeltaX = Math.abs(myLoc.add(left).x - target.x);
-                        int leftDeltaY = Math.abs(myLoc.add(left).y - target.y);
+                    	MapLocation leftSquare = myLoc.add(left);
+                        int leftDeltaX = Math.abs(leftSquare.x - target.x);
+                        int leftDeltaY = Math.abs(leftSquare.y - target.y);
                         int biggerLeft = Math.max(leftDeltaX, leftDeltaY);
-                        boolean isRoad = rc.senseTerrainTile(myLoc.add(left)) == TerrainTile.ROAD;
+                        boolean isRoad = rc.senseTerrainTile(leftSquare) == TerrainTile.ROAD;
                         if (isRoad && biggerLeft == bigger) {
                             return left;
                         }
@@ -63,10 +65,11 @@ public class BugNavigator {
                     // Try right
                     Direction right = toTarget.rotateRight();
                     if (rc.canMove(right)) {
-                        int rightDeltaX = Math.abs(myLoc.add(right).x - target.x);
-                        int rightDeltaY = Math.abs(myLoc.add(right).y - target.y);
+                    	MapLocation rightSquare = myLoc.add(right);
+                        int rightDeltaX = Math.abs(rightSquare.x - target.x);
+                        int rightDeltaY = Math.abs(rightSquare.y - target.y);
                         int biggerRight = Math.max(rightDeltaX, rightDeltaY);
-                        boolean isRoad = rc.senseTerrainTile(myLoc.add(right)) == TerrainTile.ROAD;
+                        boolean isRoad = rc.senseTerrainTile(rightSquare) == TerrainTile.ROAD;
                         if (isRoad && biggerRight == bigger) {
                             return right;
                         }
@@ -121,8 +124,9 @@ public class BugNavigator {
                     Direction to_check = myLoc.directionTo(last_wall);
                     next_square = rc.getLocation().add(
                             directions[(to_check.ordinal() + 1 * direction_to_turn + 8) % 8]);
-                    if (rc.senseTerrainTile(next_square) == TerrainTile.VOID
-                            || rc.senseTerrainTile(next_square) == TerrainTile.OFF_MAP) {
+                    TerrainTile nextTerrain = rc.senseTerrainTile(next_square);
+                    if (nextTerrain == TerrainTile.VOID
+                            || nextTerrain == TerrainTile.OFF_MAP) {
                         last_wall = next_square;
                     }
                     else {
@@ -139,10 +143,11 @@ public class BugNavigator {
                     MapLocation possibleNextWall = last_wall;
                     boolean willGetOut = false;
 
-                    for (int x = 0; (x + 1) * (x + 1) + 1 < 35; x++) {
+                    for (int x = 0; x < 5; x++) {
                         possibleNextWall = possibleNextWall.add(toNextSquare);
-                        if (rc.senseTerrainTile(possibleNextWall) == TerrainTile.ROAD
-                                || rc.senseTerrainTile(possibleNextWall) == TerrainTile.NORMAL) {
+                        TerrainTile possibleWallTerrain = rc.senseTerrainTile(possibleNextWall);
+                        if (possibleWallTerrain == TerrainTile.ROAD
+                                || possibleWallTerrain == TerrainTile.NORMAL) {
                             willGetOut = true;
                         }
                     }
