@@ -141,6 +141,9 @@ public class CowboyRobot extends BaseRobot {
                     }
                 }
                 predatorLocation = rc.senseRobotInfo(predator).location;
+
+                // TODO: Check that it is possible to rush into the enemy and there isnt a void in
+                // the way
                 break;
 
             case UNENGAGED:
@@ -291,7 +294,8 @@ public class CowboyRobot extends BaseRobot {
                 Direction dirToMove = BugNavigator.getDirectionTo(rc, awayFromPredator);
 
                 // If we are trying to move in a direction that is not next to away, then we stuck
-                if (Math.abs(dirToMove.ordinal() - away.ordinal()) > 1) {
+                int diff = Math.abs(dirToMove.ordinal() - away.ordinal());
+                if (diff > 1 && diff < 7) {
                     type = engagementBehavior.KAMIKAZEE;
                     doAction();
                 }
