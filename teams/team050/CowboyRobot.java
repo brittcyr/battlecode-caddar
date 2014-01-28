@@ -58,7 +58,7 @@ public class CowboyRobot extends BaseRobot {
         MapLocation waypoint = Clans.getWaypoint(clan);
         if (!waypoint.equals(target)) {
             BugNavigator.bugReset();
-            target = Clans.getWaypoint(clan);
+            target = waypoint;
         }
 
         // Do not just build a structure so that it can get destroyed
