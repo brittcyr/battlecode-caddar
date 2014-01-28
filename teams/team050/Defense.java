@@ -8,6 +8,7 @@ import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
 
 public class Defense {
+	public final static int DIST_FROM_PASTR = 7;
 
     public static Direction[] directions = { Direction.NORTH, Direction.NORTH_EAST, Direction.EAST,
             Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST,
@@ -34,7 +35,7 @@ public class Defense {
         distInDir = new int[8];
         for (int dir = 0; dir < 8; dir++) {
             int range = 0;
-            for (range = 0; range < 9; range++) {
+            for (; ++range < DIST_FROM_PASTR;) {
                 TerrainTile terrain = rc.senseTerrainTile(pastr.add(directions[dir], range));
                 if (terrain == TerrainTile.VOID || terrain == TerrainTile.OFF_MAP) {
                     range--;
@@ -55,6 +56,7 @@ public class Defense {
 
             // Otherwise, we have push in and need to go out
             goingIn = false;
+            BugNavigator.bugReset();
             direction += 5;
             direction %= 8;
             while (distInDir[direction] < 4) {
@@ -64,14 +66,17 @@ public class Defense {
         }
 
         if (!goingIn) {
-            if (rc.getLocation().distanceSquaredTo(pastr) > Math.min(48, distInDir[direction] ^ 2)) {
+            if (rc.getLocation().distanceSquaredTo(pastr) > 
+            Math.min(DIST_FROM_PASTR * DIST_FROM_PASTR, distInDir[direction] * distInDir[direction])) {
                 goingIn = true;
+                BugNavigator.bugReset();
+                doDefense(rc);
                 return;
             }
 
             // Otherwise we are still going out
             rc.sneak(BugNavigator.getDirectionTo(rc,
-                    pastr.add(directions[direction], Math.min(5, distInDir[direction]))));
+                    pastr.add(directions[direction], Math.min(DIST_FROM_PASTR, distInDir[direction]))));
         }
 
     }
