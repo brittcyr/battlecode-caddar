@@ -69,7 +69,7 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
-    	myLoc = rc.getLocation();
+        myLoc = rc.getLocation();
 
         switch (type) {
             case RETREAT:
@@ -168,16 +168,16 @@ public class CowboyRobot extends BaseRobot {
                 int numRealEnemies = 0;
                 for (Robot e : sightEnemies) {
                     RobotType enemyType = rc.senseRobotInfo(e).type;
-                    switch (enemyType){
-                    case SOLDIER:
-                    	numRealEnemies += 1;
-                    	break;
-                    case HQ:
-                    	numRealEnemies += 100;
-                    	break;
-                    case NOISETOWER:
-                    case PASTR:
-                    	break;
+                    switch (enemyType) {
+                        case SOLDIER:
+                            numRealEnemies += 1;
+                            break;
+                        case HQ:
+                            numRealEnemies += 100;
+                            break;
+                        case NOISETOWER:
+                        case PASTR:
+                            break;
                     }
                 }
 
@@ -331,10 +331,24 @@ public class CowboyRobot extends BaseRobot {
 
             case KAMIKAZEE:
                 Robot[] attackableEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
+                int realEnemies = 0;
+                for (Robot r : attackableEnemies) {
+                    switch (rc.senseRobotInfo(r).type) {
+                        case SOLDIER:
+                            realEnemies += 1;
+                            break;
+                        case HQ:
+                            realEnemies -= 100;
+                            break;
+                        case NOISETOWER:
+                        case PASTR:
+                            break;
+                    }
+                }
                 // This is the selfdestruct logic
                 // The -1 is optimistic hope that one of them will die before they kill us
                 Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
-                if (rc.getHealth() < (attackableEnemies.length + 1) * 10.0) {
+                if (rc.getHealth() < realEnemies * 10.0) {
                     // We are doomed
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
                     // If there are more enemies than friendlies
@@ -343,7 +357,7 @@ public class CowboyRobot extends BaseRobot {
                         return;
                     }
                 }
-                
+
                 int canDamage = 0;
                 if (splashFriendlies.length == 0) {
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
@@ -354,13 +368,13 @@ public class CowboyRobot extends BaseRobot {
                 int bestEnemies = 0;
                 Direction bestDirection = toPredator;
                 if (rc.canMove(toPredator)) {
-                    bestEnemies = rc.senseNearbyGameObjects(Robot.class,
-                            myLoc.add(toPredator), 2, enemy).length;
+                    bestEnemies = rc.senseNearbyGameObjects(Robot.class, myLoc.add(toPredator), 2,
+                            enemy).length;
                 }
                 Direction left = toPredator.rotateLeft();
                 if (rc.canMove(left)) {
-                    int leftEnemies = rc.senseNearbyGameObjects(Robot.class,
-                            myLoc.add(left), 2, enemy).length;
+                    int leftEnemies = rc.senseNearbyGameObjects(Robot.class, myLoc.add(left), 2,
+                            enemy).length;
                     if (bestEnemies < leftEnemies) {
                         bestDirection = left;
                         bestEnemies = leftEnemies;
@@ -368,20 +382,20 @@ public class CowboyRobot extends BaseRobot {
                 }
                 Direction right = toPredator.rotateRight();
                 if (rc.canMove(right)) {
-                    int rightEnemies = rc.senseNearbyGameObjects(Robot.class,
-                            myLoc.add(right), 2, enemy).length;
+                    int rightEnemies = rc.senseNearbyGameObjects(Robot.class, myLoc.add(right), 2,
+                            enemy).length;
                     if (bestEnemies < rightEnemies) {
                         bestDirection = right;
                         bestEnemies = rightEnemies;
                     }
                 }
-                
+
                 // If we can do damage now and it does not help to move in
                 if (canDamage > 0 && canDamage >= bestEnemies) {
-                	rc.selfDestruct();
-                	break;
+                    rc.selfDestruct();
+                    break;
                 }
-                
+
                 if (rc.canMove(bestDirection)) {
                     rc.move(bestDirection);
                 }
