@@ -15,6 +15,7 @@ public class CowboyRobot extends BaseRobot {
     public final Team  me;
     public final Team  enemy;
     public static int  clan;
+    public MapLocation myLoc;
 
     // This is the waypoint that our clan is moving towards
     public MapLocation target;
@@ -68,6 +69,7 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
+    	myLoc = rc.getLocation();
 
         switch (type) {
             case RETREAT:
@@ -109,7 +111,7 @@ public class CowboyRobot extends BaseRobot {
                     break;
                 }
 
-                if (rc.getHealth() <= 40.0 && sightEnemies.length > 2) {
+                if (rc.getHealth() <= 60.0 && sightEnemies.length > 2) {
                     type = engagementBehavior.KAMIKAZEE;
                     break;
                 }
@@ -243,7 +245,7 @@ public class CowboyRobot extends BaseRobot {
                             if (Clans.getClanPastrStatus(clan) == false) {
                                 rc.construct(RobotType.PASTR);
                                 Clans.setClanPastrStatus(clan, true);
-                                Clans.setWaypoint(clan, rc.getLocation());
+                                Clans.setWaypoint(clan, myLoc);
                             }
                             else if (Clans.getClanNTStatus(clan) == false) {
                                 rc.construct(RobotType.NOISETOWER);
@@ -269,11 +271,11 @@ public class CowboyRobot extends BaseRobot {
                 break;
 
             case RETREAT:
-                Direction toPredator = rc.getLocation().directionTo(predatorLocation);
+                Direction toPredator = myLoc.directionTo(predatorLocation);
                 Direction away = toPredator.opposite();
 
                 // Add 3 to be sufficiently far away
-                MapLocation awayFromPredator = rc.getLocation().add(away, 3);
+                MapLocation awayFromPredator = myLoc.add(away, 3);
 
                 // Reset for the best direction in the opposite direction
                 BugNavigator.bugReset();
@@ -306,7 +308,7 @@ public class CowboyRobot extends BaseRobot {
                 Robot[] sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
                 if (sightFriendlies.length == 0 && sightEnemies.length == 1) {
                     // We are in a 1-1 situation and should not be the first into striking range
-                    int enemyDist = rc.getLocation().distanceSquaredTo(preyLocation);
+                    int enemyDist = myLoc.distanceSquaredTo(preyLocation);
                     if (enemyDist > 15 && enemyDist <= 22) {
                         if (rc.senseRobotInfo(prey).health + 10.0 >= rc.getHealth()) {
                             // This is where we stand still and should not close the gap ourselves
@@ -321,7 +323,7 @@ public class CowboyRobot extends BaseRobot {
                 Robot[] attackableEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
                 // This is the selfdestruct logic
                 // The -1 is optimistic hope that one of them will die before they kill us
-                if (rc.getHealth() < (attackableEnemies.length - 1) * 10.0) {
+                if (rc.getHealth() < (attackableEnemies.length + 1) * 10.0) {
                     // We are doomed
                     Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
@@ -332,17 +334,17 @@ public class CowboyRobot extends BaseRobot {
                     }
                 }
 
-                toPredator = rc.getLocation().directionTo(predatorLocation);
+                toPredator = myLoc.directionTo(predatorLocation);
                 int bestEnemies = 0;
                 Direction bestDirection = toPredator;
                 if (rc.canMove(toPredator)) {
                     bestEnemies = rc.senseNearbyGameObjects(Robot.class,
-                            rc.getLocation().add(toPredator), 2, enemy).length;
+                            myLoc.add(toPredator), 2, enemy).length;
                 }
                 Direction left = toPredator.rotateLeft();
                 if (rc.canMove(left)) {
                     int leftEnemies = rc.senseNearbyGameObjects(Robot.class,
-                            rc.getLocation().add(left), 2, enemy).length;
+                            myLoc.add(left), 2, enemy).length;
                     if (bestEnemies < leftEnemies) {
                         bestDirection = left;
                         bestEnemies = leftEnemies;
@@ -351,7 +353,7 @@ public class CowboyRobot extends BaseRobot {
                 Direction right = toPredator.rotateRight();
                 if (rc.canMove(right)) {
                     int rightEnemies = rc.senseNearbyGameObjects(Robot.class,
-                            rc.getLocation().add(right), 2, enemy).length;
+                            myLoc.add(right), 2, enemy).length;
                     if (bestEnemies < rightEnemies) {
                         bestDirection = right;
                         bestEnemies = rightEnemies;
@@ -370,7 +372,7 @@ public class CowboyRobot extends BaseRobot {
     }
 
     private boolean withinRangeSquared(MapLocation target, double rangeSquared) {
-        return target.distanceSquaredTo(rc.getLocation()) < rangeSquared;
+        return target.distanceSquaredTo(myLoc) < rangeSquared;
     }
 
     protected void sendUpdates() {
