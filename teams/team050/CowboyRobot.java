@@ -169,8 +169,17 @@ public class CowboyRobot extends BaseRobot {
                 int numRealEnemies = 0;
                 for (Robot e : sightEnemies) {
                     RobotType enemyType = rc.senseRobotInfo(e).type;
-                    numRealEnemies += enemyType == RobotType.SOLDIER ? 1 : 0;
-                    numRealEnemies += enemyType == RobotType.HQ ? 10 : 0;
+                    switch (enemyType){
+                    case SOLDIER:
+                    	numRealEnemies += 1;
+                    	break;
+                    case HQ:
+                    	numRealEnemies += 100;
+                    	break;
+                    case NOISETOWER:
+                    case PASTR:
+                    	break;
+                    }
                 }
 
                 // This is smaller because we have to be close to consider ourselves to be up
@@ -300,6 +309,7 @@ public class CowboyRobot extends BaseRobot {
                 }
                 else {
                     type = engagementBehavior.UNENGAGED;
+                    doAction();
                 }
                 break;
 
