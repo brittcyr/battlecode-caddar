@@ -84,7 +84,6 @@ public class CowboyRobot extends BaseRobot {
                     double enemyHealth = rc.senseRobotInfo(sightEnemies[0]).health;
                     if (rc.getHealth() > enemyHealth) {
                         BugNavigator.bugReset();
-                        // TODO: We don't want to walk into the first shot though
                         type = engagementBehavior.CHASE;
                         break;
                     }
@@ -188,6 +187,7 @@ public class CowboyRobot extends BaseRobot {
                 for (Robot r : sightFriendlies) {
                     actualSightFriendlies += rc.senseRobotInfo(r).type == RobotType.SOLDIER ? 1 : 0;
                 }
+                // TODO: Fix retreat when the second enemy in sight but not range
                 boolean advantage = ((actualSightFriendlies + 1) >= numRealEnemies && (rc
                         .getHealth() > 10.0 || (numRealEnemies == 1 && rc
                         .senseRobotInfo(sightEnemies[0]).health <= 10.0)));
@@ -343,6 +343,13 @@ public class CowboyRobot extends BaseRobot {
                         return;
                     }
                 }
+                
+                int canDamage = 0;
+                // TODO: One on one case where they can't kill us, but we are chasing
+                if (rc.senseNearbyGameObjects(Robot.class, 2, me).length == 0) {
+                    Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
+                    canDamage = splashEnemies.length;
+                }
 
                 toPredator = myLoc.directionTo(predatorLocation);
                 int bestEnemies = 0;
@@ -369,6 +376,13 @@ public class CowboyRobot extends BaseRobot {
                         bestEnemies = rightEnemies;
                     }
                 }
+                
+                // If we can do damage now and it does not help to move in
+                if (canDamage > 0 && canDamage >= bestEnemies) {
+                	rc.selfDestruct();
+                	break;
+                }
+                
                 if (rc.canMove(bestDirection)) {
                     rc.move(bestDirection);
                 }
