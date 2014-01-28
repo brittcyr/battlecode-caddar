@@ -63,7 +63,7 @@ public class CowboyRobot extends BaseRobot {
 
         // Do not just build a structure so that it can get destroyed
         if (rc.isConstructing() && type != engagementBehavior.UNENGAGED
-                && rc.getConstructingRounds() < 10) {
+                && rc.getConstructingRounds() < 3 && rc.getConstructingType() == RobotType.PASTR) {
             rc.selfDestruct();
         }
     }
@@ -333,9 +333,9 @@ public class CowboyRobot extends BaseRobot {
                 Robot[] attackableEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
                 // This is the selfdestruct logic
                 // The -1 is optimistic hope that one of them will die before they kill us
+                Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
                 if (rc.getHealth() < (attackableEnemies.length + 1) * 10.0) {
                     // We are doomed
-                    Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
                     // If there are more enemies than friendlies
                     if (splashEnemies.length > splashFriendlies.length) {
@@ -345,8 +345,7 @@ public class CowboyRobot extends BaseRobot {
                 }
                 
                 int canDamage = 0;
-                // TODO: One on one case where they can't kill us, but we are chasing
-                if (rc.senseNearbyGameObjects(Robot.class, 2, me).length == 0) {
+                if (splashFriendlies.length == 0) {
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
                     canDamage = splashEnemies.length;
                 }
