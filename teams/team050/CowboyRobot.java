@@ -302,6 +302,8 @@ public class CowboyRobot extends BaseRobot {
                 else {
                     rc.move(dirToMove);
                 }
+
+                // TODO: Mercy kill our own pastr
                 break;
 
             case FIGHT:
