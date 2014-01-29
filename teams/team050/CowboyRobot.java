@@ -45,7 +45,7 @@ public class CowboyRobot extends BaseRobot {
 
         // Join first clan with less than 5 members.
         // TODO: Change policy to join IDLE clan w/ < 5 members?
-        for (int i = 0; i < Clans.getNumClans() + 1; i++) {
+        for (int i = 0; i < Clans.getNumClans(); i++) {
             if (Clans.getSize(i) < 5) {
                 Clans.joinClan(rc, i);
                 clan = i;
