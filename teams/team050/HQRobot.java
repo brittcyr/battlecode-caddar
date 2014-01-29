@@ -20,6 +20,8 @@ public class HQRobot extends BaseRobot {
     public int               mapWidth;
     public int               mapHeight;
     public MapLocation       enemyHQ;
+    public final Team        me;
+    public final Team        enemy;
 
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -31,6 +33,8 @@ public class HQRobot extends BaseRobot {
         }
 
         nextPastrSite = scoutNextPasture(hq);
+        me = rc.getTeam();
+        enemy = me.opponent();
     }
 
     protected void getUpdates() {
@@ -55,10 +59,8 @@ public class HQRobot extends BaseRobot {
     public void manageRaider(int clan) throws GameActionException {
         MapLocation target = Clans.getWaypoint(clan);
 
-        // TODO: not have to check this every turn
-
         // Update to the location that is nearest to where you were
-        MapLocation[] pastrLocations = rc.sensePastrLocations(rc.getTeam().opponent());
+        MapLocation[] pastrLocations = rc.sensePastrLocations(enemy);
         if (pastrLocations.length > 0) {
             MapLocation possible = pastrLocations[0];
             for (MapLocation p : pastrLocations) {
@@ -83,6 +85,7 @@ public class HQRobot extends BaseRobot {
             }
             else {
                 // We are going to stay put then
+                // TODO: Decide on somewhere better to go
             }
         }
     }
