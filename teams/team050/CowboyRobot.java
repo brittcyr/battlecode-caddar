@@ -190,7 +190,6 @@ public class CowboyRobot extends BaseRobot {
                 for (Robot r : sightFriendlies) {
                     actualSightFriendlies += rc.senseRobotInfo(r).type == RobotType.SOLDIER ? 1 : 0;
                 }
-                // TODO: Fix retreat when the second enemy in sight but not range
                 boolean advantage = ((actualSightFriendlies + 1) >= numRealEnemies && (rc
                         .getHealth() > 10.0 || (numRealEnemies == 1 && rc
                         .senseRobotInfo(sightEnemies[0]).health <= 10.0)));
@@ -443,7 +442,6 @@ public class CowboyRobot extends BaseRobot {
                         break;
                 }
             }
-            // TODO: Make this run even when we have action delay
             // This is the selfdestruct logic
             Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
             if (rc.getHealth() < realEnemies * 10.0 + 20.0) {
