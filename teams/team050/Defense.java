@@ -8,23 +8,23 @@ import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
 
 public class Defense {
-	public final static int DIST_FROM_PASTR = 7;
+    public final static int   DIST_FROM_PASTR = 7;
 
-    public static Direction[] directions = { Direction.NORTH, Direction.NORTH_EAST, Direction.EAST,
-            Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST,
-            Direction.NORTH_WEST        };
+    public static Direction[] directions      = { Direction.NORTH, Direction.NORTH_EAST,
+            Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST,
+            Direction.WEST, Direction.NORTH_WEST };
 
     // Whether we are running in or sneaking out
-    public static boolean     goingIn    = false;
+    public static boolean     goingIn         = false;
 
     // How far we are able to walk in each dir
-    public static int[]       distInDir  = null;
+    public static int[]       distInDir       = null;
 
     // What we are defending
     public static MapLocation pastr;
 
     // Current direction
-    public static int         direction  = 4;
+    public static int         direction       = 4;
 
     // Initialize how far we can go in each direction
     public static void initDirs(RobotController rc) throws GameActionException {
@@ -59,28 +59,32 @@ public class Defense {
             BugNavigator.bugReset();
             direction += 5;
             direction %= 8;
-            for (int x = 0; x < 8; x++) {
-            	if (distInDir[direction] < 4) {
-                direction += 5;
-                direction %= 8;
-            	} else {
-            		break;
-            	}
+            for (int x = 0; x < 9; x++) {
+                if (distInDir[direction] < 4) {
+                    direction += 5;
+                    direction %= 8;
+                }
+                else {
+                    break;
+                }
             }
         }
 
         if (!goingIn) {
-            if (rc.getLocation().distanceSquaredTo(pastr) > 
-            Math.min(DIST_FROM_PASTR * DIST_FROM_PASTR, distInDir[direction] * distInDir[direction])) {
+            if (rc.getLocation().distanceSquaredTo(pastr) > Math.min(DIST_FROM_PASTR
+                    * DIST_FROM_PASTR, distInDir[direction] * distInDir[direction])) {
                 goingIn = true;
                 BugNavigator.bugReset();
-                doDefense(rc);
+                // To avoid stack overflow, wait a turn
+                // doDefense(rc);
                 return;
             }
 
             // Otherwise we are still going out
-            rc.sneak(BugNavigator.getDirectionTo(rc,
-                    pastr.add(directions[direction], Math.min(DIST_FROM_PASTR, distInDir[direction]))));
+            rc.sneak(BugNavigator.getDirectionTo(
+                    rc,
+                    pastr.add(directions[direction],
+                            Math.min(DIST_FROM_PASTR, distInDir[direction]))));
         }
 
     }
