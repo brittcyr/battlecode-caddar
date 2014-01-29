@@ -79,7 +79,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
                 for (int x = 0; x < 9; x++) {
                     int dirDist = checkDirection(myPastr, dir);
-                    if (dirDist < 5) {
+                    if (dirDist < 4) {
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
@@ -117,7 +117,7 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     public int checkDirection(MapLocation pastr, Direction dir) {
-        int d = 3;
+        int d = 1;
         MapLocation target = pastr.add(dir, d);
 
         while (rc.canAttackSquare(target)) {
