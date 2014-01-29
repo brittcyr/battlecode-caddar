@@ -17,7 +17,7 @@ public class NoiseTowerRobot extends BaseRobot {
     public MapLocation[] enemyPastrs;
     public Direction     dir;
     public int           dist;
-    public double[][] cowGrowth;
+    public double[][]    cowGrowth;
 
     public NoiseTowerRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -26,9 +26,6 @@ public class NoiseTowerRobot extends BaseRobot {
         dir = Direction.NORTH;
         dist = 20;
         cowGrowth = myRC.senseCowGrowth();
-
-        // TODO: Scan the nearby area and decide which coarse squares are worth attacking
-        // TODO: Create a heap of squares that we need to pull cows from and follow the dirs
     }
 
     protected void getUpdates() {
@@ -60,15 +57,10 @@ public class NoiseTowerRobot extends BaseRobot {
                         && distToEnemy <= 300 ? p : enemyPastr;
             }
         }
-
         target = null;
-
-        // TODO: Compute dijkstra on a really coarse map, 4x4 on region around noise tower
-        // But this weighting does not care about roads
     }
 
     public void doAction() throws GameActionException {
-
         // Offense
         if (enemyPastr != null) {
             // Be offensive only if they are in range
@@ -104,10 +96,11 @@ public class NoiseTowerRobot extends BaseRobot {
                 }
             }
             target = myPastr.add(dir, dist);
+        }
 
-            if (target == null) {
-                rc.selfDestruct();
-            }
+        // We have no use and are just hurting our spawn delay
+        if (target == null) {
+            rc.selfDestruct();
         }
 
         if (rc.canAttackSquare(target)) {
@@ -121,7 +114,6 @@ public class NoiseTowerRobot extends BaseRobot {
 
     protected void doCompute() {
         // pass
-        // TODO: Do spare computing for offense
     }
 
     public int checkDirection(MapLocation pastr, Direction dir) {

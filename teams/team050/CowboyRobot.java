@@ -143,11 +143,6 @@ public class CowboyRobot extends BaseRobot {
                     }
                 }
                 predatorLocation = rc.senseRobotInfo(predator).location;
-
-                if (!rc.canMove(myLoc.directionTo(predatorLocation))) {
-                    type = engagementBehavior.RETREAT;
-                }
-
                 break;
 
             case UNENGAGED:
