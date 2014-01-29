@@ -64,9 +64,11 @@ public class CowboyRobot extends BaseRobot {
         // Do not just build a structure so that it can get destroyed
         if (rc.isConstructing() && type != engagementBehavior.UNENGAGED
                 && rc.getConstructingRounds() < 3 && rc.getConstructingType() == RobotType.PASTR) {
-            // TODO: Check if we have the soldier advantage and if so, then we might as well build
-            // and risk it on our micro
-            rc.selfDestruct();
+            Robot[] friends = rc.senseNearbyGameObjects(Robot.class, 35, me);
+            Robot[] enemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
+            if (friends.length > enemies.length) {
+                rc.selfDestruct();
+            }
         }
     }
 
