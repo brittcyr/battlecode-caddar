@@ -350,9 +350,8 @@ public class CowboyRobot extends BaseRobot {
                     }
                 }
                 // This is the selfdestruct logic
-                // TODO: Self destruct more
                 Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
-                if (rc.getHealth() < realEnemies * 10.0) {
+                if (rc.getHealth() < realEnemies * 10.0 + 20.0) {
                     // We are doomed
                     Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
                     // If there are more enemies than friendlies
@@ -395,7 +394,7 @@ public class CowboyRobot extends BaseRobot {
                 }
 
                 // If we can do damage now and it does not help to move in
-                if (canDamage > 0 && canDamage >= bestEnemies) {
+                if (canDamage > 0) {
                     rc.selfDestruct();
                     break;
                 }
