@@ -144,8 +144,10 @@ public class CowboyRobot extends BaseRobot {
                 }
                 predatorLocation = rc.senseRobotInfo(predator).location;
 
-                // TODO: Check that it is possible to rush into the enemy and there isnt a void in
-                // the way
+                if (!rc.canMove(myLoc.directionTo(predatorLocation))) {
+                    type = engagementBehavior.RETREAT;
+                }
+
                 break;
 
             case UNENGAGED:
