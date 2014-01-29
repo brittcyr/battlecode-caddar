@@ -158,8 +158,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
     private boolean isValidTerrain(MapLocation m) {
         TerrainTile t = rc.senseTerrainTile(m);
-        double growth = cowGrowth[m.x][m.y];
-        return (t == TerrainTile.NORMAL || t == TerrainTile.ROAD) && growth > 0.0;
+        return (t == TerrainTile.NORMAL || t == TerrainTile.ROAD) && cowGrowth[m.x][m.y] > 0.0;
     }
 
 }
