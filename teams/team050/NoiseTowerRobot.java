@@ -117,15 +117,15 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     public int checkDirection(MapLocation pastr, Direction dir) {
-        MapLocation target = pastr;
         int d = 3;
+        MapLocation target = pastr.add(dir, d);
 
         while (rc.canAttackSquare(target)) {
             TerrainTile terrain = rc.senseTerrainTile(target);
             if (terrain == TerrainTile.OFF_MAP) {
                 break;
             }
-            if (terrain == TerrainTile.NORMAL || terrain == TerrainTile.ROAD) {
+            if (isValidTerrain(target)) {
                 target = target.add(dir);
             }
             else {
