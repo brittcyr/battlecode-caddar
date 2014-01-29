@@ -18,10 +18,6 @@ public class BugNavigator {
 
     public static void bugReset() {
         bugging = false;
-        dist_to_target_at_bug_start = 0.0;
-        last_wall = null;
-        direction_to_turn = 1;
-        turned = false;
     }
 
     public static void navigateTo(RobotController rc, MapLocation target)
@@ -52,7 +48,7 @@ public class BugNavigator {
                     // Try left
                     Direction left = toTarget.rotateLeft();
                     if (rc.canMove(left)) {
-                    	MapLocation leftSquare = myLoc.add(left);
+                        MapLocation leftSquare = myLoc.add(left);
                         int leftDeltaX = Math.abs(leftSquare.x - target.x);
                         int leftDeltaY = Math.abs(leftSquare.y - target.y);
                         int biggerLeft = Math.max(leftDeltaX, leftDeltaY);
@@ -65,7 +61,7 @@ public class BugNavigator {
                     // Try right
                     Direction right = toTarget.rotateRight();
                     if (rc.canMove(right)) {
-                    	MapLocation rightSquare = myLoc.add(right);
+                        MapLocation rightSquare = myLoc.add(right);
                         int rightDeltaX = Math.abs(rightSquare.x - target.x);
                         int rightDeltaY = Math.abs(rightSquare.y - target.y);
                         int biggerRight = Math.max(rightDeltaX, rightDeltaY);
@@ -125,8 +121,7 @@ public class BugNavigator {
                     next_square = rc.getLocation().add(
                             directions[(to_check.ordinal() + 1 * direction_to_turn + 8) % 8]);
                     TerrainTile nextTerrain = rc.senseTerrainTile(next_square);
-                    if (nextTerrain == TerrainTile.VOID
-                            || nextTerrain == TerrainTile.OFF_MAP) {
+                    if (nextTerrain == TerrainTile.VOID || nextTerrain == TerrainTile.OFF_MAP) {
                         last_wall = next_square;
                     }
                     else {
