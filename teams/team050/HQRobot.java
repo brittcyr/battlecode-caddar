@@ -19,7 +19,7 @@ public class HQRobot extends BaseRobot {
     public static double[][] cowGrowth;
     public int               mapWidth;
     public int               mapHeight;
-    public MapLocation       enemyHQ;
+    public final MapLocation enemyHQ;
     public final Team        me;
     public final Team        enemy;
 
@@ -32,9 +32,10 @@ public class HQRobot extends BaseRobot {
             Clans.setWaypoint(clan, hq);
         }
 
-        nextPastrSite = scoutNextPasture(hq);
+        nextPastrSite = scoutNextPasture();
         me = rc.getTeam();
         enemy = me.opponent();
+        enemyHQ = rc.senseEnemyHQLocation();
     }
 
     protected void getUpdates() {
@@ -91,10 +92,11 @@ public class HQRobot extends BaseRobot {
     }
 
     public void manageIdleClan(int clan) throws GameActionException {
+        // Leave early since the other guy will catch up and we are waiting for large clans
         if (Clans.getSize(clan) >= Clans.DEFAULT_CLAN_SIZE - 1) {
             Clans.setClanMode(clan, ClanMode.BUILDER);
             Clans.setWaypoint(clan, nextPastrSite);
-            nextPastrSite = scoutNextPasture(rc.senseHQLocation());
+            nextPastrSite = scoutNextPasture();
         }
     }
 
@@ -183,12 +185,11 @@ public class HQRobot extends BaseRobot {
         // pass
     }
 
-    public MapLocation scoutNextPasture(MapLocation hq) {
+    public MapLocation scoutNextPasture() {
         cowGrowth = rc.senseCowGrowth();
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);
 
-        enemyHQ = rc.senseEnemyHQLocation();
         mapWidth = rc.getMapWidth();
         mapHeight = rc.getMapHeight();
         for (int x = 1; x < mapWidth - 1; x = x + 3) {
