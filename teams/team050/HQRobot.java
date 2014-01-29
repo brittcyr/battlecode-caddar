@@ -133,13 +133,14 @@ public class HQRobot extends BaseRobot {
                     opponent);
             for (Robot s : splashAttack) {
                 // Does 25.0 damage in the splash radius
-            	double health = rc.senseRobotInfo(s).health;
-            	if (health <= 25.0){
-            		kills += 1;
-            		damage += health;
-            	} else {
-            		damage += 25.0;
-            	}
+                double health = rc.senseRobotInfo(s).health;
+                if (health <= 25.0) {
+                    kills += 1;
+                    damage += health;
+                }
+                else {
+                    damage += 25.0;
+                }
             }
             if (bestKills < kills || (bestKills == kills && bestDamage < damage)) {
                 bestKills = kills;
@@ -175,7 +176,7 @@ public class HQRobot extends BaseRobot {
         // pass
     }
 
-    protected void doCompute() {
+    protected void doCompute() throws GameActionException {
         // pass
     }
 

@@ -422,8 +422,48 @@ public class CowboyRobot extends BaseRobot {
         // pass
     }
 
-    protected void doCompute() {
-        // pass
+    protected void doCompute() throws GameActionException {
+        if (!rc.isActive() && type == engagementBehavior.KAMIKAZEE) {
+            Robot[] attackableEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
+            int realEnemies = 0;
+            for (Robot r : attackableEnemies) {
+                switch (rc.senseRobotInfo(r).type) {
+                    case SOLDIER:
+                        realEnemies += 1;
+                        break;
+                    case HQ:
+                        realEnemies -= 100;
+                        break;
+                    case NOISETOWER:
+                    case PASTR:
+                        break;
+                }
+            }
+            // TODO: Make this run even when we have action delay
+            // This is the selfdestruct logic
+            Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
+            if (rc.getHealth() < realEnemies * 10.0 + 20.0) {
+                // We are doomed
+                Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
+                // If there are more enemies than friendlies
+                if (splashEnemies.length > splashFriendlies.length) {
+                    rc.selfDestruct();
+                    return;
+                }
+            }
+
+            int canDamage = 0;
+            if (splashFriendlies.length == 0) {
+                Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
+                canDamage = splashEnemies.length;
+            }
+
+            // If we can do damage now, do it
+            // TODO: Make a heuristic to see if we will do more damage by moving
+            if (canDamage > 0) {
+                rc.selfDestruct();
+            }
+        }
     }
 
 }

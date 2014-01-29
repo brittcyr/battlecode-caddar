@@ -39,7 +39,7 @@ public abstract class BaseRobot {
         rc.yield();
     }
 
-    protected abstract void doCompute();
+    protected abstract void doCompute() throws GameActionException;
 
     protected void sendUpdates() throws GameActionException {
         Liveness.updateLiveness(rc);
