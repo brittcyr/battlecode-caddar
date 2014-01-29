@@ -32,10 +32,10 @@ public class HQRobot extends BaseRobot {
             Clans.setWaypoint(clan, hq);
         }
 
-        nextPastrSite = scoutNextPasture();
         me = rc.getTeam();
         enemy = me.opponent();
         enemyHQ = rc.senseEnemyHQLocation();
+        nextPastrSite = scoutNextPasture();
     }
 
     protected void getUpdates() {
