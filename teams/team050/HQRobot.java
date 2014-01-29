@@ -88,7 +88,7 @@ public class HQRobot extends BaseRobot {
     }
 
     public void manageIdleClan(int clan) throws GameActionException {
-        if (Clans.getSize(clan) >= Clans.DEFAULT_CLAN_SIZE + 1) {
+        if (Clans.getSize(clan) >= Clans.DEFAULT_CLAN_SIZE - 1) {
             Clans.setClanMode(clan, ClanMode.BUILDER);
             Clans.setWaypoint(clan, nextPastrSite);
             nextPastrSite = scoutNextPasture(rc.senseHQLocation());
