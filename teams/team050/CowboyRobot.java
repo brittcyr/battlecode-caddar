@@ -350,7 +350,7 @@ public class CowboyRobot extends BaseRobot {
                     }
                 }
                 // This is the selfdestruct logic
-                // The -1 is optimistic hope that one of them will die before they kill us
+                // TODO: Self destruct more
                 Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
                 if (rc.getHealth() < realEnemies * 10.0) {
                     // We are doomed

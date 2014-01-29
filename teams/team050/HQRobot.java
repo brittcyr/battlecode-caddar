@@ -133,8 +133,13 @@ public class HQRobot extends BaseRobot {
                     opponent);
             for (Robot s : splashAttack) {
                 // Does 25.0 damage in the splash radius
-                kills += rc.senseRobotInfo(s).health <= 25.0 ? 1 : 0;
-                damage += Math.min(25.0, rc.senseRobotInfo(s).health);
+            	double health = rc.senseRobotInfo(s).health;
+            	if (health <= 25.0){
+            		kills += 1;
+            		damage += health;
+            	} else {
+            		damage += 25.0;
+            	}
             }
             if (bestKills < kills || (bestKills == kills && bestDamage < damage)) {
                 bestKills = kills;
