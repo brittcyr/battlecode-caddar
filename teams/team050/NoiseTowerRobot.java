@@ -117,6 +117,7 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     public int checkDirection(MapLocation pastr, Direction dir) {
+        // TODO: Cache these so that there is not a spike in the bytecode usage every time it turns
         int d = 1;
         MapLocation target = pastr.add(dir, d);
 
