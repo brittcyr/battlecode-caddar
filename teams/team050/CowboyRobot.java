@@ -296,6 +296,7 @@ public class CowboyRobot extends BaseRobot {
                 int diff = Math.abs(dirToMove.ordinal() - away.ordinal());
                 if (diff > 1 && diff < 7) {
                     type = engagementBehavior.KAMIKAZEE;
+                    // TODO: Make a heuristic to see if we will reach the enemy in time
                     doAction();
                 }
                 else {
