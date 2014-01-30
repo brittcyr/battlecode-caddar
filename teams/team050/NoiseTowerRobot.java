@@ -18,6 +18,7 @@ public class NoiseTowerRobot extends BaseRobot {
     public Direction     dir;
     public int           dist;
     public double[][]    cowGrowth;
+    public int[]         distInDirs;
 
     public NoiseTowerRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -26,6 +27,7 @@ public class NoiseTowerRobot extends BaseRobot {
         dir = Direction.NORTH;
         dist = 20;
         cowGrowth = myRC.senseCowGrowth();
+        distInDirs = new int[8];
     }
 
     protected void getUpdates() {

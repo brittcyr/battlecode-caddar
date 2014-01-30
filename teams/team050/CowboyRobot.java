@@ -352,7 +352,6 @@ public class CowboyRobot extends BaseRobot {
                     }
                 }
 
-                // TODO: Make this run even when we have action delay
                 // This is the selfdestruct logic
                 Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
                 if (rc.getHealth() < realEnemies * 10.0 + 20.0) {
@@ -372,7 +371,6 @@ public class CowboyRobot extends BaseRobot {
                 }
 
                 // If we can do damage now, do it
-                // TODO: Make a heuristic to see if we will do more damage by moving
                 if (canDamage > 0) {
                     rc.selfDestruct();
                     break;
@@ -461,7 +459,6 @@ public class CowboyRobot extends BaseRobot {
             }
 
             // If we can do damage now, do it
-            // TODO: Make a heuristic to see if we will do more damage by moving
             if (canDamage > 0) {
                 rc.selfDestruct();
             }
