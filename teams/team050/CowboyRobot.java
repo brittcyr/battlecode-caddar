@@ -436,7 +436,6 @@ public class CowboyRobot extends BaseRobot {
                         break;
                     case NOISETOWER:
                     case PASTR:
-                        realEnemies -= 1;
                         break;
                 }
             }
