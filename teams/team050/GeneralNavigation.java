@@ -43,21 +43,20 @@ public class GeneralNavigation {
         target = _target;
     }
 
-    private static int detectMyCoarseX(RobotController rc) {
-        MapLocation myLoc = rc.getLocation();
+    private static int detectMyCoarseX(MapLocation myLoc) {
         int myX = myLoc.x;
         return myX / coarseness;
     }
 
-    private static int detectMyCoarseY(RobotController rc) {
-        MapLocation myLoc = rc.getLocation();
+    private static int detectMyCoarseY(MapLocation myLoc) {
         int myY = myLoc.y;
         return myY / coarseness;
     }
 
     private static MapLocation getMyCenter(RobotController rc) {
-        int coarseX = detectMyCoarseX(rc);
-        int coarseY = detectMyCoarseY(rc);
+        MapLocation myLoc = rc.getLocation();
+        int coarseX = detectMyCoarseX(myLoc);
+        int coarseY = detectMyCoarseY(myLoc);
         int fineX = coarseX * coarseness + coarseness / 2;
         int fineY = coarseY * coarseness + coarseness / 2;
         return new MapLocation(fineX, fineY);
@@ -132,6 +131,7 @@ public class GeneralNavigation {
     }
 
     public static Direction getNextDirection(RobotController rc) throws GameActionException {
+        MapLocation myLoc = rc.getLocation();
         // Check if we are ready to use big navigation or if we have to use bug nav
         if (!imReady()) {
             // TODO: check if it is available via radio otherwise just bug navigate
@@ -139,8 +139,8 @@ public class GeneralNavigation {
         }
 
         // Do smart navigation to enemy
-        int coarseX = GeneralNavigation.detectMyCoarseX(rc);
-        int coarseY = GeneralNavigation.detectMyCoarseY(rc);
+        int coarseX = GeneralNavigation.detectMyCoarseX(myLoc);
+        int coarseY = GeneralNavigation.detectMyCoarseY(myLoc);
         int directionNum = Dijkstra.previous[coarseY][coarseX];
 
         // This means that we are close to the target or in a bad area and should just use bug
