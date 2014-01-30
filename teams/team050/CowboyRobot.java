@@ -1,7 +1,9 @@
 package team050;
 
+import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
+import team050.rpc.Liveness;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -14,8 +16,10 @@ import battlecode.common.Team;
 public class CowboyRobot extends BaseRobot {
     public final Team  me;
     public final Team  enemy;
-    public static int  clan;
+    public static int  clan             = -1;
     public MapLocation myLoc;
+
+    public int         gid              = -1;
 
     // This is the waypoint that our clan is moving towards
     public MapLocation target;
@@ -44,13 +48,21 @@ public class CowboyRobot extends BaseRobot {
         enemy = me.opponent();
 
         // Join first clan with less than 5 members.
-        for (int i = 0; i < Clans.getNumClans() + 1; i++) {
-            if (Clans.getSize(i) < 5) {
-                Clans.joinClan(rc, i);
-                clan = i;
+        for (int pgid = 0; pgid < Channels.MAX_ROBOTS; pgid++) {
+            int pclan = pgid / 10;
+            if (Clans.getClanSize(pclan) >= 5) {
+                continue;
+            }
+            if (Liveness.getLastPostedRoundByGid(pgid) == 0) {
+                gid = pgid;
+                clan = gid / 10;  // TODO: 10 should be some constant somewhere or something.
+                Clans.setClanSize(clan, Clans.getClanSize(clan));
+                Liveness.updateLiveness(RobotType.SOLDIER, gid);
                 break;
             }
         }
+        assert (gid != -1);
+        assert (clan != -1);
     }
 
     protected void getUpdates() throws GameActionException {
@@ -419,8 +431,13 @@ public class CowboyRobot extends BaseRobot {
         return target.distanceSquaredTo(myLoc) < rangeSquared;
     }
 
-    protected void sendUpdates() {
-        // pass
+    protected void sendUpdates() throws GameActionException {
+        if (!rc.isConstructing()) {
+            Liveness.updateLiveness(RobotType.SOLDIER, gid);
+        }
+        else {
+            Liveness.updateLiveness(rc.getConstructingType(), gid);
+        }
     }
 
     protected void doCompute() throws GameActionException {

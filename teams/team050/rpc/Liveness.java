@@ -3,7 +3,6 @@ package team050.rpc;
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
-import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 
 public class Liveness {
@@ -25,28 +24,29 @@ public class Liveness {
         return RobotType.values()[x];
     }
 
-    // Update a robot's liveness.
-    // TODO: Could check for collisions here (if data in BOT_LIVENESS + GID) has already been
-    // written this round.
-    public static void updateLiveness(RobotController rc) throws GameActionException {
-        int roundNum = Clock.getRoundNum();
-        RobotType type = rc.getType();
-        int word = roundAndTypeToInt(roundNum, type);
+    // Clear liveness slot.
+    public static void clearLiveness(int gid) throws GameActionException {
+        Radio.putData(Channels.BOT_LIVENESS + gid, new int[] { 0 });
+    }
 
-        int gid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
+    // Update a robot's liveness.
+    public static void updateLiveness(RobotType type, int gid) throws GameActionException {
+        int roundNum = Clock.getRoundNum();
+        int word = roundAndTypeToInt(roundNum, type);
+        System.out.println(gid);
         Radio.putData(Channels.BOT_LIVENESS + gid, new int[] { word });
     }
 
     // Last round that robot posted update.
     public static int getLastPostedRoundByGid(int gid) throws GameActionException {
-        assert (gid < Channels.MAX_GAME_OBJS);
+        assert (gid < Channels.MAX_ROBOTS);
         int word = Radio.getData(Channels.BOT_LIVENESS + gid, 1)[0];
         return Liveness.wordToRound(word);
     }
 
-    // Most recently posted type of robot.
-    public static RobotType getLastPostedTypeByGid(int gid) throws GameActionException {
-        assert (gid < Channels.MAX_GAME_OBJS);
+    // Last round that robot posted update.
+    public static RobotType getLastPostedType(int gid) throws GameActionException {
+        assert (gid < Channels.MAX_ROBOTS);
         int word = Radio.getData(Channels.BOT_LIVENESS + gid, 1)[0];
         return Liveness.wordToType(word);
     }

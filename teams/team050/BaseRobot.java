@@ -1,6 +1,5 @@
 package team050;
 
-import team050.rpc.Liveness;
 import team050.rpc.Radio;
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
@@ -36,9 +35,7 @@ public abstract class BaseRobot {
 
     protected abstract void doCompute() throws GameActionException;
 
-    protected void sendUpdates() throws GameActionException {
-        Liveness.updateLiveness(rc);
-    }
+    protected abstract void sendUpdates() throws GameActionException;
 
     protected abstract void updateInternals() throws GameActionException;
 

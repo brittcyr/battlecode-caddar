@@ -3,6 +3,8 @@ package team050;
 import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
+import team050.rpc.Liveness;
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.GameConstants;
@@ -10,6 +12,7 @@ import battlecode.common.MapLocation;
 import battlecode.common.Robot;
 import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
+import battlecode.common.RobotType;
 import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
@@ -43,8 +46,28 @@ public class HQRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
+        // Update liveness.
+        // TODO: Maybe not do this every round.
+        for (int gid = 0; gid < Channels.MAX_ROBOTS; gid++) {
+            int lastUpdatedRound = Liveness.getLastPostedRoundByGid(gid);
+            if (lastUpdatedRound == 0) {
+                continue;
+            }
+            if (lastUpdatedRound < Clock.getRoundNum() - 25) {
+                int clan = gid / 10;
+                Clans.setClanSize(clan, Clans.getClanSize(clan) - 1);
+                if (Liveness.getLastPostedType(gid) == RobotType.PASTR) {
+                    Clans.setClanPastrStatus(clan, false);
+                }
+                if (Liveness.getLastPostedType(gid) == RobotType.NOISETOWER) {
+                    Clans.setClanNTStatus(clan, false);
+                }
+                Liveness.clearLiveness(gid);
+            }
+        }
+
         // Manage clans.
-        for (int i = 0; i < Clans.getNumClans(); i++) {
+        for (int i = 0; i < 4; i++) {
             switch (Clans.getClanMode(i)) {
                 case IDLE:
                     manageIdleClan(i);
@@ -110,7 +133,7 @@ public class HQRobot extends BaseRobot {
 
     public void manageIdleClan(int clan) throws GameActionException {
         // Leave early since the other guy will catch up and we are waiting for large clans
-        if (Clans.getSize(clan) >= Clans.DEFAULT_CLAN_SIZE - 1) {
+        if (Clans.getClanSize(clan) >= Clans.DEFAULT_CLAN_SIZE - 1) {
             Clans.setClanMode(clan, ClanMode.RAIDER);
             // Clans.setWaypoint(clan, nextPastrSite);
             nextPastrSite = scoutNextPasture();

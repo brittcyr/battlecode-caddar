@@ -2,7 +2,6 @@ package team050.rpc;
 
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
 
 /*
  * When a cowboy is born, it must be assigned to a clan. This RPC library enables access to shared
@@ -11,38 +10,16 @@ import battlecode.common.RobotController;
 public class Clans {
 
     public static enum ClanMode {
-        DEAD, IDLE, DEFENDER, RAIDER, BUILDER
+        IDLE, DEFENDER, RAIDER, BUILDER
     }
 
     public static final int DEFAULT_CLAN_SIZE = 5;
 
-    public static int getNumClans() throws GameActionException {
-        return Radio.getData(Channels.NUM_CLANS, 1)[0];
-    }
-
-    public static void setNumClans(int numClans) throws GameActionException {
-        Radio.putData(Channels.NUM_CLANS, new int[] { numClans });
-    }
-
-    public static int getMembership(RobotController rc) throws GameActionException {
-        int uid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
-        return Radio.getData(Channels.CLAN_MEMBERSHIPS + uid, 1)[0];
-    }
-
-    public static int getMembershipByGid(int gid) throws GameActionException {
-        return Radio.getData(Channels.CLAN_MEMBERSHIPS + gid, 1)[0];
-    }
-
-    public static void setMembership(RobotController rc, int clanId) throws GameActionException {
-        int uid = rc.getRobot().getID() % Channels.MAX_GAME_OBJS;
-        Radio.putData(Channels.CLAN_MEMBERSHIPS + uid, new int[] { clanId });
-    }
-
-    public static int getSize(int clan) throws GameActionException {
+    public static int getClanSize(int clan) throws GameActionException {
         return Radio.getData(Channels.CLAN_SIZES + clan, 1)[0];
     }
 
-    public static void setSize(int clan, int size) throws GameActionException {
+    public static void setClanSize(int clan, int size) throws GameActionException {
         Radio.putData(Channels.CLAN_SIZES + clan, new int[] { size });
     }
 
@@ -56,34 +33,17 @@ public class Clans {
         Radio.putData(Channels.CLAN_WAYPOINTS + clan, new int[] { wp });
     }
 
-    // TODO: Use marshaler.
     public static ClanMode getClanMode(int clan) throws GameActionException {
-        return ClanMode.values()[Radio.getData(Channels.CLAN_MODES + clan, 1)[0]];
+        int modeIndex = Radio.getData(Channels.CLAN_MODES + clan, 1)[0];
+        assert (modeIndex >= 0);
+        assert (modeIndex < ClanMode.values().length);
+        if (modeIndex >= ClanMode.values().length)
+            System.out.println("ARRAY Error: modeIndex = " + modeIndex);
+        return ClanMode.values()[modeIndex];
     }
 
-    // TODO: Use marshaler.
     public static void setClanMode(int clan, ClanMode mode) throws GameActionException {
         Radio.putData(Channels.CLAN_MODES + clan, new int[] { mode.ordinal() });
-    }
-
-    // TODO: Do not exceed MAX_CLANS.
-    public static void createClan(int clan) throws GameActionException {
-        assert (Clans.getSize(clan) == 0);
-        assert (Clans.getClanMode(clan) == ClanMode.DEAD);
-
-        Clans.setClanMode(clan, ClanMode.IDLE);
-        Clans.setNumClans(Clans.getNumClans() + 1);
-    }
-
-    /*
-     * Add rc to clan. If clan does not exist, create it. Set rc to be in clan. Increase the size of
-     * clan by one.
-     */
-    public static void joinClan(RobotController rc, int clan) throws GameActionException {
-        if (Clans.getClanMode(clan) == ClanMode.DEAD)
-            Clans.createClan(clan);
-        Clans.setMembership(rc, clan);
-        Clans.setSize(clan, Clans.getSize(clan) + 1);
     }
 
     public static int[] getClanPrivateMemory(int clan, int offset, int len)
@@ -95,13 +55,11 @@ public class Clans {
 
     public static void setClanPrivateMemory(int clan, int offset, int[] data)
             throws GameActionException {
-        // TODO: assert check.
         int channel = Channels.CLAN_MEM + clan * Channels.CLAN_PRIV_MEM_SZ + offset;
         Radio.putData(channel, data);
     }
 
     public static boolean getClanPastrStatus(int clan) throws GameActionException {
-        // TODO: Use marshaler.
         if (Clans.getClanPrivateMemory(clan, Channels.BUILDER_PASTR_EXISTS_OFFSET,
                 Channels.BUILDER_PASTR_EXISTS_SZ)[0] == 1) {
             return true;
@@ -112,14 +70,12 @@ public class Clans {
     }
 
     public static void setClanPastrStatus(int clan, boolean status) throws GameActionException {
-        // TODO: Use marshaler.
         int val = (status) ? 1 : 0;
         int[] data = { val };
         Clans.setClanPrivateMemory(clan, Channels.BUILDER_PASTR_EXISTS_OFFSET, data);
     }
 
     public static boolean getClanNTStatus(int clan) throws GameActionException {
-        // TODO: Use marshaler.
         if (Clans.getClanPrivateMemory(clan, Channels.BUILDER_NT_EXISTS_OFFSET,
                 Channels.BUILDER_NT_EXISTS_SZ)[0] == 1) {
             return true;
@@ -130,7 +86,6 @@ public class Clans {
     }
 
     public static void setClanNTStatus(int clan, boolean status) throws GameActionException {
-        // TODO: Use marshaler.
         int val = (status) ? 1 : 0;
         int[] data = { val };
         Clans.setClanPrivateMemory(clan, Channels.BUILDER_NT_EXISTS_OFFSET, data);

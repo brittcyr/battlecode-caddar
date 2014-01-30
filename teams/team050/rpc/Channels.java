@@ -10,9 +10,8 @@ package team050.rpc;
 public class Channels {
 
     // Used to map large game element IDs (e.g. rc.getRobot().getId()) to smaller addr space.
-    public static final int MAX_GAME_OBJS               = 1009;                                  // 1009
-                                                                                                  // prime.
-    public static final int MAX_CLANS                   = 20;
+    public static final int MAX_ROBOTS                  = 40;
+    public static final int MAX_CLANS                   = 5;
 
     // We store the radio "address" at which each section starts, as well as the size of that
     // section (*_SZ). Then functions can index into that section to retrieve the information they
@@ -28,22 +27,14 @@ public class Channels {
     public static final int BUILDER_NT_EXISTS_SZ        = 1;
 
     // Clan information.
-    public static final int CLAN_ADDR_SPACE_START       = 40000;
-
-    // The total number of clans.
-    public static final int NUM_CLANS                   = CLAN_ADDR_SPACE_START;
-    public static final int NUM_CLANS_SZ                = 1;
-
-    // What clan each robot is in.
-    public static final int CLAN_MEMBERSHIPS            = CLAN_ADDR_SPACE_START + NUM_CLANS_SZ;
-    public static final int CLAN_MEMBERSHIPS_SZ         = MAX_GAME_OBJS;
+    public static final int CLAN_ADDR_SPACE_START       = 2000;
 
     // Liveness updates for each robot.
-    public static final int BOT_LIVENESS                = CLAN_MEMBERSHIPS + CLAN_MEMBERSHIPS_SZ;
-    public static final int BOT_LIVENESS_SZ             = MAX_GAME_OBJS;
+    public static final int BOT_LIVENESS                = CLAN_ADDR_SPACE_START;
+    public static final int BOT_LIVENESS_SZ             = MAX_ROBOTS;
 
     // The size of each clan.
-    public static final int CLAN_SIZES                  = CLAN_MEMBERSHIPS + CLAN_MEMBERSHIPS_SZ;
+    public static final int CLAN_SIZES                  = BOT_LIVENESS + BOT_LIVENESS_SZ;
     public static final int CLAN_SIZES_SZ               = MAX_CLANS;
 
     // Each clan's waypoint.
