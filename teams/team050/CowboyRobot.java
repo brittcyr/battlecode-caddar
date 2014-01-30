@@ -65,7 +65,7 @@ public class CowboyRobot extends BaseRobot {
                 && rc.getConstructingRounds() < 3 && rc.getConstructingType() == RobotType.PASTR) {
             Robot[] friends = rc.senseNearbyGameObjects(Robot.class, 35, me);
             Robot[] enemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
-            if (friends.length > enemies.length) {
+            if (friends.length < enemies.length) {
                 rc.selfDestruct();
             }
         }
