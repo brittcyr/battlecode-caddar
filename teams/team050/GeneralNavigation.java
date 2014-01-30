@@ -160,6 +160,7 @@ public class GeneralNavigation {
     }
 
     private static boolean imReady() {
+        // TODO: Lookup in the radio
         int coarseX = target.x / coarseness;
         int coarseY = target.y / coarseness;
         return (previous != null && previous[coarseY][coarseX] == Dijkstra.UNSET);
