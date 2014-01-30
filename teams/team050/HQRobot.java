@@ -59,6 +59,7 @@ public class HQRobot extends BaseRobot {
 
     public void manageRaider(int clan) throws GameActionException {
         MapLocation target = Clans.getWaypoint(clan);
+        // TODO: Optimize this code
 
         // Update to the location that is nearest to where you were
         MapLocation[] pastrLocations = rc.sensePastrLocations(enemy);
@@ -86,7 +87,26 @@ public class HQRobot extends BaseRobot {
             }
             else {
                 // We are going to stay put then
-                // TODO: Decide on somewhere better to go
+                MapLocation[] myPastrs = rc.sensePastrLocations(me);
+                if (myPastrs.length == 0) {
+                    MapLocation best = myPastrs[0];
+                    for (MapLocation p : myPastrs) {
+                        if (p.distanceSquaredTo(rc.senseEnemyHQLocation()) < best
+                                .distanceSquaredTo(rc.senseEnemyHQLocation())) {
+                            best = p;
+                        }
+                    }
+                    target = best;
+                }
+                else {
+                    if (rc.senseTerrainTile(new MapLocation(rc.getMapWidth() / 2,
+                            rc.getMapHeight() / 2)) != TerrainTile.VOID) {
+                        target = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                    }
+                    else {
+                        target = rc.senseHQLocation();
+                    }
+                }
             }
         }
     }
