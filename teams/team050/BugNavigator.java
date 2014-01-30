@@ -118,8 +118,8 @@ public class BugNavigator {
                 MapLocation next_square = null;
                 for (int x = 1; x < 8; x++) {
                     Direction to_check = myLoc.directionTo(last_wall);
-                    next_square = rc.getLocation().add(
-                            directions[(to_check.ordinal() + 1 * direction_to_turn + 8) % 8]);
+                    next_square = myLoc
+                            .add(directions[(to_check.ordinal() + 1 * direction_to_turn + 8) % 8]);
                     TerrainTile nextTerrain = rc.senseTerrainTile(next_square);
                     if (nextTerrain == TerrainTile.VOID || nextTerrain == TerrainTile.OFF_MAP) {
                         last_wall = next_square;
