@@ -10,26 +10,36 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void getUpdates() {
-    	// TODO: Check if there are any requests for computation
+        // TODO: Check if there are any requests for computation
     }
 
     protected void updateInternals() {
-    	// TODO: Potential distress signal
+        // TODO: Potential distress signal
         // This is where we should decide if we call for reinforcements
+
+        // Possible things to calculate
+        // HQ
+        // EnemyHQ
+        // ME
+        // Other PASTR
+        // ENEMY PASTR1
+        // ENEMY PASTR2
+        // ENEMY PASTR3
+        // ...
     }
 
     public void doAction() throws GameActionException {
-    	GeneralNavigation.prepareCompute(rc, rc.getLocation());
-    	GeneralNavigation.doCompute();
+        GeneralNavigation.prepareCompute(rc, rc.getLocation());
+        GeneralNavigation.doCompute();
     }
 
     protected void sendUpdates() {
-    	// TODO: send the results
+        // TODO: send the results
     }
 
     protected void doCompute() {
-    	// pass
-    	// The action of pastr is just computing
+        // pass
+        // The action of pastr is just computing
     }
 
 }
