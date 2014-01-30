@@ -35,8 +35,8 @@ public class GeneralNavigation {
      * 
      * REQUESTING DIRECTIONS 1. setTarget 2. getNextDirection
      * 
-     * This should handle checking if the currently computed map is correct, if it is not, then we
-     * will request it and in the mean time, just bug
+     * This should handle checking if the map exists in the radio, if not, then we will request it
+     * and in the mean time, just bug
      */
 
     public static void setTarget(MapLocation _target) {
