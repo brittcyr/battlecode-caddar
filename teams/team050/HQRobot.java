@@ -59,7 +59,6 @@ public class HQRobot extends BaseRobot {
 
     public void manageRaider(int clan) throws GameActionException {
         MapLocation target = Clans.getWaypoint(clan);
-        // TODO: Optimize this code
 
         // Update to the location that is nearest to where you were
         MapLocation[] pastrLocations = rc.sensePastrLocations(enemy);
@@ -132,6 +131,8 @@ public class HQRobot extends BaseRobot {
                 }
                 toSpawn = toSpawn.rotateLeft();
             }
+            // TODO: If we cannot spawn, then move the waypoint since we are being blocked by our
+            // own robots
         }
 
         // Sense up to 15 because that is attack radius, but can splash to 21
