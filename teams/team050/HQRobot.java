@@ -72,7 +72,7 @@ public class HQRobot extends BaseRobot {
             target = possible;
         }
         else {
-            MapLocation[] broadcast = rc.senseBroadcastingRobotLocations();
+            MapLocation[] broadcast = rc.senseBroadcastingRobotLocations(enemy);
             if (broadcast.length > 0) {
                 MapLocation possible = broadcast[0];
                 for (MapLocation p : broadcast) {
@@ -86,7 +86,7 @@ public class HQRobot extends BaseRobot {
             else {
                 // We are going to stay put then
                 MapLocation[] myPastrs = rc.sensePastrLocations(me);
-                if (myPastrs.length == 0) {
+                if (myPastrs.length > 0) {
                     MapLocation best = myPastrs[0];
                     for (MapLocation p : myPastrs) {
                         if (p.distanceSquaredTo(enemyHQ) < best.distanceSquaredTo(enemyHQ)) {
@@ -105,13 +105,14 @@ public class HQRobot extends BaseRobot {
                 }
             }
         }
+        Clans.setWaypoint(clan, target);
     }
 
     public void manageIdleClan(int clan) throws GameActionException {
         // Leave early since the other guy will catch up and we are waiting for large clans
         if (Clans.getSize(clan) >= Clans.DEFAULT_CLAN_SIZE - 1) {
-            Clans.setClanMode(clan, ClanMode.BUILDER);
-            Clans.setWaypoint(clan, nextPastrSite);
+            Clans.setClanMode(clan, ClanMode.RAIDER);
+            // Clans.setWaypoint(clan, nextPastrSite);
             nextPastrSite = scoutNextPasture();
         }
     }
