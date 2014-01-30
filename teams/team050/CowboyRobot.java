@@ -228,6 +228,7 @@ public class CowboyRobot extends BaseRobot {
                 else {
                     type = engagementBehavior.CHASE;
                     if (prey == null || !rc.canSenseObject(prey)) {
+                        // TODO: Chase the closest enemy
                         prey = sightEnemies[0];
                         for (Robot e : sightEnemies) {
                             prey = rc.senseRobotInfo(e).health < rc.senseRobotInfo(prey).health ? e
