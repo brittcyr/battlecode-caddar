@@ -78,8 +78,7 @@ public class HQRobot extends BaseRobot {
                 MapLocation possible = broadcast[0];
                 for (MapLocation p : broadcast) {
                     if (p.distanceSquaredTo(target) < possible.distanceSquaredTo(target)
-                            && (p.x != rc.senseEnemyHQLocation().x && p.y != rc
-                                    .senseEnemyHQLocation().y)) {
+                            && (p.x != enemyHQ.x && p.y != enemyHQ.y)) {
                         possible = p;
                     }
                 }
@@ -91,20 +90,18 @@ public class HQRobot extends BaseRobot {
                 if (myPastrs.length == 0) {
                     MapLocation best = myPastrs[0];
                     for (MapLocation p : myPastrs) {
-                        if (p.distanceSquaredTo(rc.senseEnemyHQLocation()) < best
-                                .distanceSquaredTo(rc.senseEnemyHQLocation())) {
+                        if (p.distanceSquaredTo(enemyHQ) < best.distanceSquaredTo(enemyHQ)) {
                             best = p;
                         }
                     }
                     target = best;
                 }
                 else {
-                    if (rc.senseTerrainTile(new MapLocation(rc.getMapWidth() / 2,
-                            rc.getMapHeight() / 2)) != TerrainTile.VOID) {
-                        target = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                    if (rc.senseTerrainTile(new MapLocation(mapWidth / 2, mapHeight / 2)) != TerrainTile.VOID) {
+                        target = new MapLocation(mapWidth / 2, mapHeight / 2);
                     }
                     else {
-                        target = rc.senseHQLocation();
+                        target = enemyHQ;
                     }
                 }
             }
