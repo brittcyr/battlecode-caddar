@@ -8,17 +8,18 @@ import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
 public class NoiseTowerRobot extends BaseRobot {
-    public final Team    me;
-    public final Team    enemy;
-    public MapLocation   myPastr;
-    public MapLocation   enemyPastr;
-    public MapLocation   target;
-    public MapLocation[] myPastrs;
-    public MapLocation[] enemyPastrs;
-    public Direction     dir;
-    public int           dist;
-    public double[][]    cowGrowth;
-    public int[]         distInDirs;
+    public final Team        me;
+    public final Team        enemy;
+    public MapLocation       myPastr;
+    public MapLocation       enemyPastr;
+    public MapLocation       target;
+    public MapLocation[]     myPastrs;
+    public MapLocation[]     enemyPastrs;
+    public Direction         dir;
+    public int               dist;
+    public double[][]        cowGrowth;
+    public int[]             distInDirs;
+    public final MapLocation myLoc;
 
     public NoiseTowerRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -28,6 +29,7 @@ public class NoiseTowerRobot extends BaseRobot {
         dist = 20;
         cowGrowth = myRC.senseCowGrowth();
         distInDirs = new int[8];
+        myLoc = rc.getLocation();
     }
 
     protected void getUpdates() {
@@ -45,8 +47,8 @@ public class NoiseTowerRobot extends BaseRobot {
         if (myPastrs.length > 0) {
             myPastr = myPastrs[0];
             for (MapLocation p : myPastrs) {
-                myPastr = p.distanceSquaredTo(rc.getLocation()) < myPastr.distanceSquaredTo(rc
-                        .getLocation()) ? p : myPastr;
+                myPastr = p.distanceSquaredTo(myLoc) < myPastr.distanceSquaredTo(myLoc) ? p
+                        : myPastr;
             }
         }
 
@@ -54,8 +56,8 @@ public class NoiseTowerRobot extends BaseRobot {
         if (enemyPastrs.length > 0) {
             enemyPastr = enemyPastrs[0];
             for (MapLocation p : enemyPastrs) {
-                int distToEnemy = p.distanceSquaredTo(rc.getLocation());
-                enemyPastr = distToEnemy > enemyPastr.distanceSquaredTo(rc.getLocation())
+                int distToEnemy = p.distanceSquaredTo(myLoc);
+                enemyPastr = distToEnemy > enemyPastr.distanceSquaredTo(myLoc)
                         && distToEnemy <= 300 ? p : enemyPastr;
             }
         }
@@ -132,10 +134,12 @@ public class NoiseTowerRobot extends BaseRobot {
                 target = target.add(dir);
             }
             else {
-                MapLocation left1 = target.add(dir.rotateLeft());
-                MapLocation right1 = target.add(dir.rotateRight());
-                MapLocation left2 = target.add(dir.rotateLeft().rotateLeft());
-                MapLocation right2 = target.add(dir.rotateRight().rotateRight());
+                Direction left = dir.rotateLeft();
+                Direction right = dir.rotateRight();
+                MapLocation left1 = target.add(left);
+                MapLocation right1 = target.add(right);
+                MapLocation left2 = target.add(left.rotateLeft());
+                MapLocation right2 = target.add(right.rotateRight());
 
                 if ((isValidTerrain(left1) && isValidTerrain(left2))
                         || (isValidTerrain(right1) && isValidTerrain(right2))) {
