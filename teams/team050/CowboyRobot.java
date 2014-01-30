@@ -56,7 +56,7 @@ public class CowboyRobot extends BaseRobot {
             if (Liveness.getLastPostedRoundByGid(pgid) == 0) {
                 gid = pgid;
                 clan = gid / 10;  // TODO: 10 should be some constant somewhere or something.
-                Clans.setClanSize(clan, Clans.getClanSize(clan));
+                Clans.setClanSize(clan, Clans.getClanSize(clan) + 1);
                 Liveness.updateLiveness(RobotType.SOLDIER, gid);
                 break;
             }
