@@ -136,8 +136,7 @@ public class HQRobot extends BaseRobot {
 
         // Sense up to 15 because that is attack radius, but can splash to 21
         // Best attack is most kills, then most damage tiebreaker
-        Team opponent = rc.getTeam().opponent();
-        Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, opponent);
+        Robot[] nearbyEnemies = rc.senseNearbyGameObjects(Robot.class, 15, enemy);
 
         MapLocation bestAttack = null;
         int bestKills = 0;
@@ -151,8 +150,7 @@ public class HQRobot extends BaseRobot {
             int kills = robotInfo.health <= 50.0 ? 1 : 0;
             double damage = Math.min(50.0, robotInfo.health);
 
-            Robot[] splashAttack = rc.senseNearbyGameObjects(Robot.class, robotLocation, 2,
-                    opponent);
+            Robot[] splashAttack = rc.senseNearbyGameObjects(Robot.class, robotLocation, 2, enemy);
             for (Robot s : splashAttack) {
                 // Does 25.0 damage in the splash radius
                 double health = rc.senseRobotInfo(s).health;
@@ -172,7 +170,7 @@ public class HQRobot extends BaseRobot {
         }
 
         if (bestAttack == null) {
-            Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 21, opponent);
+            Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 21, enemy);
             if (splashEnemies.length != 0) {
                 // Then we have an enemy outside our attack but not splash radius
                 // just attack the first one that we can
