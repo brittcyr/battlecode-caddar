@@ -53,7 +53,7 @@ public class NoiseTowerRobot extends BaseRobot {
         }
 
         // Pick the farthest in range
-        if (enemyPastrs.length > 0) {
+        if (enemyPastrs.length > 0 && myPastr == null) {
             enemyPastr = enemyPastrs[0];
             for (MapLocation p : enemyPastrs) {
                 int distToEnemy = p.distanceSquaredTo(myLoc);
