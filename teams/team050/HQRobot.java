@@ -42,8 +42,7 @@ public class HQRobot extends BaseRobot {
     }
 
     protected void getUpdates() throws GameActionException {
-        if (Clock.getRoundNum() % 50 == 0)
-            Liveness.printLivenessTable();
+        // pass
     }
 
     protected void updateInternals() throws GameActionException {
@@ -58,13 +57,27 @@ public class HQRobot extends BaseRobot {
                 int clan = gid / 10;
                 Clans.setClanSize(clan, Clans.getClanSize(clan) - 1);
                 if (Liveness.getLastPostedType(gid) == RobotType.PASTR) {
-                    Clans.setClanPastrStatus(clan, false);
+                    // Clans.setClanPastrStatus(clan, false);
                 }
                 if (Liveness.getLastPostedType(gid) == RobotType.NOISETOWER) {
-                    Clans.setClanNTStatus(clan, false);
+                    // Clans.setClanNTStatus(clan, false);
                 }
                 Liveness.clearLiveness(gid);
             }
+        }
+
+        for (int clan = 0; clan < 4; clan++) {
+            boolean hasPastr = false;
+            boolean hasNT = false;
+            for (int bot = 0; bot < 10; bot++) {
+                int gid = 10 * clan + bot;
+                if (Liveness.getLastPostedType(gid) == RobotType.PASTR)
+                    hasPastr = true;
+                if (Liveness.getLastPostedType(gid) == RobotType.NOISETOWER)
+                    hasNT = true;
+            }
+            Clans.setClanPastrStatus(clan, hasPastr);
+            Clans.setClanNTStatus(clan, hasNT);
         }
 
         // Manage clans.

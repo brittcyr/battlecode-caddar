@@ -22,13 +22,14 @@ public class PastrRobot extends BaseRobot {
         for (int i = 0; i < Channels.MAX_ROBOTS; i += 10) {
             int pclan = i / 10;
             ClanMode mode = Clans.getClanMode(pclan);
-            if (mode == ClanMode.BUILDER) {
+            if (mode == ClanMode.DEFENDER) {
                 clan = pclan;
                 for (int pgidOffset = 0; pgidOffset < 10; pgidOffset++) {
                     int pgid = i + pgidOffset;
                     if (Liveness.getLastPostedRoundByGid(pgid) == 0) {
                         gid = pgid;
                         Liveness.updateLiveness(RobotType.PASTR, gid);
+                        Clans.setClanSize(clan, Clans.getClanSize(clan) + 1);
                         break;
                     }
                 }
@@ -58,8 +59,8 @@ public class PastrRobot extends BaseRobot {
     }
 
     public void doAction() throws GameActionException {
-        GeneralNavigation.prepareCompute(rc, rc.getLocation());
-        GeneralNavigation.doCompute();
+        // GeneralNavigation.prepareCompute(rc, rc.getLocation());
+        // GeneralNavigation.doCompute();
     }
 
     protected void sendUpdates() throws GameActionException {

@@ -317,7 +317,6 @@ public class CowboyRobot extends BaseRobot {
                         /* Does our clan need us to rebuild anything? */
                         if (Clans.getClanPastrStatus(clan) == false) {
                             if (withinRangeSquared(target, rangeSquared)) {
-                                System.out.println("Rebuilding destroyed PASTR\n");
                                 Clans.setClanPastrStatus(clan, true);
                                 Clans.setWaypoint(clan, myLoc);
                                 rc.construct(RobotType.PASTR);
@@ -325,7 +324,6 @@ public class CowboyRobot extends BaseRobot {
                         }
                         else if (Clans.getClanNTStatus(clan) == false) {
                             if (withinRangeSquared(target, rangeSquared)) {
-                                System.out.println("Rebuilding destroyed NT\n");
                                 Clans.setClanNTStatus(clan, true);
                                 rc.construct(RobotType.NOISETOWER);
                                 Clans.setClanMode(clan, ClanMode.DEFENDER);
