@@ -46,14 +46,14 @@ public class HQRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
-        // Update liveness.
+        // Check for liveness & maintain liveness state table.
         // TODO: Maybe not do this every round.
         for (int gid = 0; gid < Channels.MAX_ROBOTS; gid++) {
             int lastUpdatedRound = Liveness.getLastPostedRoundByGid(gid);
             if (lastUpdatedRound == 0) {
                 continue;
             }
-            if (lastUpdatedRound < Clock.getRoundNum() - 25) {
+            if (lastUpdatedRound < (Clock.getRoundNum() - Liveness.LIVENESS_UPDATE_PERIOD - 1)) {
                 int clan = gid / 10;
                 Clans.setClanSize(clan, Clans.getClanSize(clan) - 1);
                 if (Liveness.getLastPostedType(gid) == RobotType.PASTR) {

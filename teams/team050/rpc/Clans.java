@@ -37,8 +37,6 @@ public class Clans {
         int modeIndex = Radio.getData(Channels.CLAN_MODES + clan, 1)[0];
         assert (modeIndex >= 0);
         assert (modeIndex < ClanMode.values().length);
-        if (modeIndex >= ClanMode.values().length)
-            System.out.println("ARRAY Error: modeIndex = " + modeIndex);
         return ClanMode.values()[modeIndex];
     }
 
