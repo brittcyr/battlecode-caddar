@@ -9,6 +9,9 @@ public class Liveness {
     // Each round robots post their liveness field to (current round number, RobotType).
     // HQ checks these fields to garbage collect radio state each round.
 
+    // Bots expected to update liveness every 10 rounds.
+    public static final int LIVENESS_UPDATE_PERIOD = 10;
+
     public static int roundAndTypeToInt(int roundNum, RobotType type) {
         return roundNum + ((GameConstants.ROUND_MAX_LIMIT + 1) * type.ordinal());
     }
@@ -33,7 +36,6 @@ public class Liveness {
     public static void updateLiveness(RobotType type, int gid) throws GameActionException {
         int roundNum = Clock.getRoundNum();
         int word = roundAndTypeToInt(roundNum, type);
-        System.out.println(gid);
         Radio.putData(Channels.BOT_LIVENESS + gid, new int[] { word });
     }
 

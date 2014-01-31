@@ -4,6 +4,7 @@ import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
 import team050.rpc.Liveness;
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -432,6 +433,8 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void sendUpdates() throws GameActionException {
+        if (Clock.getRoundNum() % Liveness.LIVENESS_UPDATE_PERIOD != 0)
+            return;
         if (!rc.isConstructing()) {
             Liveness.updateLiveness(RobotType.SOLDIER, gid);
         }
