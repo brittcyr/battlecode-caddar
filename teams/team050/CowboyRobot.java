@@ -127,6 +127,7 @@ public class CowboyRobot extends BaseRobot {
                 }
 
                 if (rc.getHealth() <= 60.0 && sightEnemies.length > 2) {
+                    // TODO: Test if we will reach the enemy
                     type = engagementBehavior.KAMIKAZEE;
                     break;
                 }
