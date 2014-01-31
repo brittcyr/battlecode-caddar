@@ -4,6 +4,7 @@ import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
 import team050.rpc.Liveness;
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -321,12 +322,18 @@ public class CowboyRobot extends BaseRobot {
                                 Clans.setWaypoint(clan, myLoc);
                                 rc.construct(RobotType.PASTR);
                             }
+                            else {
+                                rc.move(BugNavigator.getDirectionTo(rc, target));
+                            }
                         }
                         else if (Clans.getClanNTStatus(clan) == false) {
                             if (withinRangeSquared(target, rangeSquared)) {
                                 Clans.setClanNTStatus(clan, true);
                                 rc.construct(RobotType.NOISETOWER);
                                 Clans.setClanMode(clan, ClanMode.DEFENDER);
+                            }
+                            else {
+                                rc.move(BugNavigator.getDirectionTo(rc, target));
                             }
                         }
                         else {
