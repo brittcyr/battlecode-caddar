@@ -421,9 +421,12 @@ public class CowboyRobot extends BaseRobot {
                 Robot[] sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
                 if (sightFriendlies.length == 0 && sightEnemies.length == 1) {
                     // We are in a 1-1 situation and should not be the first into striking range
+                    prey = sightEnemies[0];
+                    RobotInfo preyInfo = rc.senseRobotInfo(prey);
+                    preyLocation = preyInfo.location;
                     int enemyDist = myLoc.distanceSquaredTo(preyLocation);
                     if (enemyDist > 15 && enemyDist <= 22) {
-                        if (rc.senseRobotInfo(prey).health + 10.0 >= rc.getHealth()) {
+                        if (preyInfo.health + 10.0 >= rc.getHealth()) {
                             // This is where we stand still and should not close the gap ourselves
                             break;
                         }
@@ -464,7 +467,9 @@ public class CowboyRobot extends BaseRobot {
                 }
                 else {
                     type = engagementBehavior.RETREAT;
-                    doAction();
+                    if (Clock.getBytecodeNum() < 2500) {
+                        doAction();
+                    }
                 }
                 break;
         }
