@@ -187,8 +187,6 @@ public class HQRobot extends BaseRobot {
                 }
                 toSpawn = toSpawn.rotateLeft();
             }
-            // TODO: If we cannot spawn, then move the waypoint since we are being blocked by our
-            // own robots
         }
 
         // Sense up to 15 because that is attack radius, but can splash to 21
