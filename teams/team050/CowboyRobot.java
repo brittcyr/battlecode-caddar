@@ -292,7 +292,7 @@ public class CowboyRobot extends BaseRobot {
             case UNENGAGED:
                 switch (Clans.getClanMode(clan)) {
                     case IDLE:
-                        BugNavigator.navigateTo(rc, rc.senseHQLocation());
+                        rc.sneak(BugNavigator.getDirectionTo(rc, rc.senseHQLocation()));
                         // Do nothing when we are not active
                         break;
                     case BUILDER:

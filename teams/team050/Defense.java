@@ -8,6 +8,8 @@ import battlecode.common.RobotController;
 import battlecode.common.TerrainTile;
 
 public class Defense {
+    // The distance we go from the pastr as we are herding. Not too far so that we aren't defending,
+    // but not too close to not be herding
     public final static int   DIST_FROM_PASTR = 7;
 
     public static Direction[] directions      = { Direction.NORTH, Direction.NORTH_EAST,
@@ -26,7 +28,9 @@ public class Defense {
     // Current direction
     public static int         direction       = 4;
 
-    // Initialize how far we can go in each direction
+    /*
+     * Initialize how far we can go in each direction
+     */
     public static void initDirs(RobotController rc) throws GameActionException {
         pastr = Clans.getWaypoint(CowboyRobot.clan);
         if (distInDir != null) {
@@ -46,6 +50,12 @@ public class Defense {
         }
     }
 
+    /*
+     * doDefense means that we are patrolling the pastr in all directions
+     * 
+     * We sneak out to not disturb cows and then run in to herd. This allows us to both do cowboy
+     * herding and check all directions around the pastr for enemies
+     */
     public static void doDefense(RobotController rc) throws GameActionException {
         if (goingIn) {
             // Check if we have push cows into the pastr
@@ -75,8 +85,6 @@ public class Defense {
                     * DIST_FROM_PASTR, distInDir[direction] * distInDir[direction])) {
                 goingIn = true;
                 BugNavigator.bugReset();
-                // To avoid stack overflow, wait a turn
-                // doDefense(rc);
                 return;
             }
 

@@ -16,15 +16,26 @@ public class BugNavigator {
     static int         direction_to_turn           = 1;
     static boolean     turned                      = false;
 
+    /*
+     * Reset bugging so that we can use this if targets
+     */
     public static void bugReset() {
         bugging = false;
     }
 
+    /*
+     * Sneak towards the target
+     */
+    @Deprecated
     public static void navigateTo(RobotController rc, MapLocation target)
             throws GameActionException {
         rc.sneak(getDirectionTo(rc, target));
     }
 
+    /*
+     * Determine the direction to get to the target. This will always tell you a direction that it
+     * thinks will eventually get you closer using the bugging algorithm
+     */
     public static Direction getDirectionTo(RobotController rc, MapLocation target) {
         try {
             turned &= bugging;
@@ -77,6 +88,7 @@ public class BugNavigator {
                 last_wall = myLoc.add(toTarget);
                 dist_to_target_at_bug_start = myLoc.distanceSquaredTo(target);
 
+                // Determine which direction we should try to bug around
                 double dist_plus = 9999;
                 double dist_minus = 9999;
                 Direction dir = toTarget;
@@ -179,7 +191,7 @@ public class BugNavigator {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Soldier Exception");
+            System.out.println("Bugging Exception");
         }
         return Direction.NONE;
     }
