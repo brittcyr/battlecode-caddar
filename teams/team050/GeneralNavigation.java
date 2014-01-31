@@ -1,6 +1,7 @@
 package team050;
 
 import team050.Dijkstra;
+import team050.rpc.CoopNav;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -115,7 +116,6 @@ public class GeneralNavigation {
     public static void prepareCompute(RobotController rc, MapLocation target) {
         // This is the test if we are preparing our first computation
         if (gameBoard == null) {
-            // TODO: Check the radio to see if these are available there
             senseGameBoard(rc);
             setupCoarseMap(rc);
         }
@@ -133,15 +133,17 @@ public class GeneralNavigation {
     public static Direction getNextDirection(RobotController rc) throws GameActionException {
         MapLocation myLoc = rc.getLocation();
         // Check if we are ready to use big navigation or if we have to use bug nav
-        if (!imReady()) {
-            // TODO: check if it is available via radio otherwise just bug navigate
+        if (!CoopNav.isComputationReady(target)) {
             return BugNavigator.getDirectionTo(rc, target);
+        }
+        else {
+            CoopNav.requestComputation(target, coarseness);
         }
 
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(myLoc);
         int coarseY = GeneralNavigation.detectMyCoarseY(myLoc);
-        int directionNum = Dijkstra.previous[coarseY][coarseX];
+        int directionNum = CoopNav.getDirectionFromResult(target, coarseX, coarseY);
 
         // This means that we are close to the target or in a bad area and should just use bug
         if (directionNum == Dijkstra.UNSET) {
@@ -157,12 +159,5 @@ public class GeneralNavigation {
         }
 
         return BugNavigator.getDirectionTo(rc, waypoint);
-    }
-
-    private static boolean imReady() {
-        // TODO: Lookup in the radio
-        int coarseX = target.x / coarseness;
-        int coarseY = target.y / coarseness;
-        return (previous != null && previous[coarseY][coarseX] == Dijkstra.UNSET);
     }
 }
