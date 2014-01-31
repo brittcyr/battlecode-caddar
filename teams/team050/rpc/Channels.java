@@ -48,4 +48,17 @@ public class Channels {
     // Clan-private memory.
     public static final int CLAN_MEM                    = CLAN_MODES + CLAN_MODES_SZ;
     public static final int CLAN_MEM_SZ                 = MAX_CLANS * CLAN_PRIV_MEM_SZ;
+
+    /*
+     * Navigation memory starts here.
+     */
+    public static final int MAX_NAV_REQUESTS            = 10;
+
+    // Navigation Request Descriptor Table
+    public static final int NAVREQ_HEADER_TBL           = CLAN_MEM + CLAN_MEM_SZ;
+    public static final int NAVREQ_HEADER_DESC_SZ       = 2;
+    public static final int NAVREQ_HEADER_TBL_SZ        = MAX_NAV_REQUESTS * NAVREQ_HEADER_DESC_SZ;
+
+    // Navigation results
+    public static final int NAVRESULTS                  = NAVREQ_HEADER_TBL + NAVREQ_HEADER_TBL_SZ;
 }
