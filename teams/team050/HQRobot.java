@@ -145,7 +145,7 @@ public class HQRobot extends BaseRobot {
                         target = new MapLocation(mapWidth / 2, mapHeight / 2);
                     }
                     else {
-                        target = enemyHQ;
+                        target = rc.senseHQLocation();
                     }
                 }
             }
