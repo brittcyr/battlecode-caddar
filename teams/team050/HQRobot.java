@@ -56,12 +56,6 @@ public class HQRobot extends BaseRobot {
             if (lastUpdatedRound < (Clock.getRoundNum() - Liveness.LIVENESS_UPDATE_PERIOD - 1)) {
                 int clan = gid / 10;
                 Clans.setClanSize(clan, Clans.getClanSize(clan) - 1);
-                if (Liveness.getLastPostedType(gid) == RobotType.PASTR) {
-                    // Clans.setClanPastrStatus(clan, false);
-                }
-                if (Liveness.getLastPostedType(gid) == RobotType.NOISETOWER) {
-                    // Clans.setClanNTStatus(clan, false);
-                }
                 Liveness.clearLiveness(gid);
             }
         }

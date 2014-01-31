@@ -16,7 +16,7 @@ public class Clans {
     public static final ClanMode[] TARGET_CLAN_TYPES = { ClanMode.RAIDER, ClanMode.BUILDER,
             ClanMode.RAIDER, ClanMode.RAIDER        };
 
-    public static int[]            TARGET_CLAN_SIZES = { 5, 5, 5, 5 };
+    public static int[]            TARGET_CLAN_SIZES = { 5, 5, 5, 30 };
 
     public static int getClanSize(int clan) throws GameActionException {
         return Radio.getData(Channels.CLAN_SIZES + clan, 1)[0];

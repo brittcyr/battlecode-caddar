@@ -15,7 +15,7 @@ public class PastrRobot extends BaseRobot {
 
     public PastrRobot(RobotController myRC) throws GameActionException {
         super(myRC);
-        GeneralNavigation.prepareCompute(rc, rc.getLocation());
+        // GeneralNavigation.prepareCompute(rc, rc.getLocation());
 
         // Determine what clan supposed to be in, assign self gid.
         // TODO 10 should be constant
@@ -60,8 +60,7 @@ public class PastrRobot extends BaseRobot {
     }
 
     public void doAction() throws GameActionException {
-        GeneralNavigation.prepareCompute(rc, rc.getLocation());
-        GeneralNavigation.doCompute();
+        // GeneralNavigation.doCompute();
     }
 
     protected void sendUpdates() throws GameActionException {
