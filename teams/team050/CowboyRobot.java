@@ -286,6 +286,7 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void doAction() throws GameActionException {
+        double rangeSquared = 2;
         switch (type) {
             case UNENGAGED:
                 switch (Clans.getClanMode(clan)) {
@@ -296,16 +297,15 @@ public class CowboyRobot extends BaseRobot {
                     case BUILDER:
                         // If "close enough to target" build a PASTR if clan hasn't built one yet.
                         // If PASTR built and close enough, build NT.
-                        double rangeSquared = 2;
                         if (withinRangeSquared(target, rangeSquared)) {
                             if (Clans.getClanPastrStatus(clan) == false) {
-                                rc.construct(RobotType.PASTR);
                                 Clans.setClanPastrStatus(clan, true);
                                 Clans.setWaypoint(clan, myLoc);
+                                rc.construct(RobotType.PASTR);
                             }
                             else if (Clans.getClanNTStatus(clan) == false) {
-                                rc.construct(RobotType.NOISETOWER);
                                 Clans.setClanNTStatus(clan, true);
+                                rc.construct(RobotType.NOISETOWER);
                                 Clans.setClanMode(clan, ClanMode.DEFENDER);
                             }
                         }
@@ -314,8 +314,27 @@ public class CowboyRobot extends BaseRobot {
                         }
                         break;
                     case DEFENDER:
-                        Defense.initDirs(rc);
-                        Defense.doDefense(rc);
+                        /* Does our clan need us to rebuild anything? */
+                        if (Clans.getClanPastrStatus(clan) == false) {
+                            if (withinRangeSquared(target, rangeSquared)) {
+                                System.out.println("Rebuilding destroyed PASTR\n");
+                                Clans.setClanPastrStatus(clan, true);
+                                Clans.setWaypoint(clan, myLoc);
+                                rc.construct(RobotType.PASTR);
+                            }
+                        }
+                        else if (Clans.getClanNTStatus(clan) == false) {
+                            if (withinRangeSquared(target, rangeSquared)) {
+                                System.out.println("Rebuilding destroyed NT\n");
+                                Clans.setClanNTStatus(clan, true);
+                                rc.construct(RobotType.NOISETOWER);
+                                Clans.setClanMode(clan, ClanMode.DEFENDER);
+                            }
+                        }
+                        else {
+                            Defense.initDirs(rc);
+                            Defense.doDefense(rc);
+                        }
                         break;
                     case RAIDER:
                         rc.move(BugNavigator.getDirectionTo(rc, target));

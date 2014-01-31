@@ -41,8 +41,9 @@ public class HQRobot extends BaseRobot {
         nextPastrSite = scoutNextPasture();
     }
 
-    protected void getUpdates() {
-        // pass
+    protected void getUpdates() throws GameActionException {
+        if (Clock.getRoundNum() % 50 == 0)
+            Liveness.printLivenessTable();
     }
 
     protected void updateInternals() throws GameActionException {
@@ -74,10 +75,18 @@ public class HQRobot extends BaseRobot {
                     break;
                 case RAIDER:
                     manageRaider(i);
+                    break;
+                case DEFENDER:
+                    manageDefender(i);
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    private void manageDefender(int i) throws GameActionException {
+        // pass
     }
 
     public void manageRaider(int clan) throws GameActionException {

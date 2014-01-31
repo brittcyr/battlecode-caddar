@@ -52,4 +52,21 @@ public class Liveness {
         int word = Radio.getData(Channels.BOT_LIVENESS + gid, 1)[0];
         return Liveness.wordToType(word);
     }
+
+    /*
+     * Used for debugging.
+     */
+    public static void printLivenessTable() throws GameActionException {
+        int[] livenessTable = Radio.getData(Channels.BOT_LIVENESS, Channels.BOT_LIVENESS_SZ);
+        assert (livenessTable.length == Channels.BOT_LIVENESS_SZ);
+        System.out.printf("\n\n\n\n*** ROUND %d ***\n", Clock.getRoundNum());
+        for (int i = 0; i < livenessTable.length; i++) {
+            if (i % 10 == 0) {
+                System.out.printf("========== CLAN %d (%s) ==========\n------------------------\n",
+                        i / 10, Clans.getClanMode(i / 10));
+            }
+            System.out.printf("GID %d:\t[TYPE: %s][ROUND: %d]\n", i, wordToType(livenessTable[i]),
+                    wordToRound(livenessTable[i]));
+        }
+    }
 }
