@@ -240,11 +240,10 @@ public class CowboyRobot extends BaseRobot {
                 else {
                     type = engagementBehavior.CHASE;
                     if (prey == null || !rc.canSenseObject(prey)) {
-                        // TODO: Chase the closest enemy
                         prey = sightEnemies[0];
                         for (Robot e : sightEnemies) {
-                            prey = rc.senseRobotInfo(e).health < rc.senseRobotInfo(prey).health ? e
-                                    : prey;
+                            prey = myLoc.distanceSquaredTo(rc.senseRobotInfo(e).location) < myLoc
+                                    .distanceSquaredTo(rc.senseRobotInfo(prey).location) ? e : prey;
                         }
                     }
                 }
@@ -309,7 +308,8 @@ public class CowboyRobot extends BaseRobot {
                 int diff = Math.abs(dirToMove.ordinal() - away.ordinal());
                 if (diff > 1 && diff < 7) {
                     type = engagementBehavior.KAMIKAZEE;
-                    // TODO: Make a heuristic to see if we will reach the enemy in time
+                    // TODO: Make a heuristic to see if we will reach the enemy in time to avoid
+                    // running into wall and then getting shot down
                     doAction();
                 }
                 else {
