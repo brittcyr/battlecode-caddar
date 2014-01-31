@@ -141,7 +141,7 @@ public class HQRobot extends BaseRobot {
         ClanMode newMode = Clans.TARGET_CLAN_TYPES[clan];
         switch (newMode) {
             case BUILDER:
-                if (Clans.getClanSize(clan) >= Clans.TARGET_CLAN_SIZES[clan] - 1) {
+                if (Clans.getClanSize(clan) >= 2) {
                     Clans.setWaypoint(clan, nextPastrSite);
                     Clans.setClanMode(clan, ClanMode.BUILDER);
                 }
