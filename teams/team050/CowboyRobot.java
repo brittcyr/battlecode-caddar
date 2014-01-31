@@ -398,6 +398,20 @@ public class CowboyRobot extends BaseRobot {
                 break;
 
             case CHASE:
+                if (Clans.getClanMode(clan) == ClanMode.DEFENDER) {
+                    MapLocation pastr = Defense.pastr;
+                    if (pastr != null) {
+                        Robot myPastr = (Robot) rc.senseObjectAtLocation(pastr);
+                        if (myPastr != null) {
+                            RobotInfo r = rc.senseRobotInfo(myPastr);
+                            if (r.health <= 10.0 && rc.canAttackSquare(pastr)) {
+                                rc.attackSquare(pastr);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 Robot[] sightFriendlies = rc.senseNearbyGameObjects(Robot.class, 15, me);
                 Robot[] sightEnemies = rc.senseNearbyGameObjects(Robot.class, 35, enemy);
                 if (sightFriendlies.length == 0 && sightEnemies.length == 1) {
