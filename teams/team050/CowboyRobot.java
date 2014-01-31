@@ -368,7 +368,7 @@ public class CowboyRobot extends BaseRobot {
 
                 if (Clans.getClanMode(clan) == ClanMode.DEFENDER) {
                     MapLocation pastr = Defense.pastr;
-                    if (pastr != null) {
+                    if (pastr != null && rc.canSenseSquare(pastr)) {
                         Robot myPastr = (Robot) rc.senseObjectAtLocation(pastr);
                         if (myPastr != null) {
                             RobotInfo r = rc.senseRobotInfo(myPastr);
@@ -400,7 +400,7 @@ public class CowboyRobot extends BaseRobot {
             case CHASE:
                 if (Clans.getClanMode(clan) == ClanMode.DEFENDER) {
                     MapLocation pastr = Defense.pastr;
-                    if (pastr != null) {
+                    if (pastr != null && rc.canSenseSquare(pastr)) {
                         Robot myPastr = (Robot) rc.senseObjectAtLocation(pastr);
                         if (myPastr != null) {
                             RobotInfo r = rc.senseRobotInfo(myPastr);

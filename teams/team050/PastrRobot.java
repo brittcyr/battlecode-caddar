@@ -59,7 +59,7 @@ public class PastrRobot extends BaseRobot {
     }
 
     public void doAction() throws GameActionException {
-        GeneralNavigation.doCompute();
+        // GeneralNavigation.doCompute();
     }
 
     protected void sendUpdates() throws GameActionException {
