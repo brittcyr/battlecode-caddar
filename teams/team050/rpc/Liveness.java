@@ -33,7 +33,6 @@ public class Liveness {
     public static void updateLiveness(RobotType type, int gid) throws GameActionException {
         int roundNum = Clock.getRoundNum();
         int word = roundAndTypeToInt(roundNum, type);
-        System.out.println(gid);
         Radio.putData(Channels.BOT_LIVENESS + gid, new int[] { word });
     }
 

@@ -4,6 +4,7 @@ import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
 import team050.rpc.Liveness;
+import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -308,6 +309,7 @@ public class CowboyRobot extends BaseRobot {
                 int diff = Math.abs(dirToMove.ordinal() - away.ordinal());
                 if (diff > 1 && diff < 7) {
                     type = engagementBehavior.KAMIKAZEE;
+                    System.out.println(Clock.getBytecodeNum());
                     // TODO: Make a heuristic to see if we will reach the enemy in time to avoid
                     // running into wall and then getting shot down
                     doAction();
