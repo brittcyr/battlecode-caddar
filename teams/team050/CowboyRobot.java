@@ -47,10 +47,10 @@ public class CowboyRobot extends BaseRobot {
         me = rc.getTeam();
         enemy = me.opponent();
 
-        // Join first clan with less than 5 members.
+        // Join first clan that needs new members.
         for (int pgid = 0; pgid < Channels.MAX_ROBOTS; pgid++) {
             int pclan = pgid / 10;
-            if (Clans.getClanSize(pclan) >= 5) {
+            if (Clans.getClanSize(pclan) >= Clans.TARGET_CLAN_SIZES[pclan]) {
                 continue;
             }
             if (Liveness.getLastPostedRoundByGid(pgid) == 0) {

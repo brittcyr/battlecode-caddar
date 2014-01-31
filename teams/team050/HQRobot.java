@@ -131,12 +131,28 @@ public class HQRobot extends BaseRobot {
         Clans.setWaypoint(clan, target);
     }
 
+    /*
+     * The big thing here is to instigate the evolution from IDLE to the end-type for this clan.
+     * 
+     * We first check what the eventual mode will be for this idle clan. We then check if the clan
+     * is large enough, and if it is, we evolve the clan to its new mode and dispatch it.
+     */
     public void manageIdleClan(int clan) throws GameActionException {
-        // Leave early since the other guy will catch up and we are waiting for large clans
-        if (Clans.getClanSize(clan) >= Clans.DEFAULT_CLAN_SIZE - 1) {
-            Clans.setClanMode(clan, ClanMode.RAIDER);
-            // Clans.setWaypoint(clan, nextPastrSite);
-            nextPastrSite = scoutNextPasture();
+        ClanMode newMode = Clans.TARGET_CLAN_TYPES[clan];
+        switch (newMode) {
+            case BUILDER:
+                if (Clans.getClanSize(clan) >= Clans.TARGET_CLAN_SIZES[clan] - 1) {
+                    Clans.setWaypoint(clan, nextPastrSite);
+                    Clans.setClanMode(clan, ClanMode.BUILDER);
+                }
+                break;
+            case RAIDER:
+                if (Clans.getClanSize(clan) >= Clans.TARGET_CLAN_SIZES[clan] - 1) {
+                    Clans.setClanMode(clan, ClanMode.RAIDER);
+                }
+                break;
+            default:
+                break;
         }
     }
 
