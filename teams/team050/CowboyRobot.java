@@ -12,6 +12,7 @@ import battlecode.common.RobotController;
 import battlecode.common.RobotInfo;
 import battlecode.common.RobotType;
 import battlecode.common.Team;
+import battlecode.common.TerrainTile;
 
 public class CowboyRobot extends BaseRobot {
     public final Team  me;
@@ -126,8 +127,39 @@ public class CowboyRobot extends BaseRobot {
                 }
 
                 if (rc.getHealth() <= 60.0 && sightEnemies.length > 2) {
-                    // TODO: Test if we will reach the enemy
-                    type = engagementBehavior.KAMIKAZEE;
+                    // Hack to save bytecode for important turns
+                    if (!rc.isActive()) {
+                        Direction toPredator = myLoc.directionTo(predatorLocation);
+                        boolean myEnd = false;
+                        if (checkTerrain(myLoc.add(toPredator))) {
+                            myEnd = true;
+                        }
+                        else {
+                            myEnd = checkTerrain(myLoc.add(toPredator.rotateLeft()))
+                                    || checkTerrain(myLoc.add(toPredator.rotateRight()));
+                        }
+
+                        if (!myEnd) {
+                            break;
+                        }
+
+                        boolean theirEnd = false;
+                        Direction fromPredator = toPredator.opposite();
+                        if (checkTerrain(predatorLocation.add(fromPredator))) {
+                            theirEnd = true;
+                        }
+                        else {
+                            theirEnd = checkTerrain(myLoc.add(fromPredator.rotateLeft()))
+                                    || checkTerrain(myLoc.add(fromPredator.rotateRight()));
+                        }
+
+                        if (!theirEnd) {
+                            break;
+                        }
+                        // This is a rough test since it does not check the middle, but it is a
+                        // quick heuristic
+                        type = engagementBehavior.KAMIKAZEE;
+                    }
                     break;
                 }
 
@@ -453,6 +485,21 @@ public class CowboyRobot extends BaseRobot {
             }
 
         }
+    }
+
+    private boolean checkTerrain(MapLocation loc) {
+        TerrainTile t = rc.senseTerrainTile(loc);
+        switch (t) {
+            case NORMAL:
+                return true;
+            case ROAD:
+                return true;
+            case VOID:
+                return false;
+            case OFF_MAP:
+                return false;
+        }
+        return false;
     }
 
 }
