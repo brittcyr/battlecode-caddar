@@ -127,6 +127,7 @@ public class CowboyRobot extends BaseRobot {
                 }
 
                 if (rc.getHealth() <= 60.0 && sightEnemies.length > 2) {
+                    // TODO: Test if we will reach the enemy
                     type = engagementBehavior.KAMIKAZEE;
                     break;
                 }
@@ -309,7 +310,6 @@ public class CowboyRobot extends BaseRobot {
                 int diff = Math.abs(dirToMove.ordinal() - away.ordinal());
                 if (diff > 1 && diff < 7) {
                     type = engagementBehavior.KAMIKAZEE;
-                    System.out.println(Clock.getBytecodeNum());
                     // TODO: Make a heuristic to see if we will reach the enemy in time to avoid
                     // running into wall and then getting shot down
                     doAction();
