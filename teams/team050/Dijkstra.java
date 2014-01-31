@@ -2,6 +2,8 @@ package team050;
 
 import java.util.Arrays;
 
+import battlecode.common.Clock;
+
 public class Dijkstra {
     public static int         iters;
     public static int         width          = 0;
@@ -38,7 +40,7 @@ public class Dijkstra {
     }
 
     public static void doDijkstra() {
-        while (true) {
+        while (true && Clock.getBytecodesLeft() > 1000) {
             // Find the position with minimum distance
             int val = distStringHeap.getMinVal();
             int index = distStringHeap.extractMin();
