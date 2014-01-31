@@ -363,12 +363,25 @@ public class CowboyRobot extends BaseRobot {
                     // TODO: Make a heuristic to see if we will reach the enemy in time to avoid
                     // running into wall and then getting shot down
                     doAction();
-                }
-                else {
-                    rc.move(dirToMove);
+                    break;
                 }
 
-                // TODO: Mercy kill our own pastr
+                if (Clans.getClanMode(clan) == ClanMode.DEFENDER) {
+                    MapLocation pastr = Defense.pastr;
+                    if (pastr != null) {
+                        Robot myPastr = (Robot) rc.senseObjectAtLocation(pastr);
+                        if (myPastr != null) {
+                            RobotInfo r = rc.senseRobotInfo(myPastr);
+                            if (r.health <= 10.0 && rc.canAttackSquare(pastr)) {
+                                rc.attackSquare(pastr);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                rc.move(dirToMove);
+
                 break;
 
             case FIGHT:
