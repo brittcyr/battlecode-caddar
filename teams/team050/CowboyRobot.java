@@ -434,8 +434,21 @@ public class CowboyRobot extends BaseRobot {
 
             if (splashFriendlies.length == 0) {
                 Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
-                if (splashEnemies != null) {
-                    rc.selfDestruct();
+                for (Robot r : splashEnemies) {
+                    RobotInfo info = rc.senseRobotInfo(r);
+                    switch (info.type) {
+                        case SOLDIER:
+                            rc.selfDestruct();
+                            return;
+                        case HQ:
+                            break;
+                        case NOISETOWER:
+                        case PASTR:
+                            if (info.health <= 41.0 + rc.getHealth() * .5) {
+                                rc.selfDestruct();
+                                return;
+                            }
+                    }
                 }
             }
 
