@@ -4,7 +4,6 @@ import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
 import team050.rpc.Liveness;
-import battlecode.common.Clock;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -351,46 +350,6 @@ public class CowboyRobot extends BaseRobot {
                 break;
 
             case KAMIKAZEE:
-                Robot[] attackableEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
-                int realEnemies = 0;
-                for (Robot r : attackableEnemies) {
-                    switch (rc.senseRobotInfo(r).type) {
-                        case SOLDIER:
-                            realEnemies += 1;
-                            break;
-                        case HQ:
-                            realEnemies -= 100;
-                            break;
-                        case NOISETOWER:
-                        case PASTR:
-                            break;
-                    }
-                }
-
-                // This is the selfdestruct logic
-                Robot[] splashFriendlies = rc.senseNearbyGameObjects(Robot.class, 2, me);
-                if (rc.getHealth() < realEnemies * 10.0 + 20.0) {
-                    // We are doomed
-                    Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
-                    // If there are more enemies than friendlies
-                    if (splashEnemies.length > splashFriendlies.length) {
-                        rc.selfDestruct();
-                        return;
-                    }
-                }
-
-                int canDamage = 0;
-                if (splashFriendlies.length == 0) {
-                    Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
-                    canDamage = splashEnemies.length;
-                }
-
-                // If we can do damage now, do it
-                if (canDamage > 0) {
-                    rc.selfDestruct();
-                    break;
-                }
-
                 toPredator = myLoc.directionTo(predatorLocation);
                 int bestEnemies = 0;
                 Direction bestDirection = toPredator;
@@ -434,16 +393,18 @@ public class CowboyRobot extends BaseRobot {
     }
 
     protected void sendUpdates() throws GameActionException {
-        if (!rc.isConstructing()) {
-            Liveness.updateLiveness(RobotType.SOLDIER, gid);
-        }
-        else {
-            Liveness.updateLiveness(rc.getConstructingType(), gid);
+        if (!rc.isActive()) {
+            if (!rc.isConstructing()) {
+                Liveness.updateLiveness(RobotType.SOLDIER, gid);
+            }
+            else {
+                Liveness.updateLiveness(rc.getConstructingType(), gid);
+            }
         }
     }
 
     protected void doCompute() throws GameActionException {
-        if (!rc.isActive() && type == engagementBehavior.KAMIKAZEE) {
+        if (type == engagementBehavior.KAMIKAZEE) {
             Robot[] attackableEnemies = rc.senseNearbyGameObjects(Robot.class, 10, enemy);
             int realEnemies = 0;
             for (Robot r : attackableEnemies) {
@@ -471,16 +432,13 @@ public class CowboyRobot extends BaseRobot {
                 }
             }
 
-            int canDamage = 0;
             if (splashFriendlies.length == 0) {
                 Robot[] splashEnemies = rc.senseNearbyGameObjects(Robot.class, 2, enemy);
-                canDamage = splashEnemies.length;
+                if (splashEnemies != null) {
+                    rc.selfDestruct();
+                }
             }
 
-            // If we can do damage now, do it
-            if (canDamage > 0) {
-                rc.selfDestruct();
-            }
         }
     }
 
