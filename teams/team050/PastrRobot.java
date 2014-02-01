@@ -12,10 +12,10 @@ import battlecode.common.RobotType;
 
 public class PastrRobot extends BaseRobot {
 
-    public int     gid         = -1;
-    public int     clan        = -1;
-    public boolean isComputing = false;
-    public int     jobID       = -1;
+    public int         gid         = -1;
+    public int         clan        = -1;
+    public boolean     isComputing = false;
+    public MapLocation target      = null;
 
     public PastrRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -40,7 +40,6 @@ public class PastrRobot extends BaseRobot {
                 }
             }
         }
-        CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
         assert (gid != -1);
         assert (clan != -1);
     }
@@ -48,20 +47,15 @@ public class PastrRobot extends BaseRobot {
     protected void getUpdates() throws GameActionException {
         // Check if we are free to take a new computing job
         if (!isComputing) {
-            jobID = CoopNav.claimNextAvailableJob();
+            target = CoopNav.claimNextAvailableJob();
 
             // Check whether there is computation that needs to be done
-            if (jobID == -1) {
+            if (target == null) {
                 return;
             }
 
-            // Get the parameters for the job
-            int jobCoarseness = CoopNav.getJobCoarseness(jobID);
-            MapLocation jobTarget = CoopNav.getJobTarget(jobID);
-
             // Tell GeneralNavigation what the next job should be
-            GeneralNavigation.coarseness = jobCoarseness;
-            GeneralNavigation.prepareCompute(rc, jobTarget);
+            GeneralNavigation.prepareCompute(rc, target);
 
             // Set the computing flag
             isComputing = true;
@@ -92,7 +86,7 @@ public class PastrRobot extends BaseRobot {
             Dijkstra.finished = false;
 
             // Tell the cowboys all the wonderful computing that we have done
-            CoopNav.postJobResult(rc, jobID, Dijkstra.previous);
+            CoopNav.postJobResult(rc, target, Dijkstra.previous);
 
             // Redundant because posting could take a really long time
             Liveness.updateLiveness(RobotType.PASTR, gid);

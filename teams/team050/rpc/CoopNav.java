@@ -1,6 +1,6 @@
 package team050.rpc;
 
-import hq_search.GeneralNavigation;
+import team050.GeneralNavigation;
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
