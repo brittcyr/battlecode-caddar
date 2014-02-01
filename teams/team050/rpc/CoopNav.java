@@ -55,12 +55,13 @@ public class CoopNav {
             // Post request if job i not already taken.
             boolean nrdRequested = isRequestedFromNrd(navreqDescriptor);
             if (!nrdRequested) {
-                setCoarsenessByJob(coarseness, i);
-                setTargetByJob(target, i);
-                setRequestedByJob(true, i);
-                setComputingByJob(false, i);
-                setFinishedByJob(false, i);
-                setRoundByJob(0, i);
+                navreqDescriptor[0] = setCoarsenessInWord(coarseness, navreqDescriptor[0]);
+                navreqDescriptor[0] = setTargetInWord(target, navreqDescriptor[0]);
+                navreqDescriptor[1] = setRequestedInWord(true, navreqDescriptor[1]);
+                navreqDescriptor[1] = setComputingInWord(false, navreqDescriptor[1]);
+                navreqDescriptor[1] = setFinishedInWord(false, navreqDescriptor[1]);
+                navreqDescriptor[1] = setRoundInWord(0, navreqDescriptor[1]);
+                setNavreqDescriptor(navreqDescriptor, i);
                 return 0;
             }
         }
@@ -112,16 +113,19 @@ public class CoopNav {
 
             if (isRequestedFromNrd(navreqDescriptor)) {
                 if (!(isComputingFromNrd(navreqDescriptor))) {
-                    // Job requested, nobody computing. Claim it!
-                    setComputingByJob(true, i);
-                    setFinishedByJob(false, i);
-                    setRoundByJob(Clock.getRoundNum(), i);
-                    return i;
+                    if (!(isFinishedFromNrd(navreqDescriptor))) {
+                        // Job requested, nobody computing solution, and no answer. Claim it!
+                        navreqDescriptor[1] = setComputingInWord(true, navreqDescriptor[1]);
+                        navreqDescriptor[1] = setFinishedInWord(false, navreqDescriptor[1]);
+                        navreqDescriptor[1] = setRoundInWord(Clock.getRoundNum(),
+                                navreqDescriptor[1]);
+                        setNavreqDescriptor(navreqDescriptor, i);
+                        return i;
+                    }
                 }
             }
         }
 
-        // Checked all of the jobs. They are all being worked on or haven't been posted.
         return -1;
     }
 
@@ -133,7 +137,7 @@ public class CoopNav {
         if (!isComputingFromNrd(navreqDescriptor)) {
             return null;
         }
-        return getJobTarget(jobId);
+        return getTargetFromNrd(navreqDescriptor);
     }
 
     /*
@@ -144,13 +148,13 @@ public class CoopNav {
         if (!isComputingFromNrd(navreqDescriptor)) {
             return -1;
         }
-        return getJobCoarseness(jobId);
+        return getCoarsenessFromNrd(navreqDescriptor);
     }
 
     /*
      * Post a finished computation to shared memory.
      * 
-     * This performs NO SAFETY CHECKS!!!
+     * This performs NO SAFETY CHECKS!!! It will just write to the radio blindly.
      * 
      * If you start computing on a job and take too long and the HQ clears you from the navreq
      * header table, then when you post this, you might be overwriting somebody else's request,
@@ -164,14 +168,16 @@ public class CoopNav {
         int navresultAddr = Channels.NAVRESULTS + jobId * navresultSize;
         int ySize = (int) Math.ceil(rc.getMapHeight() / coarseness);
 
+        int[] navreqDescriptor = getNavreqDescriptor(jobId);
+        navreqDescriptor[1] = setFinishedInWord(true, navreqDescriptor[1]);
+        navreqDescriptor[1] = setComputingInWord(false, navreqDescriptor[1]);
+
         // Post each row at a time.
         for (int y = 0; y < result[0].length; y++) {
             int rowAddr = navresultAddr + y * ySize;
             Radio.putData(rowAddr, result[y]);
         }
 
-        setFinishedByJob(true, jobId);
-        setComputingByJob(false, jobId);
     }
 
     /*
@@ -191,16 +197,12 @@ public class CoopNav {
         return Marshaler.intToMapLocation(word);
     }
 
-    private static void setTargetByJob(MapLocation target, int jobId) throws GameActionException {
-        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ);
-        int word = Radio.getData(wordAddr, 1)[0];
+    private static int setTargetInWord(MapLocation target, int word) {
         int coarseness = word & 1;
-
-        int newWord = Marshaler.MapLocationToInt(target);
-        newWord = newWord << 1;
-        newWord |= coarseness;
-
-        Radio.putData(wordAddr, new int[] { newWord });
+        word = Marshaler.MapLocationToInt(target);
+        word = word << 1;
+        word |= coarseness;
+        return word;
     }
 
     private static boolean isFinishedFromNrd(int[] navreqDescriptor) {
@@ -223,16 +225,14 @@ public class CoopNav {
         }
     }
 
-    private static void setCoarsenessByJob(int coarseness, int jobId) throws GameActionException {
-        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ);
-        int word = Radio.getData(wordAddr, 1)[0];
+    private static int setCoarsenessInWord(int coarseness, int word) {
         if (coarseness == 2) {
             word &= ~1;
         }
         else {
             word |= 1;
         }
-        Radio.putData(wordAddr, new int[] { word });
+        return word;
     }
 
     private static int[] getNavreqDescriptor(int jobId) throws GameActionException {
@@ -240,10 +240,13 @@ public class CoopNav {
         return Radio.getData(wordAddr, Channels.NAVREQ_HEADER_DESC_SZ);
     }
 
-    private static void setRoundByJob(int round, int jobId) throws GameActionException {
-        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ) + 1;
-        int word = Radio.getData(wordAddr, 1)[0];
+    private static void setNavreqDescriptor(int[] navreqDescriptor, int jobId)
+            throws GameActionException {
+        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ);
+        Radio.putData(wordAddr, navreqDescriptor);
+    }
 
+    private static int setRoundInWord(int round, int word) {
         int newWord = round << 3;
         if ((word & 1) != 0) {
             newWord |= 1;
@@ -254,50 +257,37 @@ public class CoopNav {
         if ((word & 4) != 0) {
             newWord |= 4;
         }
-
-        Radio.putData(wordAddr, new int[] { newWord });
+        return newWord;
     }
 
-    private static void setFinishedByJob(boolean status, int jobId) throws GameActionException {
-        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ) + 1;
-        int word = Radio.getData(wordAddr, 1)[0];
-
+    private static int setFinishedInWord(boolean status, int word) {
         if (status) {
             word |= (1 << 2);
         }
         else {
             word &= ~(1 << 2);
         }
-
-        Radio.putData(wordAddr, new int[] { word });
+        return word;
     }
 
-    private static void setComputingByJob(boolean status, int jobId) throws GameActionException {
-        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ) + 1;
-        int word = Radio.getData(wordAddr, 1)[0];
-
+    private static int setComputingInWord(boolean status, int word) {
         if (status) {
             word |= (1 << 1);
         }
         else {
             word &= ~(1 << 1);
         }
-
-        Radio.putData(wordAddr, new int[] { word });
+        return word;
     }
 
-    private static void setRequestedByJob(boolean status, int jobId) throws GameActionException {
-        int wordAddr = Channels.NAVREQ_HEADER_TBL + (jobId * Channels.NAVREQ_HEADER_DESC_SZ) + 1;
-        int word = Radio.getData(wordAddr, 1)[0];
-
+    private static int setRequestedInWord(boolean status, int word) {
         if (status) {
             word |= 1;
         }
         else {
             word &= ~1;
         }
-
-        Radio.putData(wordAddr, new int[] { word });
+        return word;
     }
 
     private static boolean isComputingFromNrd(int[] navreqDescriptor) {
@@ -308,5 +298,15 @@ public class CoopNav {
         else {
             return false;
         }
+    }
+
+    private static void printNavreqHeaderTable() throws GameActionException {
+        int[] table = Radio.getData(Channels.NAVREQ_HEADER_TBL, 20);
+        System.out.printf("========== NAVREQ DESCRIPTOR TABLE ==========\n");
+        System.out.printf("==========         START           ==========\n");
+        for (int i = 0; i < table.length; i++) {
+            System.out.printf("%d:\t%08x\n", i, table[i]);
+        }
+        System.out.printf("==========          END            ==========\n");
     }
 }
