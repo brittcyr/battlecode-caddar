@@ -44,7 +44,7 @@ public class PastrRobot extends BaseRobot {
         assert (clan != -1);
     }
 
-    protected void getUpdates() {
+    protected void getUpdates() throws GameActionException {
         // Check if we are free to take a new computing job
         if (!isComputing) {
             jobID = CoopNav.claimNextAvailableJob();
@@ -91,7 +91,7 @@ public class PastrRobot extends BaseRobot {
             Dijkstra.finished = false;
 
             // Tell the cowboys all the wonderful computing that we have done
-            CoopNav.postJobResult(jobID, Dijkstra.previous);
+            CoopNav.postJobResult(rc, jobID, Dijkstra.previous);
 
             // Redundant because posting could take a really long time
             Liveness.updateLiveness(RobotType.PASTR, gid);

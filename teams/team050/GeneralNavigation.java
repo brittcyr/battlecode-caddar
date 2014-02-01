@@ -1,6 +1,5 @@
 package team050;
 
-import team050.Dijkstra;
 import team050.rpc.CoopNav;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -121,7 +120,7 @@ public class GeneralNavigation {
         // Do smart navigation to enemy
         int coarseX = GeneralNavigation.detectMyCoarseX(myLoc);
         int coarseY = GeneralNavigation.detectMyCoarseY(myLoc);
-        int directionNum = CoopNav.getDirectionFromResult(target, coarseX, coarseY);
+        int directionNum = CoopNav.getDirectionFromResult(rc, target, coarseX, coarseY);
 
         // This means that we are close to the target or in a bad area and should just use bug
         if (directionNum == Dijkstra.UNSET) {

@@ -39,7 +39,8 @@ public class CoopNav {
      * 
      * Return 0 if request is posted.
      */
-    public static int requestComputation(MapLocation target, int coarseness) throws Exception {
+    public static int requestComputation(MapLocation target, int coarseness)
+            throws GameActionException {
         for (int i = 0; i < Channels.MAX_NAV_REQUESTS; i++) {
             int[] navreqDescriptor = getNavreqDescriptor(i);
 
