@@ -3,6 +3,7 @@ package team050;
 import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
+import team050.rpc.CoopNav;
 import team050.rpc.Liveness;
 import battlecode.common.Clock;
 import battlecode.common.Direction;
@@ -39,6 +40,10 @@ public class HQRobot extends BaseRobot {
         enemy = me.opponent();
         enemyHQ = rc.senseEnemyHQLocation();
         nextPastrSite = scoutNextPasture();
+
+        CoopNav.requestComputation(nextPastrSite, GeneralNavigation.coarseness);
+        CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
+        CoopNav.requestComputation(rc.senseEnemyHQLocation(), GeneralNavigation.coarseness);
     }
 
     protected void getUpdates() throws GameActionException {
@@ -104,6 +109,7 @@ public class HQRobot extends BaseRobot {
         if (pastrLocations.length > 0) {
             MapLocation possible = pastrLocations[0];
             for (MapLocation p : pastrLocations) {
+                CoopNav.requestComputation(target, GeneralNavigation.coarseness);
                 if (p.distanceSquaredTo(target) < possible.distanceSquaredTo(target)) {
                     possible = p;
                 }

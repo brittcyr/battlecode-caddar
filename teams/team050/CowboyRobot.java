@@ -2,6 +2,7 @@ package team050;
 
 import team050.rpc.Channels;
 import team050.rpc.Clans;
+import team050.rpc.CoopNav;
 import team050.rpc.Clans.ClanMode;
 import team050.rpc.Liveness;
 import battlecode.common.Clock;
@@ -303,6 +304,7 @@ public class CowboyRobot extends BaseRobot {
                                 Clans.setClanPastrStatus(clan, true);
                                 Clans.setWaypoint(clan, myLoc);
                                 rc.construct(RobotType.PASTR);
+                                CoopNav.requestComputation(target, GeneralNavigation.coarseness);
                             }
                             else if (Clans.getClanNTStatus(clan) == false) {
                                 Clans.setClanNTStatus(clan, true);
@@ -321,6 +323,7 @@ public class CowboyRobot extends BaseRobot {
                                 Clans.setClanPastrStatus(clan, true);
                                 Clans.setWaypoint(clan, myLoc);
                                 rc.construct(RobotType.PASTR);
+                                CoopNav.requestComputation(target, GeneralNavigation.coarseness);
                             }
                             else {
                                 rc.move(BugNavigator.getDirectionTo(rc, target));
@@ -342,7 +345,8 @@ public class CowboyRobot extends BaseRobot {
                         }
                         break;
                     case RAIDER:
-                        rc.move(BugNavigator.getDirectionTo(rc, target));
+                        GeneralNavigation.setTarget(target);
+                        rc.move(GeneralNavigation.getNextDirection(rc));
                         break;
                     default:
                         rc.move(BugNavigator.getDirectionTo(rc, target));
