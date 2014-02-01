@@ -15,6 +15,7 @@ public class Dijkstra {
     public static boolean[][] visited        = null;
     public static StringHeap  distStringHeap = null;
     public static int[]       vals;
+    public static int         byteCodeThresh = 1000;
 
     public static void setupDijkstra(int[][] _grid, int start_x, int start_y) {
         height = _grid.length;
@@ -41,7 +42,7 @@ public class Dijkstra {
 
     public static void doDijkstra() {
         while (true) {
-            if (Clock.getBytecodesLeft() < 1000) {
+            if (Clock.getBytecodesLeft() < byteCodeThresh) {
                 return;
             }
 

@@ -27,6 +27,10 @@ public class HQRobot extends BaseRobot {
     public final Team        me;
     public final Team        enemy;
 
+    // Computation code
+    public boolean           isComputing   = false;
+    public MapLocation       computeTarget = null;
+
     public HQRobot(RobotController myRC) throws GameActionException {
         super(myRC);
 
@@ -51,7 +55,21 @@ public class HQRobot extends BaseRobot {
     }
 
     protected void getUpdates() throws GameActionException {
-        // pass
+        // Check if we are free to take a new computing job
+        if (!isComputing) {
+            computeTarget = CoopNav.claimNextAvailableJob();
+
+            // Check whether there is computation that needs to be done
+            if (computeTarget == null) {
+                return;
+            }
+
+            // Tell GeneralNavigation what the next job should be
+            GeneralNavigation.prepareCompute(rc, computeTarget);
+
+            // Set the computing flag
+            isComputing = true;
+        }
     }
 
     protected void updateInternals() throws GameActionException {
@@ -122,7 +140,7 @@ public class HQRobot extends BaseRobot {
         }
         else {
             MapLocation[] broadcast = rc.senseBroadcastingRobotLocations(enemy);
-            if (broadcast.length > 0) {
+            if (Clock.getRoundNum() > 500 && broadcast.length > 0) {
                 MapLocation possible = broadcast[0];
                 for (MapLocation p : broadcast) {
                     if (p.distanceSquaredTo(target) < possible.distanceSquaredTo(target)
@@ -257,12 +275,25 @@ public class HQRobot extends BaseRobot {
         }
     }
 
-    protected void sendUpdates() {
-        // pass
+    protected void sendUpdates() throws GameActionException {
+        // This is a flag that tells us if the computation has finished
+        if (Dijkstra.finished) {
+            // We are no longer computing once this is done
+            isComputing = false;
+
+            // We are now finished, do not want this to accidentally run again
+            Dijkstra.finished = false;
+
+            // Tell the cowboys all the wonderful computing that we have done
+            CoopNav.postJobResult(rc, computeTarget, Dijkstra.previous);
+        }
     }
 
     protected void doCompute() throws GameActionException {
-        // pass
+        // If we have a job prepared, then do computation
+        if (isComputing) {
+            GeneralNavigation.doCompute();
+        }
     }
 
     public MapLocation scoutNextPasture() {
