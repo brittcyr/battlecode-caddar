@@ -337,7 +337,8 @@ public class CowboyRobot extends BaseRobot {
                                 Clans.setClanMode(clan, ClanMode.DEFENDER);
                             }
                             else {
-                                rc.move(BugNavigator.getDirectionTo(rc, target));
+                                GeneralNavigation.setTarget(target);
+                                rc.move(GeneralNavigation.getNextDirection(rc));
                             }
                         }
                         else {
