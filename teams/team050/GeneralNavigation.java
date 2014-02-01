@@ -20,26 +20,6 @@ public class GeneralNavigation {
     public static MapLocation     currentlyLoaded = null;
     public static int[][]         previous        = null;
 
-    /*
-     * Here is how to use GeneralNavigation
-     * 
-     * There are two types of uses, either we are offering to compute something or are requesting
-     * directions
-     * 
-     * 
-     * DOING COMPUTATION 1. prepareCompute(MapLocation target) 2. doCompute()
-     * 
-     * Setup this way so that prepareCompute can be called once and then doCompute can be called in
-     * the robot's doCompute once this returns, the dijkstra is ready and the results will be put
-     * into previous
-     * 
-     * 
-     * REQUESTING DIRECTIONS 1. setTarget 2. getNextDirection
-     * 
-     * This should handle checking if the map exists in the radio, if not, then we will request it
-     * and in the mean time, just bug
-     */
-
     public static void setTarget(MapLocation _target) {
         target = _target;
     }
@@ -134,10 +114,8 @@ public class GeneralNavigation {
         MapLocation myLoc = rc.getLocation();
         // Check if we are ready to use big navigation or if we have to use bug nav
         if (!CoopNav.isComputationReady(target)) {
-            return BugNavigator.getDirectionTo(rc, target);
-        }
-        else {
             CoopNav.requestComputation(target, coarseness);
+            return BugNavigator.getDirectionTo(rc, target);
         }
 
         // Do smart navigation to enemy
