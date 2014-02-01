@@ -52,6 +52,9 @@ public class HQRobot extends BaseRobot {
                 GeneralNavigation.coarseness);
         CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
         CoopNav.requestComputation(rc.senseEnemyHQLocation(), GeneralNavigation.coarseness);
+
+        // Be safe here
+        Dijkstra.byteCodeThresh = 1500;
     }
 
     protected void getUpdates() throws GameActionException {
