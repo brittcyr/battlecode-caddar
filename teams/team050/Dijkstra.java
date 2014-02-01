@@ -41,8 +41,9 @@ public class Dijkstra {
     }
 
     public static void doDijkstra() {
+        int startRound = Clock.getRoundNum();
         while (true) {
-            if (Clock.getBytecodesLeft() < byteCodeThresh) {
+            if (Clock.getBytecodesLeft() < byteCodeThresh || Clock.getRoundNum() > startRound + 3) {
                 return;
             }
 
