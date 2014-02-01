@@ -23,9 +23,13 @@ public class CoopNav {
     public static boolean isComputationReady(MapLocation target) throws GameActionException {
         for (int i = 0; i < Channels.MAX_NAV_REQUESTS; i++) {
             int[] navreqDescriptor = getNavreqDescriptor(i);
+            int coarseX = target.x / GeneralNavigation.coarseness;
+            int coarseY = target.y / GeneralNavigation.coarseness;
             MapLocation nrdTarget = getTargetFromNrd(navreqDescriptor);
+            int coarseNrdX = nrdTarget.x / GeneralNavigation.coarseness;
+            int coarseNrdY = nrdTarget.y / GeneralNavigation.coarseness;
 
-            if ((nrdTarget.x == target.x) && (nrdTarget.y == target.y)) {
+            if ((coarseX == coarseNrdX) && (coarseY == coarseNrdY)) {
                 return isFinishedFromNrd(navreqDescriptor);
             }
         }
@@ -46,10 +50,13 @@ public class CoopNav {
             int[] navreqDescriptor = getNavreqDescriptor(i);
 
             // Check if computation has already been requested.
+            int coarseX = target.x / GeneralNavigation.coarseness;
+            int coarseY = target.y / GeneralNavigation.coarseness;
             MapLocation nrdTarget = getTargetFromNrd(navreqDescriptor);
-            int nrdCoarseness = getCoarsenessFromNrd(navreqDescriptor);
-            if ((nrdTarget.x == target.y) && (nrdTarget.y == target.y)
-                    && (nrdCoarseness == coarseness)) {
+            int coarseNrdX = nrdTarget.x / GeneralNavigation.coarseness;
+            int coarseNrdY = nrdTarget.y / GeneralNavigation.coarseness;
+            if ((coarseX == coarseNrdX) && (coarseY == coarseNrdY)
+                    && (GeneralNavigation.coarseness == coarseness)) {
                 return -2;
             }
 
@@ -78,13 +85,18 @@ public class CoopNav {
             throws GameActionException {
         for (int i = 0; i < Channels.MAX_NAV_REQUESTS; i++) {
             int[] navreqDescriptor = getNavreqDescriptor(i);
-            int coarseness = getCoarsenessFromNrd(navreqDescriptor);
             MapLocation nrdTarget = getTargetFromNrd(navreqDescriptor);
+            int coarseX = target.x / GeneralNavigation.coarseness;
+            int coarseY = target.y / GeneralNavigation.coarseness;
+            int coarseNrdX = nrdTarget.x / GeneralNavigation.coarseness;
+            int coarseNrdY = nrdTarget.y / GeneralNavigation.coarseness;
 
-            if ((nrdTarget.x == target.x) && (nrdTarget.y == target.y)) {
-                int index = (int) Math.ceil(rc.getMapWidth() / coarseness) * y + x;
-                int navresultSize = ((int) Math.ceil(rc.getMapWidth() / coarseness))
-                        * ((int) Math.ceil(rc.getMapHeight() / coarseness));
+            if ((coarseX == coarseNrdX) && (coarseY == coarseNrdY)) {
+                int index = (int) Math.ceil(rc.getMapWidth() / GeneralNavigation.coarseness) * y
+                        + x;
+                int navresultSize = ((int) Math.ceil(rc.getMapWidth()
+                        / GeneralNavigation.coarseness))
+                        * ((int) Math.ceil(rc.getMapHeight() / GeneralNavigation.coarseness));
                 int navresultAddr = Channels.NAVRESULTS + i * navresultSize;
                 int dxnAddr = navresultAddr + index;
                 int dxn = Radio.getData(dxnAddr, 1)[0];
@@ -148,7 +160,11 @@ public class CoopNav {
         for (int i = 0; i < Channels.MAX_NAV_REQUESTS; i++) {
             int[] navreqDescriptor = getNavreqDescriptor(i);
             MapLocation nrdTarget = getTargetFromNrd(navreqDescriptor);
-            if ((nrdTarget.x == target.x) && (nrdTarget.y == target.y)) {
+            int coarseX = target.x / GeneralNavigation.coarseness;
+            int coarseY = target.y / GeneralNavigation.coarseness;
+            int coarseNrdX = nrdTarget.x / GeneralNavigation.coarseness;
+            int coarseNrdY = nrdTarget.y / GeneralNavigation.coarseness;
+            if ((coarseX == coarseNrdX) && (coarseY == coarseNrdY)) {
                 jobId = i;
                 break;
             }
