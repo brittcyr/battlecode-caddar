@@ -13,20 +13,24 @@ import battlecode.common.Team;
 import battlecode.common.TerrainTile;
 
 public class NoiseTowerRobot extends BaseRobot {
-    public final Team        me;
-    public final Team        enemy;
-    public MapLocation       myPastr;
-    public MapLocation       enemyPastr;
-    public MapLocation       target;
-    public MapLocation[]     myPastrs;
-    public MapLocation[]     enemyPastrs;
-    public Direction         dir;
-    public int               dist;
-    public double[][]        cowGrowth;
-    public int[]             distInDirs;
-    public final MapLocation myLoc;
-    public int               gid  = -1;
-    public int               clan = -1;
+
+    public static Direction[] directions = { Direction.NORTH, Direction.NORTH_EAST, Direction.EAST,
+            Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST,
+            Direction.NORTH_WEST        };
+    public final Team         me;
+    public final Team         enemy;
+    public MapLocation        myPastr;
+    public MapLocation        enemyPastr;
+    public MapLocation        target;
+    public MapLocation[]      myPastrs;
+    public MapLocation[]      enemyPastrs;
+    public Direction          dir;
+    public int                dist;
+    public double[][]         cowGrowth;
+    public int[]              distInDirs;
+    public final MapLocation  myLoc;
+    public int                gid        = -1;
+    public int                clan       = -1;
 
     public NoiseTowerRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -69,6 +73,8 @@ public class NoiseTowerRobot extends BaseRobot {
         myPastrs = rc.sensePastrLocations(me);
         enemyPastrs = rc.sensePastrLocations(enemy);
 
+        MapLocation oldPastr = myPastr;
+
         myPastr = null;
         enemyPastr = null;
 
@@ -78,6 +84,12 @@ public class NoiseTowerRobot extends BaseRobot {
             for (MapLocation p : myPastrs) {
                 myPastr = p.distanceSquaredTo(myLoc) < myPastr.distanceSquaredTo(myLoc) ? p
                         : myPastr;
+            }
+        }
+
+        if (!myPastr.equals(oldPastr)) {
+            for (int x = 0; x < 8; x++) {
+                distInDirs[x] = checkDirection(myPastr, directions[x]);
             }
         }
 
@@ -104,14 +116,19 @@ public class NoiseTowerRobot extends BaseRobot {
 
         // Leave this code here since we only want it to run whenever the NT is active
         if (myPastr != null) {
-            dist -= 2;
+            if (dist < 5) {
+                dist -= 1;
+            }
+            else {
+                dist -= 2;
+            }
             if (dist < 3) {
                 dir = dir.rotateRight();
                 dir = dir.rotateRight();
                 dir = dir.rotateRight();
 
                 for (int x = 0; x < 9; x++) {
-                    int dirDist = checkDirection(myPastr, dir);
+                    int dirDist = distInDirs[dir.ordinal()];
                     if (dirDist < 4) {
                         dir = dir.rotateRight();
                         dir = dir.rotateRight();
@@ -150,7 +167,6 @@ public class NoiseTowerRobot extends BaseRobot {
     }
 
     public int checkDirection(MapLocation pastr, Direction dir) {
-        // TODO: Cache these so that there is not a spike in the bytecode usage every time it turns
         int d = 1;
         MapLocation target = pastr.add(dir, d);
 
