@@ -73,6 +73,9 @@ public class HQRobot extends BaseRobot {
     }
 
     protected void updateInternals() throws GameActionException {
+        if (Clock.getRoundNum() % 10 != 0) {
+            return;
+        }
         // Check for liveness & maintain liveness state table.
         // TODO: Maybe not do this every round.
         for (int gid = 0; gid < Channels.MAX_ROBOTS; gid++) {
@@ -204,7 +207,7 @@ public class HQRobot extends BaseRobot {
         boolean doSpawn = false;
         Direction toSpawn = rc.getLocation().directionTo(rc.senseEnemyHQLocation());
         // Check if a robot is spawnable and spawn one if it is
-        if (rc.isActive() && rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
+        if (rc.senseRobotCount() < GameConstants.MAX_ROBOTS) {
             for (int rot = 0; rot < 8; rot++) {
                 MapLocation test = rc.getLocation().add(toSpawn);
                 if (rc.senseTerrainTile(test) != TerrainTile.VOID

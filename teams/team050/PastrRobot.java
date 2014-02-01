@@ -40,6 +40,8 @@ public class PastrRobot extends BaseRobot {
                 }
             }
         }
+
+        CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
         assert (gid != -1);
         assert (clan != -1);
     }

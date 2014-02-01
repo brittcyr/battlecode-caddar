@@ -304,7 +304,7 @@ public class CowboyRobot extends BaseRobot {
                                 Clans.setClanPastrStatus(clan, true);
                                 Clans.setWaypoint(clan, myLoc);
                                 rc.construct(RobotType.PASTR);
-                                CoopNav.requestComputation(target, GeneralNavigation.coarseness);
+                                CoopNav.requestComputation(myLoc, GeneralNavigation.coarseness);
                             }
                             else if (Clans.getClanNTStatus(clan) == false) {
                                 Clans.setClanNTStatus(clan, true);
@@ -324,7 +324,7 @@ public class CowboyRobot extends BaseRobot {
                                 Clans.setClanPastrStatus(clan, true);
                                 Clans.setWaypoint(clan, myLoc);
                                 rc.construct(RobotType.PASTR);
-                                CoopNav.requestComputation(target, GeneralNavigation.coarseness);
+                                CoopNav.requestComputation(myLoc, GeneralNavigation.coarseness);
                             }
                             else {
                                 rc.move(BugNavigator.getDirectionTo(rc, target));
