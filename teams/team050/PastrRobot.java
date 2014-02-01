@@ -45,33 +45,52 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void getUpdates() {
+        // Check if we are free to take a new computing job
         if (!isComputing) {
             jobID = CoopNav.claimNextAvailableJob();
+
+            // Check whether there is computation that needs to be done
+            if (jobID == -1) {
+                return;
+            }
+
+            // Get the parameters for the job
             int jobCoarseness = CoopNav.getJobCoarseness(jobID);
             MapLocation jobTarget = CoopNav.getJobTarget(jobID);
 
+            // Tell GeneralNavigation what the next job should be
             GeneralNavigation.coarseness = jobCoarseness;
             GeneralNavigation.prepareCompute(rc, jobTarget);
+
+            // Set the computing flag
             isComputing = true;
         }
     }
 
     protected void updateInternals() {
-
+        // TODO: check for enemy pastrs and post them to the queue
     }
 
     public void doAction() throws GameActionException {
+        // If we have a job prepared, then do computation
         if (isComputing) {
             GeneralNavigation.doCompute();
         }
     }
 
     protected void sendUpdates() throws GameActionException {
+        // Update the liveness so that the hq knows we are alive
         Liveness.updateLiveness(RobotType.PASTR, gid);
-        if (Dijkstra.finished) {
 
+        // This is a flag that tells us if the computation has finished
+        if (Dijkstra.finished) {
+            // We are no longer computing once this is done
             isComputing = false;
+
+            // We are now finished, do not want this to accidentally run again
             Dijkstra.finished = false;
+
+            // Tell the cowboys all the wonderful computing that we have done
             CoopNav.postJobResult(jobID, Dijkstra.previous);
 
             // Redundant because posting could take a really long time
