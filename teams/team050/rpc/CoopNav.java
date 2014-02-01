@@ -133,7 +133,7 @@ public class CoopNav {
         if (!isComputingFromNrd(navreqDescriptor)) {
             return null;
         }
-        return getJobTarget(jobId);
+        return getTargetFromNrd(navreqDescriptor);
     }
 
     /*
@@ -144,7 +144,7 @@ public class CoopNav {
         if (!isComputingFromNrd(navreqDescriptor)) {
             return -1;
         }
-        return getJobCoarseness(jobId);
+        return getCoarsenessFromNrd(navreqDescriptor);
     }
 
     /*

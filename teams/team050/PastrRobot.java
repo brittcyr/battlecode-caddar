@@ -69,7 +69,7 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void updateInternals() {
-        // TODO: check for enemy pastrs and post them to the queue
+        // pass
     }
 
     public void doAction() throws GameActionException {

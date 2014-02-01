@@ -313,7 +313,8 @@ public class CowboyRobot extends BaseRobot {
                             }
                         }
                         else {
-                            rc.move(BugNavigator.getDirectionTo(rc, target));
+                            GeneralNavigation.setTarget(target);
+                            rc.move(GeneralNavigation.getNextDirection(rc));
                         }
                         break;
                     case DEFENDER:
