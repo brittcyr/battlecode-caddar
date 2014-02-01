@@ -80,7 +80,6 @@ public class HQRobot extends BaseRobot {
             return;
         }
         // Check for liveness & maintain liveness state table.
-        // TODO: Maybe not do this every round.
         for (int gid = 0; gid < Channels.MAX_ROBOTS; gid++) {
             int lastUpdatedRound = Liveness.getLastPostedRoundByGid(gid);
             if (lastUpdatedRound == 0) {
@@ -333,7 +332,6 @@ public class HQRobot extends BaseRobot {
                 + cowGrowth[x + 1][y - 1] + cowGrowth[x + 1][y] + cowGrowth[x + 1][y + 1];
 
         growth += .0001 * (loc.distanceSquaredTo(enemyHQ));
-        // TODO: make a check for the lanes of how good clear direction is
         return growth;
     }
 }

@@ -116,7 +116,7 @@ public class NoiseTowerRobot extends BaseRobot {
 
         // Leave this code here since we only want it to run whenever the NT is active
         if (myPastr != null) {
-            if (dist < 5) {
+            if (dist <= 5) {
                 dist -= 1;
             }
             else {
