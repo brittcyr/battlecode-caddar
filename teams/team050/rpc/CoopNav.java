@@ -1,5 +1,6 @@
 package team050.rpc;
 
+import hq_search.GeneralNavigation;
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
@@ -107,7 +108,7 @@ public class CoopNav {
      * 
      * Return -1 if no job available.
      */
-    public static int claimNextAvailableJob() throws GameActionException {
+    public static MapLocation claimNextAvailableJob() throws GameActionException {
         for (int i = 0; i < Channels.MAX_NAV_REQUESTS; i++) {
             int[] navreqDescriptor = getNavreqDescriptor(i);
 
@@ -120,17 +121,19 @@ public class CoopNav {
                         navreqDescriptor[1] = setRoundInWord(Clock.getRoundNum(),
                                 navreqDescriptor[1]);
                         setNavreqDescriptor(navreqDescriptor, i);
-                        return i;
+                        return getTargetFromNrd(navreqDescriptor);
                     }
                 }
             }
         }
 
-        return -1;
+        return null;
     }
 
     /*
      * return null if jobId is invalid (doesn't correspond to an active job).
+     * 
+     * TODO: DEPRECATE!
      */
     public static MapLocation getJobTarget(int jobId) throws GameActionException {
         int[] navreqDescriptor = getNavreqDescriptor(jobId);
@@ -142,6 +145,8 @@ public class CoopNav {
 
     /*
      * return -1 if jobId is invalid (doesn't correspond to an active job).
+     * 
+     * TODO: Deprecate!
      */
     public static int getJobCoarseness(int jobId) throws GameActionException {
         int[] navreqDescriptor = getNavreqDescriptor(jobId);
@@ -159,10 +164,26 @@ public class CoopNav {
      * If you start computing on a job and take too long and the HQ clears you from the navreq
      * header table, then when you post this, you might be overwriting somebody else's request,
      * giving everyone the wrong data when they think it's right!
+     * 
+     * Return -1 if the job to compute paths to target isn't in the header table anymore.
      */
-    public static void postJobResult(RobotController rc, int jobId, int[][] result)
+    public static int postJobResult(RobotController rc, MapLocation target, int[][] result)
             throws GameActionException {
-        int coarseness = getJobCoarseness(jobId);
+
+        int jobId = -1;
+        for (int i = 0; i < Channels.MAX_NAV_REQUESTS; i++) {
+            int[] navreqDescriptor = getNavreqDescriptor(i);
+            MapLocation nrdTarget = getTargetFromNrd(navreqDescriptor);
+            if ((nrdTarget.x == target.x) && (nrdTarget.y == target.y)) {
+                jobId = i;
+                break;
+            }
+        }
+        if (jobId == -1) {
+            return -1;
+        }
+
+        int coarseness = GeneralNavigation.coarseness;
         int navresultSize = ((int) Math.ceil(rc.getMapWidth() / coarseness))
                 * ((int) Math.ceil(rc.getMapHeight() / coarseness));
         int navresultAddr = Channels.NAVRESULTS + jobId * navresultSize;
@@ -178,6 +199,7 @@ public class CoopNav {
             Radio.putData(rowAddr, result[y]);
         }
 
+        return 0;
     }
 
     /*
