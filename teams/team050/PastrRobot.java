@@ -3,15 +3,19 @@ package team050;
 import team050.rpc.Channels;
 import team050.rpc.Clans;
 import team050.rpc.Clans.ClanMode;
+import team050.rpc.CoopNav;
 import team050.rpc.Liveness;
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 import battlecode.common.RobotType;
 
 public class PastrRobot extends BaseRobot {
 
-    public int gid  = -1;
-    public int clan = -1;
+    public int     gid         = -1;
+    public int     clan        = -1;
+    public boolean isComputing = false;
+    public int     jobID       = -1;
 
     public PastrRobot(RobotController myRC) throws GameActionException {
         super(myRC);
@@ -41,35 +45,42 @@ public class PastrRobot extends BaseRobot {
     }
 
     protected void getUpdates() {
-        // TODO: Check if there are any requests for computation
+        if (!isComputing) {
+            jobID = CoopNav.claimNextAvailableJob();
+            int jobCoarseness = CoopNav.getJobCoarseness(jobID);
+            MapLocation jobTarget = CoopNav.getJobTarget(jobID);
+
+            GeneralNavigation.coarseness = jobCoarseness;
+            GeneralNavigation.prepareCompute(rc, jobTarget);
+            isComputing = true;
+        }
     }
 
     protected void updateInternals() {
-        // TODO: Potential distress signal
-        // This is where we should decide if we call for reinforcements
 
-        // Possible things to calculate
-        // HQ
-        // EnemyHQ
-        // ME
-        // Other PASTR
-        // ENEMY PASTR1
-        // ENEMY PASTR2
-        // ENEMY PASTR3
-        // ...
     }
 
     public void doAction() throws GameActionException {
-        // GeneralNavigation.doCompute();
+        if (isComputing) {
+            GeneralNavigation.doCompute();
+        }
     }
 
     protected void sendUpdates() throws GameActionException {
         Liveness.updateLiveness(RobotType.PASTR, gid);
+        if (Dijkstra.finished) {
+
+            isComputing = false;
+            Dijkstra.finished = false;
+            CoopNav.postJobResult(jobID, Dijkstra.previous);
+
+            // Redundant because posting could take a really long time
+            Liveness.updateLiveness(RobotType.PASTR, gid);
+        }
     }
 
     protected void doCompute() {
         // pass
-        // The action of pastr is just computing
     }
 
 }
