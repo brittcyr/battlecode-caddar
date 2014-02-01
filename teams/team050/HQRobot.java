@@ -36,12 +36,16 @@ public class HQRobot extends BaseRobot {
             Clans.setWaypoint(clan, hq);
         }
 
+        mapWidth = rc.getMapWidth();
+        mapHeight = rc.getMapHeight();
         me = rc.getTeam();
         enemy = me.opponent();
         enemyHQ = rc.senseEnemyHQLocation();
         nextPastrSite = scoutNextPasture();
 
         CoopNav.requestComputation(nextPastrSite, GeneralNavigation.coarseness);
+        CoopNav.requestComputation(new MapLocation(mapWidth / 2, mapHeight / 2),
+                GeneralNavigation.coarseness);
         CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
         CoopNav.requestComputation(rc.senseEnemyHQLocation(), GeneralNavigation.coarseness);
     }
@@ -266,8 +270,6 @@ public class HQRobot extends BaseRobot {
         double bestGrowth = cowGrowth[0][0];
         MapLocation bestSite = new MapLocation(0, 0);
 
-        mapWidth = rc.getMapWidth();
-        mapHeight = rc.getMapHeight();
         for (int x = 1; x < mapWidth - 1; x = x + 3) {
             for (int y = 1; y < mapHeight - 1; y = y + 3) {
                 MapLocation loc = new MapLocation(x, y);
