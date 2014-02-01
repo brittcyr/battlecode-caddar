@@ -87,7 +87,7 @@ public class NoiseTowerRobot extends BaseRobot {
             }
         }
 
-        if (!myPastr.equals(oldPastr)) {
+        if (myPastr != null && (oldPastr == null || !myPastr.equals(oldPastr))) {
             for (int x = 0; x < 8; x++) {
                 distInDirs[x] = checkDirection(myPastr, directions[x]);
             }
