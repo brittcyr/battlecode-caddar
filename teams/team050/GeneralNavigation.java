@@ -113,7 +113,6 @@ public class GeneralNavigation {
         MapLocation myLoc = rc.getLocation();
         // Check if we are ready to use big navigation or if we have to use bug nav
         if (!CoopNav.isComputationReady(target)) {
-            CoopNav.requestComputation(target, coarseness);
             return BugNavigator.getDirectionTo(rc, target);
         }
 
