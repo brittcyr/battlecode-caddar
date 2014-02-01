@@ -131,32 +131,6 @@ public class CoopNav {
     }
 
     /*
-     * return null if jobId is invalid (doesn't correspond to an active job).
-     * 
-     * TODO: DEPRECATE!
-     */
-    public static MapLocation getJobTarget(int jobId) throws GameActionException {
-        int[] navreqDescriptor = getNavreqDescriptor(jobId);
-        if (!isComputingFromNrd(navreqDescriptor)) {
-            return null;
-        }
-        return getTargetFromNrd(navreqDescriptor);
-    }
-
-    /*
-     * return -1 if jobId is invalid (doesn't correspond to an active job).
-     * 
-     * TODO: Deprecate!
-     */
-    public static int getJobCoarseness(int jobId) throws GameActionException {
-        int[] navreqDescriptor = getNavreqDescriptor(jobId);
-        if (!isComputingFromNrd(navreqDescriptor)) {
-            return -1;
-        }
-        return getCoarsenessFromNrd(navreqDescriptor);
-    }
-
-    /*
      * Post a finished computation to shared memory.
      * 
      * This performs NO SAFETY CHECKS!!! It will just write to the radio blindly.
@@ -192,6 +166,7 @@ public class CoopNav {
         int[] navreqDescriptor = getNavreqDescriptor(jobId);
         navreqDescriptor[1] = setFinishedInWord(true, navreqDescriptor[1]);
         navreqDescriptor[1] = setComputingInWord(false, navreqDescriptor[1]);
+        setNavreqDescriptor(navreqDescriptor, jobId);
 
         // Post each row at a time.
         for (int y = 0; y < result[0].length; y++) {
