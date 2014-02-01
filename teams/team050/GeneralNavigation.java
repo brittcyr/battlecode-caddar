@@ -1,10 +1,12 @@
 package team050;
 
 import team050.rpc.CoopNav;
+import team050.rpc.Liveness;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
+import battlecode.common.RobotType;
 import battlecode.common.TerrainTile;
 
 public class GeneralNavigation {
@@ -18,6 +20,8 @@ public class GeneralNavigation {
     public static int[][]         coarseMap       = null;
     public static MapLocation     currentlyLoaded = null;
     public static int[][]         previous        = null;
+    public static int             gid;
+    public static RobotType       type;
 
     public static void setTarget(MapLocation _target) {
         target = _target;
@@ -47,19 +51,20 @@ public class GeneralNavigation {
         return myCenter.add(d, coarseness);
     }
 
-    private static void senseGameBoard(RobotController rc) {
+    private static void senseGameBoard(RobotController rc) throws GameActionException {
         // Scan the grid
         int height = rc.getMapHeight();
         int width = rc.getMapWidth();
         gameBoard = new TerrainTile[height][width];
         for (int y = width - 1; y >= 0; y--) {
+            Liveness.updateLiveness(type, gid);
             for (int x = height - 1; x >= 0; x--) {
                 gameBoard[x][y] = rc.senseTerrainTile(new MapLocation(y, x));
             }
         }
     }
 
-    private static void setupCoarseMap(RobotController rc) {
+    private static void setupCoarseMap(RobotController rc) throws GameActionException {
         // Create new map for given coarseness
         int height = (int) Math.ceil((double) rc.getMapHeight() / coarseness);
         int width = (int) Math.ceil((double) rc.getMapWidth() / coarseness);
@@ -68,6 +73,7 @@ public class GeneralNavigation {
         int mapHeight = rc.getMapHeight();
         int mapWidth = rc.getMapWidth();
         for (int y = mapHeight; --y >= 0;) {
+            Liveness.updateLiveness(type, gid);
             int coarseY = y / coarseness;
             for (int x = mapWidth; --x >= 0;) {
                 int coarseX = x / coarseness;
@@ -92,7 +98,10 @@ public class GeneralNavigation {
         return 100;
     }
 
-    public static void prepareCompute(RobotController rc, MapLocation target) {
+    public static void prepareCompute(RobotController rc, MapLocation target, RobotType _type,
+            int _gid) throws GameActionException {
+        type = _type;
+        gid = _gid;
         // This is the test if we are preparing our first computation
         if (gameBoard == null) {
             senseGameBoard(rc);

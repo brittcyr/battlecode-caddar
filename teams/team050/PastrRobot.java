@@ -57,7 +57,7 @@ public class PastrRobot extends BaseRobot {
             }
 
             // Tell GeneralNavigation what the next job should be
-            GeneralNavigation.prepareCompute(rc, target);
+            GeneralNavigation.prepareCompute(rc, target, RobotType.PASTR, gid);
 
             // Set the computing flag
             isComputing = true;

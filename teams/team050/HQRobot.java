@@ -68,7 +68,7 @@ public class HQRobot extends BaseRobot {
             }
 
             // Tell GeneralNavigation what the next job should be
-            GeneralNavigation.prepareCompute(rc, computeTarget);
+            GeneralNavigation.prepareCompute(rc, computeTarget, RobotType.HQ, 39);
 
             // Set the computing flag
             isComputing = true;
