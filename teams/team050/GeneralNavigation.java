@@ -13,7 +13,7 @@ public class GeneralNavigation {
             Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST,
             Direction.WEST, Direction.NORTH_WEST };
     public static MapLocation     target          = null;
-    public static MapLocation     lastWaypoint    = null;
+    public static MapLocation     prevWaypoint    = null;
     public static int             coarseness      = 2;
     public static TerrainTile[][] gameBoard       = null;
     public static int[][]         coarseMap       = null;
@@ -153,9 +153,9 @@ public class GeneralNavigation {
         // If we have at least one more direction to go, then BugNavigate to waypoint
         Direction toWaypoint = directions[directionNum];
         MapLocation waypoint = GeneralNavigation.getNextCenter(rc, coarseness, toWaypoint);
-        if (!waypoint.equals(lastWaypoint)) {
+        if (!waypoint.equals(prevWaypoint)) {
             BugNavigator.bugReset();
-            lastWaypoint = waypoint;
+            prevWaypoint = waypoint;
         }
 
         return BugNavigator.getDirectionTo(rc, waypoint);
