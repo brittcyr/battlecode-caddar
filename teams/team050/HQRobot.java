@@ -53,8 +53,7 @@ public class HQRobot extends BaseRobot {
                 GeneralNavigation.coarseness);
         CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
 
-        // Be safe here
-        Dijkstra.byteCodeThresh = 1500;
+        Dijkstra.byteCodeThresh = 1000;
     }
 
     protected void getUpdates() throws GameActionException {

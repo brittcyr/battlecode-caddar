@@ -302,9 +302,18 @@ public class CowboyRobot extends BaseRobot {
                         if (withinRangeSquared(target, rangeSquared)) {
                             if (Clans.getClanPastrStatus(clan) == false) {
                                 Clans.setClanPastrStatus(clan, true);
-                                Clans.setWaypoint(clan, myLoc);
-                                rc.construct(RobotType.PASTR);
-                                CoopNav.requestComputation(myLoc, GeneralNavigation.coarseness);
+                                Robot[] myPastrs = rc.senseNearbyGameObjects(Robot.class, 2, me);
+                                boolean pastr = false;
+                                for (Robot a : myPastrs) {
+                                    if (rc.senseRobotInfo(a).type == RobotType.PASTR) {
+                                        pastr = true;
+                                    }
+                                }
+                                if (!pastr) {
+                                    Clans.setWaypoint(clan, myLoc);
+                                    rc.construct(RobotType.PASTR);
+                                    CoopNav.requestComputation(myLoc, GeneralNavigation.coarseness);
+                                }
                             }
                             else if (Clans.getClanNTStatus(clan) == false) {
                                 Clans.setClanNTStatus(clan, true);
@@ -322,9 +331,18 @@ public class CowboyRobot extends BaseRobot {
                         if (Clans.getClanPastrStatus(clan) == false) {
                             if (withinRangeSquared(target, rangeSquared)) {
                                 Clans.setClanPastrStatus(clan, true);
-                                Clans.setWaypoint(clan, myLoc);
-                                rc.construct(RobotType.PASTR);
-                                CoopNav.requestComputation(myLoc, GeneralNavigation.coarseness);
+                                Robot[] myPastrs = rc.senseNearbyGameObjects(Robot.class, 2, me);
+                                boolean pastr = false;
+                                for (Robot a : myPastrs) {
+                                    if (rc.senseRobotInfo(a).type == RobotType.PASTR) {
+                                        pastr = true;
+                                    }
+                                }
+                                if (!pastr) {
+                                    Clans.setWaypoint(clan, myLoc);
+                                    rc.construct(RobotType.PASTR);
+                                    CoopNav.requestComputation(myLoc, GeneralNavigation.coarseness);
+                                }
                             }
                             else {
                                 rc.move(BugNavigator.getDirectionTo(rc, target));
