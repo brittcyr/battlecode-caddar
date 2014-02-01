@@ -40,7 +40,11 @@ public class Dijkstra {
     }
 
     public static void doDijkstra() {
-        while (true && Clock.getBytecodesLeft() > 1000) {
+        while (true) {
+            if (Clock.getBytecodesLeft() < 1000) {
+                return;
+            }
+
             // Find the position with minimum distance
             int val = distStringHeap.getMinVal();
             int index = distStringHeap.extractMin();
