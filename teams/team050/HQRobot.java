@@ -197,7 +197,9 @@ public class HQRobot extends BaseRobot {
                 }
                 break;
             case RAIDER:
-                if (Clans.getClanSize(clan) >= Clans.TARGET_CLAN_SIZES[clan] - 1) {
+                // If we are at the target size minus 1, or we're the last clan and have two cowboy
+                if (Clans.getClanSize(clan) >= Clans.TARGET_CLAN_SIZES[clan] - 1
+                        || (clan == Clans.TARGET_CLAN_SIZES.length - 1 && Clans.getClanSize(clan) >= 2)) {
                     Clans.setClanMode(clan, ClanMode.RAIDER);
                 }
                 break;
