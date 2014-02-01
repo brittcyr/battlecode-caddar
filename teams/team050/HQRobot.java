@@ -47,11 +47,11 @@ public class HQRobot extends BaseRobot {
         enemyHQ = rc.senseEnemyHQLocation();
         nextPastrSite = scoutNextPasture();
 
+        CoopNav.requestComputation(rc.senseEnemyHQLocation(), GeneralNavigation.coarseness);
         CoopNav.requestComputation(nextPastrSite, GeneralNavigation.coarseness);
         CoopNav.requestComputation(new MapLocation(mapWidth / 2, mapHeight / 2),
                 GeneralNavigation.coarseness);
         CoopNav.requestComputation(rc.getLocation(), GeneralNavigation.coarseness);
-        CoopNav.requestComputation(rc.senseEnemyHQLocation(), GeneralNavigation.coarseness);
 
         // Be safe here
         Dijkstra.byteCodeThresh = 1500;
