@@ -178,6 +178,10 @@ public class HQRobot extends BaseRobot {
                 }
             }
         }
+
+        if (target.distanceSquaredTo(enemyHQ) < 25) {
+            target = nextPastrSite;
+        }
         Clans.setWaypoint(clan, target);
     }
 
